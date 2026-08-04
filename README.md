@@ -4,8 +4,8 @@ A reusable **methodology + templates + skills + UI kit** for starting and runnin
 project the way we run them: documentation-first, evidence-driven, reviewed at every
 milestone, with a consistent house visual style.
 
-Copy this into a new project (or point the `new-project` skill at it) and you get the
-whole workflow — from the first BLOG to shipped, reviewed code — without reinventing it.
+Install the skills once (see **Install** below) and you get the whole workflow — from the
+first BLOG to shipped, reviewed code — in any project, without reinventing it.
 
 ## The pipeline in one line
 
@@ -47,13 +47,44 @@ ONBOARDING/
   .claude/skills/            ← installable skills that generate the artifacts
 ```
 
-## Quick start
+## Install (once)
 
-1. **Bootstrap a project:** `/new-project` — scaffolds `docs/`, copies templates + `house.css`,
-   creates `DOCS_INDEX.md` and `DECISIONS.md`.
-2. **Write the first artifact:** `/write-blog`, then `/write-rfc`, then `/write-drp`.
-3. **Plan the build:** `/make-workplan` — phases, milestones, test gates.
-4. **At each milestone:** `/milestone-review` — code review + checkpoint, update the progress trace.
+Skills only resolve if they're discoverable *before* you invoke them. Claude Code loads
+skills from two places:
+
+- **User level** — `~/.claude/skills/<name>/SKILL.md` → available in **every** project.
+- **Project level** — `<project>/.claude/skills/<name>/SKILL.md` → that project only.
+
+So there's a bootstrap step. Pick one:
+
+**A · Install at the user level (recommended)** — makes `/new-project` and the write-* skills
+available in any directory, including an empty new project:
+
+```bash
+# from the ONBOARDING repo root — symlink so updates propagate (or use cp -r to copy)
+mkdir -p ~/.claude/skills
+ln -s "$PWD"/.claude/skills/* ~/.claude/skills/
+# keep templates + house.css reachable; the skills locate this repo (default: ../ONBOARDING)
+```
+
+Now, in a fresh project: **`/new-project`** → it scaffolds `docs/`, copies the templates +
+`house.css`, and seeds `DOCS_INDEX.md` + `DECISIONS.md`.
+
+**B · Run from inside this repo** — open Claude Code in `ONBOARDING/` and ask it to scaffold a
+sibling project; `new-project` targets the path you give. No install needed.
+
+**C · Manual first copy** — copy `templates/` and `assets/house.css` into the new project by
+hand; copy `.claude/skills/*` into the project's `.claude/skills/` to get the commands locally.
+
+> The skills reference this repo for templates + `house.css` (default location `../ONBOARDING`,
+> or tell the skill where it lives). Keep the repo somewhere stable.
+
+## Then, in every project
+
+1. **Bootstrap:** `/new-project` — scaffolds `docs/`, templates, `house.css`, index + decision log.
+2. **Frame it:** `/write-blog` → `/write-rfc` + `/write-drp` (co-authored) — vision, proposal, requirements.
+3. **Design & plan:** `/write-architecture`, then `/make-workplan` — phases, milestones, test gates.
+4. **Each milestone:** `/milestone-review` — code review + checkpoint, update the progress trace.
 
 Skills read the templates in `templates/` and the design system in `assets/house.css`, so
 every project comes out consistent.
