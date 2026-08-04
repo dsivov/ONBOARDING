@@ -181,13 +181,13 @@ buildless HTML/CSS component kit.
 ## 5 · Naming conventions
 
 ```
-BLOG_<TOPIC>.html                 BLOG_SOPILOT_ARCHITECTURE.html
-<NAME>_RFC.html                   WEAVE_RFC.html
-<NAME>_DRP.md                     SMARTFORM_DRP.md
-<NAME>_ARCHITECTURE.html          SMARTFORM_ARCHITECTURE.html
+BLOG_<TOPIC>.html                 BLOG_PLATFORM_ARCHITECTURE.html
+<NAME>_RFC.html                   PAYMENTS_RFC.html
+<NAME>_DRP.md                     PAYMENTS_DRP.md
+<NAME>_ARCHITECTURE.html          PAYMENTS_ARCHITECTURE.html
 <NAME>_CHANGE_REQUEST.md          BILLING_CHANGE_REQUEST.md
-<NAME>_WORK_PLAN.md               PLATFORM_WORK_PLAN.md
-<NAME>_CODE_REVIEW.md             WEAVE_CODE_REVIEW.md
+<NAME>_WORK_PLAN.md               PAYMENTS_WORK_PLAN.md
+<NAME>_CODE_REVIEW.md             PAYMENTS_CODE_REVIEW.md
 PROJECT_REVIEW_<YYYY-MM-DD>.md    PROJECT_REVIEW_2026-07-06.md
 DECISIONS.md  DOCS_INDEX.md
 ```
