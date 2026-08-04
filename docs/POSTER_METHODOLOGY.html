@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methodology poster</title>
+<style>
+  html,body{margin:0;background:#0a0c12;display:flex;justify-content:center;padding:24px 0}
+  .poster{width:1080px;height:1350px}
+  @media(max-width:1120px){.poster{width:100%;height:auto}}
+  .hint{color:#7b8499;font:13px "Segoe UI",sans-serif;text-align:center;margin:16px 0 0}
+</style>
+</head>
+<body>
+<!-- LinkedIn poster, 1080×1350 (portrait 4:5 — LinkedIn's max feed real estate).
+     Pure SVG → export crisp PNG: open, screenshot at 2×, or use browser "Save as image"
+     on the .poster element. House style. -->
+<div>
+<svg class="poster" viewBox="0 0 1080 1350" role="img" aria-label="How we run projects — methodology poster" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1117"/><stop offset="1" stop-color="#0b0e15"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="18%" cy="12%" r="55%"><stop offset="0" stop-color="rgba(91,141,239,.22)"/><stop offset="1" stop-color="transparent"/></radialGradient>
+    <radialGradient id="glowB" cx="88%" cy="90%" r="55%"><stop offset="0" stop-color="rgba(25,184,154,.16)"/><stop offset="1" stop-color="transparent"/></radialGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#cfe0ff"/><stop offset=".5" stop-color="#8fd9c9"/><stop offset="1" stop-color="#cdb1f7"/>
+    </linearGradient>
+    <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker>
+    <style>
+      .eyebrow{fill:#7b8499;font:700 22px "Segoe UI",sans-serif;letter-spacing:6px}
+      .h1{font:800 82px "Segoe UI",sans-serif;fill:url(#title)}
+      .lede{fill:#aab3c5;font:400 27px "Segoe UI",sans-serif}
+      .stage-t{fill:#fff;font:800 24px "Segoe UI",sans-serif;text-anchor:middle}
+      .stage-s{fill:#c9d3e6;font:500 15px "SF Mono",ui-monospace,monospace;text-anchor:middle}
+      .chip-t{fill:#fff;font:800 26px "Segoe UI",sans-serif}
+      .chip-s{fill:#aab3c5;font:400 18px "Segoe UI",sans-serif}
+      .rule{fill:#e7ebf3;font:700 30px "Segoe UI",sans-serif;text-anchor:middle}
+      .cap{fill:#7b8499;font:600 16px "Segoe UI",sans-serif;text-anchor:middle}
+      .foot{fill:#8a93a8;font:500 20px "Segoe UI",sans-serif;text-anchor:middle}
+      .badge{fill:#cdb1f7;font:800 15px "Segoe UI",sans-serif;text-anchor:middle}
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1080" height="1350" fill="url(#bg)"/>
+  <rect width="1080" height="1350" fill="url(#glowA)"/>
+  <rect width="1080" height="1350" fill="url(#glowB)"/>
+  <rect x="1" y="1" width="1078" height="1348" fill="none" stroke="#1e2536" stroke-width="2" rx="4"/>
+
+  <!-- header -->
+  <text class="eyebrow" x="80" y="130">A PROJECT OPERATING SYSTEM</text>
+  <text class="h1" x="76" y="222">How we run</text>
+  <text class="h1" x="76" y="312">projects</text>
+  <text class="lede" x="80" y="372">Documentation-first. Evidence-driven.</text>
+  <text class="lede" x="80" y="408">Reviewed at every milestone. One house style.</text>
+
+  <!-- pipeline -->
+  <text class="cap" x="540" y="486" style="text-anchor:start" transform="translate(-460,0)">THE PIPELINE — idea to shipped</text>
+  <!-- row 1: BLOG -> [RFC|DRP] -> ARCH -->
+  <g>
+    <rect x="80" y="512" width="200" height="96" rx="16" fill="rgba(91,141,239,.16)" stroke="#5b8def" stroke-width="2"/>
+    <text class="stage-t" x="180" y="558">BLOG</text><text class="stage-s" x="180" y="584">vision · html</text>
+
+    <!-- coupled RFC/DRP pair -->
+    <rect x="316" y="496" width="230" height="128" rx="18" fill="none" stroke="#a974f0" stroke-width="2" stroke-dasharray="7 5"/>
+    <text class="badge" x="431" y="486">co-authored ↔</text>
+    <rect x="332" y="512" width="198" height="48" rx="12" fill="rgba(91,141,239,.16)" stroke="#5b8def" stroke-width="2"/>
+    <text class="stage-t" x="431" y="544" style="font-size:20px">RFC · approach</text>
+    <rect x="332" y="568" width="198" height="42" rx="12" fill="rgba(25,184,154,.16)" stroke="#19b89a" stroke-width="2"/>
+    <text class="stage-t" x="431" y="596" style="font-size:20px">DRP · detail</text>
+
+    <rect x="582" y="512" width="200" height="96" rx="16" fill="rgba(25,184,154,.16)" stroke="#19b89a" stroke-width="2"/>
+    <text class="stage-t" x="682" y="552">ARCH / CR</text><text class="stage-s" x="682" y="578">design</text>
+
+    <rect x="818" y="512" width="182" height="96" rx="16" fill="rgba(240,167,60,.16)" stroke="#f0a73c" stroke-width="2"/>
+    <text class="stage-t" x="909" y="552" style="font-size:21px">WORK PLAN</text><text class="stage-s" x="909" y="578">phases · gates</text>
+
+    <line x1="280" y1="560" x2="315" y2="560" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+    <line x1="546" y1="560" x2="581" y2="560" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+    <line x1="782" y1="560" x2="817" y2="560" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+  </g>
+  <!-- row 2: milestone loop + outputs -->
+  <g>
+    <line x1="909" y1="608" x2="909" y2="656" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+    <rect x="640" y="662" width="360" height="112" rx="18" fill="rgba(169,116,240,.18)" stroke="#a974f0" stroke-width="2"/>
+    <text class="stage-t" x="820" y="704">⟳  build → review → advance</text>
+    <text class="stage-s" x="820" y="734">every milestone: test gate + code review</text>
+    <text class="stage-s" x="820" y="756">branch · commit · push · merge on green</text>
+
+    <rect x="80" y="662" width="520" height="112" rx="18" fill="#161b26" stroke="#2c3346" stroke-width="2"/>
+    <text class="stage-t" x="340" y="700" style="font-size:22px">progress trace + docs/ artifacts</text>
+    <text class="stage-s" x="340" y="730" style="font-size:14px">checkboxes · reviews · checkpoints · DECISIONS log · git</text>
+    <text class="stage-s" x="340" y="752" style="font-size:14px">every claim measured · docs honest &amp; current</text>
+    <line x1="640" y1="718" x2="601" y2="718" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+  </g>
+
+  <!-- principles -->
+  <line x1="80" y1="836" x2="1000" y2="836" stroke="#1e2536" stroke-width="2"/>
+  <g transform="translate(0,0)">
+    <circle cx="108" cy="906" r="9" fill="#5b8def"/><text class="chip-t" x="132" y="900">Docs before code</text><text class="chip-s" x="132" y="928">every build traces to a written proposal</text>
+    <circle cx="588" cy="906" r="9" fill="#19b89a"/><text class="chip-t" x="612" y="900">Every claim measured</text><text class="chip-s" x="612" y="928">a reproducible harness, or it's a hypothesis</text>
+    <circle cx="108" cy="990" r="9" fill="#f0a73c"/><text class="chip-t" x="132" y="984">Reviewed at each gate</text><text class="chip-s" x="132" y="1012">no milestone advances unverified</text>
+    <circle cx="588" cy="990" r="9" fill="#a974f0"/><text class="chip-t" x="612" y="984">One house style</text><text class="chip-s" x="612" y="1012">every artifact looks like the same project</text>
+  </g>
+
+  <!-- rule of thumb band -->
+  <rect x="80" y="1064" width="920" height="118" rx="20" fill="rgba(91,141,239,.10)" stroke="rgba(91,141,239,.4)" stroke-width="2"/>
+  <text class="cap" x="540" y="1104" fill="#9cc0ff">THE WHOLE METHOD IN ONE LINE</text>
+  <text class="rule" x="540" y="1146">Write it down · prove it · review it —</text>
+  <text class="rule" x="540" y="1166" style="font-size:22px;fill:#aab3c5">…and the project stays legible from the first idea to the last commit.</text>
+
+  <!-- footer / call to action -->
+  <text class="foot" x="540" y="1250">Curious how this holds up in the wild — what would you add or cut?</text>
+  <text class="foot" x="540" y="1284" style="fill:#7b8499;font-size:17px">BLOG → RFC ↔ DRP → ARCHITECTURE → WORK PLAN → milestone reviews</text>
+</svg>
+</div>
+<p class="hint">Poster is 1080×1350 (LinkedIn 4:5). To export a PNG: screenshot at 2×, or right-click the image → “Save image”. Edit copy directly in the SVG.</p>
+</body>
+</html>
