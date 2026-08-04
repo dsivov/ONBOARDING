@@ -70,8 +70,11 @@
         <rect class="bx" x="404" y="34" width="150" height="56" fill="rgba(25,184,154,.14)" stroke="var(--b)"/><text class="t" x="479" y="58">3 · DRP</text><text class="s" x="479" y="76">requirements · .md</text>
         <rect class="bx" x="594" y="34" width="150" height="56" fill="rgba(25,184,154,.14)" stroke="var(--b)"/><text class="t" x="669" y="55">4 · ARCH / CR</text><text class="s" x="669" y="74">design · .html/.md</text>
         <line x1="174" y1="62" x2="213" y2="62" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
-        <line x1="364" y1="62" x2="403" y2="62" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
-        <line x1="554" y1="62" x2="593" y2="62" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
+        <!-- RFC <-> DRP: coupled pair, co-authored -->
+        <rect x="207" y="28" width="350" height="68" rx="12" fill="none" stroke="var(--ctrl)" stroke-dasharray="5 4"/>
+        <line x1="368" y1="62" x2="399" y2="62" stroke="var(--ctrl)" stroke-width="2" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text class="st" x="384" y="24" fill="#cdb1f7">co-authored pair ↔</text>
+        <line x1="557" y1="62" x2="593" y2="62" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
         <!-- down to row 2 -->
         <line x1="669" y1="90" x2="669" y2="120" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
         <!-- row 2 -->
@@ -97,7 +100,8 @@
       </svg>
       <figcaption><b>Each stage produces a durable artifact in <span class="mono-chip">docs/</span>.</b>
         Blue = HTML (vision/proposal/design), teal = Markdown (requirements/plan/reviews),
-        violet = the per-milestone build-and-review loop. The bottom band runs the whole time.</figcaption>
+        violet = the per-milestone build-and-review loop. <b>RFC &amp; DRP are a co-authored pair</b>
+        (approach ↔ detail), agreed together before the work plan. The bottom band runs the whole time.</figcaption>
     </div></figure>
   </section>
 
@@ -120,6 +124,13 @@
     </table></div>
     <p class="small">Plus <span class="mono-chip">DOCS_INDEX.md</span> — the map of everything, ordered by pipeline stage.
       Every artifact has a fill-in template in <span class="mono-chip">templates/</span>.</p>
+
+    <div class="callout info"><div class="clabel">◆ RFC &amp; DRP — approach and detail, agreed together</div>
+      Don't treat these as a strict hand-off. The default is to <b>co-author them</b> — the RFC leads on
+      <b>approach</b> (assemble/build/avoid, decisions), the DRP leads on <b>detail</b> (testable requirements,
+      acceptance criteria) — and they cross-check as you go. <b>Sequential</b> (RFC→DRP) suits a contested approach you
+      want signed off cheaply first; <b>merged</b> (one RFC with a requirements section) suits a small feature. The only
+      invariant: approach + detailed requirements are agreed <b>before</b> the work plan.</div>
   </section>
 
   <section id="lifecycle">

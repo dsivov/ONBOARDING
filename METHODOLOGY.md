@@ -29,13 +29,27 @@ Templates for all of these live in [`templates/`](templates/).
 ### How the stages connect
 
 - A **BLOG** can spawn one or more **RFCs**. An RFC always cites its BLOG.
-- An **RFC** is accompanied by a **DRP** (the detailed "what/why" the RFC summarizes).
 - **ARCHITECTURE** is written once per system; **CHANGE-REQUEST** is used for every change
   after the architecture exists (it references the architecture section it touches).
 - The **WORK PLAN** turns the DRP + architecture into phases and milestones. Nothing gets
   built that isn't a task in the plan.
 - Each **milestone** ends with a **CODE REVIEW**; the project periodically gets a
   **CHECKPOINT REVIEW**.
+
+### RFC & DRP are a coupled pair (not a strict hand-off)
+
+The RFC (approach) and DRP (detail) depend on each other, so **co-author them** — this is
+the default. The invariant is only that *approach and detailed requirements are agreed
+together **before** the WORK PLAN*; how you get there is a size/fidelity choice:
+
+| Mode | When | How |
+|------|------|-----|
+| **Parallel / co-authored** ★ | Most real work — approach and detail are entangled | Draft both together: **RFC leads on approach** (assemble/build/avoid, decisions), **DRP leads on detail** (testable requirements, acceptance criteria). One review covers both. |
+| **Sequential** (RFC → DRP) | Approach is contested; you want cheap sign-off first | Get the RFC agreed, then write the DRP for the agreed direction |
+| **Merged** | Small feature | One RFC with a "Detailed requirements" section; skip the separate DRP |
+
+Cross-check continuously: a requirement no approach satisfies cheaply → revisit the RFC; an
+approach that drops a requirement → fix the DRP. Log any direction change in `DECISIONS.md`.
 
 ---
 

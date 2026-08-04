@@ -10,14 +10,18 @@ whole workflow — from the first BLOG to shipped, reviewed code — without rei
 ## The pipeline in one line
 
 ```
-BLOG ─▶ RFC ─┬─▶ DRP ─▶ ARCHITECTURE / CHANGE-REQUEST ─▶ WORK PLAN ─▶ ⟳ milestones
-             │                                              (tasks + test gates)   │
-             └──────────────── DECISIONS log ──────────────────────────────────┐  │
-                                                                                 ▼  ▼
+          ┌── RFC (approach) ──┐
+BLOG ─▶   │   co-authored ↕    │ ─▶ ARCHITECTURE / CHANGE-REQUEST ─▶ WORK PLAN ─▶ ⟳ milestones
+          └── DRP (detail) ────┘                                     (tasks + test gates)   │
+                    └──────────────── DECISIONS log ────────────────────────────────────┐  │
+                                                                                          ▼  ▼
                                                           CODE REVIEW + CHECKPOINT each milestone
-                                                                                 │
+                                                                                          │
                                                           progress trace + docs/ artifacts + memory
 ```
+
+RFC & DRP are a **coupled pair** — co-author them (RFC leads on approach, DRP on detail);
+sequential or merged-into-one are variants. See [METHODOLOGY.md](METHODOLOGY.md) §1.
 
 - **BLOG** (`.html`) — the vision / narrative. Why this, why now, for whom.
 - **RFC** (`.html`) — the proposal: what we assemble, build, avoid; decisions; phased plan.

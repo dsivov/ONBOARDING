@@ -8,12 +8,17 @@ See [../ONBOARDING/METHODOLOGY.md](../ONBOARDING/METHODOLOGY.md) for the method.
 
 ```mermaid
 flowchart LR
-  BLOG --> RFC --> DRP --> ARCH[ARCHITECTURE] --> WP[WORK PLAN] --> REV[reviews]
+  BLOG --> RFC
+  RFC <--> DRP
+  RFC --> ARCH[ARCHITECTURE]
+  DRP --> ARCH
+  ARCH --> WP[WORK PLAN] --> REV[reviews]
   DEC[DECISIONS.md] -.-> RFC
   DEC -.-> ARCH
   classDef n fill:#1b2740,stroke:#5b8def,color:#e7ebf3;
   class BLOG,RFC,DRP,ARCH,WP,REV,DEC n;
 ```
+_RFC & DRP are co-authored (approach ↔ detail); see METHODOLOGY.md §1._
 
 ## Vision
 - [BLOG_{{TOPIC}}.html](BLOG_{{TOPIC}}.html) — {{one line}}
