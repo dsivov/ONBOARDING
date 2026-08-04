@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The project operating system — how we run projects</title>
+<link rel="stylesheet" href="../assets/house.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">ONBOARDING · methodology · a human guide</div>
+    <h1>How we run projects</h1>
+    <p class="lede">A documentation-first, evidence-driven way of working — from the first
+      idea to shipped, reviewed code. Every build traces to a written proposal; every claim
+      traces to a measurement; every milestone is reviewed. This page explains the whole
+      system and why each part exists.</p>
+    <div class="hero-tags">
+      <span class="tag">docs-first</span>
+      <span class="tag">evidence-driven</span>
+      <span class="tag">reviewed at every milestone</span>
+      <span class="tag">one house style</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <div class="tl-title">In this guide</div>
+  <ol>
+    <li><a href="#why">Why a method</a></li>
+    <li><a href="#pipeline">The pipeline</a></li>
+    <li><a href="#artifacts">The artifacts</a></li>
+    <li><a href="#lifecycle">A project, end to end</a></li>
+    <li><a href="#rules">The rules that matter</a></li>
+    <li><a href="#git">The GitHub cycle</a></li>
+    <li><a href="#trace">The progress trace</a></li>
+    <li><a href="#style">House style</a></li>
+    <li><a href="#skills">Skills that automate it</a></li>
+    <li><a href="#start">Starting a project</a></li>
+  </ol>
+</nav>
+
+<main>
+<article>
+
+  <section id="why">
+    <div class="kicker">Why a method</div>
+    <h2>Structure you don't have to re-invent</h2>
+    <p class="lead-p">Good projects fail for boring reasons: work starts before it's understood,
+    claims ship unmeasured, reviews slip, and docs rot until nobody trusts them. This method
+    removes those failure modes by making the good path the default path.</p>
+    <p class="pull">Write it down, prove it, review it — then the code almost plans itself.</p>
+    <p>Nothing here is heavy. It's a fixed set of artifacts, a handful of rules, and a
+    consistent visual style — packaged so a new project inherits all of it on day one.</p>
+  </section>
+
+  <section id="pipeline">
+    <div class="kicker">The pipeline</div>
+    <h2>One flow, from idea to shipped</h2>
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 300" role="img" aria-label="the artifact pipeline">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker>
+          <marker id="al" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7b8499"/></marker></defs>
+        <style>.bx{rx:10;stroke-width:1.7}.t{fill:#fff;font:700 12px "Segoe UI",sans-serif;text-anchor:middle}.s{fill:#e7ebf3;font:8.5px var(--mono),monospace;text-anchor:middle}.st{font:800 10px "Segoe UI",sans-serif;text-anchor:middle}</style>
+        <!-- row 1 -->
+        <rect class="bx" x="24" y="34" width="150" height="56" fill="rgba(91,141,239,.14)" stroke="var(--a)"/><text class="t" x="99" y="58">1 · BLOG</text><text class="s" x="99" y="76">vision · .html</text>
+        <rect class="bx" x="214" y="34" width="150" height="56" fill="rgba(91,141,239,.14)" stroke="var(--a)"/><text class="t" x="289" y="58">2 · RFC</text><text class="s" x="289" y="76">proposal · .html</text>
+        <rect class="bx" x="404" y="34" width="150" height="56" fill="rgba(25,184,154,.14)" stroke="var(--b)"/><text class="t" x="479" y="58">3 · DRP</text><text class="s" x="479" y="76">requirements · .md</text>
+        <rect class="bx" x="594" y="34" width="150" height="56" fill="rgba(25,184,154,.14)" stroke="var(--b)"/><text class="t" x="669" y="55">4 · ARCH / CR</text><text class="s" x="669" y="74">design · .html/.md</text>
+        <line x1="174" y1="62" x2="213" y2="62" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
+        <line x1="364" y1="62" x2="403" y2="62" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
+        <line x1="554" y1="62" x2="593" y2="62" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
+        <!-- down to row 2 -->
+        <line x1="669" y1="90" x2="669" y2="120" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
+        <!-- row 2 -->
+        <rect class="bx" x="594" y="122" width="150" height="56" fill="rgba(240,167,60,.14)" stroke="var(--c)"/><text class="t" x="669" y="146">5 · WORK PLAN</text><text class="s" x="669" y="164">phases · gates · .md</text>
+        <rect class="bx" x="404" y="122" width="150" height="56" fill="rgba(169,116,240,.16)" stroke="var(--ctrl)"/><text class="t" x="479" y="140">6 · milestone</text><text class="s" x="479" y="156">build + CODE REVIEW</text><text class="s" x="479" y="170">test gate</text>
+        <line x1="593" y1="150" x2="554" y2="150" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
+        <!-- loop arrow over milestone -->
+        <path d="M430,122 C420,104 538,104 528,122" fill="none" stroke="#a974f0" stroke-width="1.6" marker-end="url(#ar)"/>
+        <text class="st" x="479" y="102" fill="#cdb1f7">⟳ per milestone</text>
+        <!-- to outputs -->
+        <line x1="404" y1="150" x2="360" y2="150" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#ar)"/>
+        <rect class="bx" x="204" y="122" width="160" height="56" fill="var(--panel2)" stroke="var(--line)"/><text class="t" x="284" y="140">7 · CHECKPOINT</text><text class="s" x="284" y="156">progress trace</text><text class="s" x="284" y="170">+ docs/ artifacts</text>
+        <!-- running log spanning -->
+        <rect class="bx" x="24" y="210" width="720" height="40" fill="#161922" stroke="var(--line)"/>
+        <text class="st" x="384" y="228" fill="#c9d3e6">DECISIONS.md · DOCS_INDEX.md — the running log &amp; map, updated throughout</text>
+        <text class="st" x="384" y="243" fill="#7b8499">every artifact links back to the one that motivated it (provenance)</text>
+        <line x1="99" y1="90" x2="120" y2="209" stroke="#7b8499" stroke-width="1.1" stroke-dasharray="3 3" marker-end="url(#al)"/>
+        <line x1="669" y1="178" x2="640" y2="209" stroke="#7b8499" stroke-width="1.1" stroke-dasharray="3 3" marker-end="url(#al)"/>
+        <!-- legend -->
+        <text class="s" x="24" y="278" fill="#9cc0ff" style="text-anchor:start">■ HTML (illustrated w/ SVG)</text>
+        <text class="s" x="230" y="278" fill="#7fe3cf" style="text-anchor:start">■ Markdown (illustrated w/ mermaid)</text>
+        <text class="s" x="470" y="278" fill="#cdb1f7" style="text-anchor:start">■ loop: build → review → advance</text>
+      </svg>
+      <figcaption><b>Each stage produces a durable artifact in <span class="mono-chip">docs/</span>.</b>
+        Blue = HTML (vision/proposal/design), teal = Markdown (requirements/plan/reviews),
+        violet = the per-milestone build-and-review loop. The bottom band runs the whole time.</figcaption>
+    </div></figure>
+  </section>
+
+  <section id="artifacts">
+    <div class="kicker">The artifacts</div>
+    <h2>Nine documents, each with one job</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Artifact</th><th>Format</th><th>Answers</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill a">BLOG</span></td><td>HTML</td><td>Why this? For whom? What changes?</td></tr>
+        <tr><td><span class="pill a">RFC</span></td><td>HTML</td><td>What we assemble / build / avoid · decisions · phased plan</td></tr>
+        <tr><td><span class="pill b">DRP</span></td><td>Markdown</td><td>Detailed requirements, constraints, acceptance criteria, non-goals</td></tr>
+        <tr><td><span class="pill b">ARCHITECTURE</span></td><td>HTML</td><td>How it's built — components, data, boundaries, flows</td></tr>
+        <tr><td><span class="pill c">CHANGE-REQUEST</span></td><td>Markdown</td><td>A scoped change on top of an existing architecture</td></tr>
+        <tr><td><span class="pill c">WORK PLAN</span></td><td>Markdown</td><td>Phases → milestones → tasks, each with a test gate</td></tr>
+        <tr><td><span class="pill ctrl">CODE REVIEW</span></td><td>Markdown</td><td>Milestone findings by severity (C/H/M/S)</td></tr>
+        <tr><td><span class="pill ctrl">CHECKPOINT</span></td><td>Markdown</td><td>Project health; open findings with ✅ FIXED tracking</td></tr>
+        <tr><td><span class="pill win">DECISIONS</span></td><td>Markdown</td><td>Every non-trivial choice + rationale (so it isn't re-litigated)</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small">Plus <span class="mono-chip">DOCS_INDEX.md</span> — the map of everything, ordered by pipeline stage.
+      Every artifact has a fill-in template in <span class="mono-chip">templates/</span>.</p>
+  </section>
+
+  <section id="lifecycle">
+    <div class="kicker">A project, end to end</div>
+    <h2>What actually happens</h2>
+    <div class="grid g2">
+      <div class="card rail ra"><h3 style="margin-top:0">Understand</h3>
+        <p class="small">A <b>BLOG</b> frames the vision. An <b>RFC</b> turns it into a concrete proposal —
+        what to reuse, what to build, the decisions and the phased plan. A <b>DRP</b> pins the
+        detailed requirements and acceptance criteria.</p></div>
+      <div class="card rail rb"><h3 style="margin-top:0">Design</h3>
+        <p class="small">An <b>ARCHITECTURE</b> doc says how it's built — components, data model,
+        boundaries. Later changes ride on <b>CHANGE-REQUESTs</b> that reference the architecture.</p></div>
+      <div class="card rail rc"><h3 style="margin-top:0">Plan</h3>
+        <p class="small">A <b>WORK PLAN</b> breaks it into phases and milestones. Every milestone
+        has an explicit <b>test gate</b> written up front. Nothing is built that isn't a task here.</p></div>
+      <div class="card rail rctrl"><h3 style="margin-top:0">Build → review → advance</h3>
+        <p class="small">Each milestone: build on a feature branch, pass the gate, run a
+        <b>CODE REVIEW</b>. Periodically, a <b>CHECKPOINT</b> takes the project's pulse. Repeat.</p></div>
+    </div>
+  </section>
+
+  <section id="rules">
+    <div class="kicker">The rules that matter</div>
+    <h2>The parts people skip (and shouldn't)</h2>
+    <div class="callout key"><div class="clabel">◆ R1 · Docs before code</div>
+      No build without an RFC/DRP and a work-plan task. Discover work mid-build? Add the task first.</div>
+    <div class="callout ok"><div class="clabel">◆ R2 · Every claim is measured</div>
+      Any performance/accuracy/"better-than" statement ships with a reproducible harness in
+      <span class="mono-chip">scripts/</span> and the numbers in the doc. Can't measure it? Call it a
+      <b>hypothesis</b>. An honest null result ("parity") beats an unverified win.</div>
+    <div class="callout caveat"><div class="clabel">◆ R3 · Every milestone has a test gate</div>
+      "The code exists" isn't done. The listed gate passing is done — and gates are written with
+      the milestone, not after.</div>
+    <div class="callout info"><div class="clabel">◆ R4 · Review before advancing</div>
+      Code review at the end of each milestone. Critical/High get fixed (or logged as open
+      findings) before the next milestone starts.</div>
+    <div class="callout danger"><div class="clabel">◆ R5 · Branches; never merge to main unverified</div>
+      Work on <span class="mono-chip">feature/&lt;name&gt;</span>. Merge only after the gate passes and
+      review is clean. Commit/push when the human asks.</div>
+    <div class="callout"><div class="clabel">◆ R6 · Docs are honest &amp; current</div>
+      The final doc describes the <b>destination, not the journey</b> — cancelled ideas move to
+      DECISIONS if they carry a lesson. When a measurement corrects a belief, fix the doc.</div>
+    <div class="callout"><div class="clabel">◆ R7 · Decisions logged, not re-litigated · R8 · Persist the non-obvious</div>
+      Log every non-trivial choice in DECISIONS.md; keep project memory that isn't derivable from
+      code or git.</div>
+  </section>
+
+  <section id="git">
+    <div class="kicker">The GitHub cycle</div>
+    <h2>How code reaches <span class="mono-chip">main</span></h2>
+    <p class="lead-p">One branch per feature; commit per task; push per milestone; merge only
+    when the gate passes and the review is clean. <span class="mono-chip">main</span> stays
+    releasable and green at all times.</p>
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 220" role="img" aria-label="git branching flow">
+        <defs><marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker></defs>
+        <style>.lbl{font:700 11px "Segoe UI",sans-serif}.s{fill:#e7ebf3;font:8.5px var(--mono),monospace}.cap{fill:#7b8499;font:9px "Segoe UI",sans-serif;text-anchor:middle}</style>
+        <!-- main line -->
+        <line x1="30" y1="50" x2="730" y2="50" stroke="var(--ok)" stroke-width="2.5"/>
+        <text class="lbl" x="30" y="38" fill="#7ee3b4">main · always green</text>
+        <circle cx="80" cy="50" r="6" fill="var(--ok)"/>
+        <circle cx="470" cy="50" r="6" fill="var(--ok)"/><text class="cap" x="470" y="34">merge M1 (squash)</text>
+        <circle cx="700" cy="50" r="6" fill="var(--ok)"/><text class="cap" x="690" y="34">tag v0.1</text>
+        <!-- feature line -->
+        <line x1="80" y1="150" x2="470" y2="150" stroke="var(--ctrl)" stroke-width="2.5"/>
+        <text class="lbl" x="86" y="176" fill="#cdb1f7">feature/x</text>
+        <circle cx="160" cy="150" r="6" fill="var(--ctrl)"/><text class="s" x="150" y="140">P0</text>
+        <circle cx="260" cy="150" r="6" fill="var(--ctrl)"/><text class="s" x="238" y="140">commit</text>
+        <circle cx="360" cy="150" r="6" fill="var(--ctrl)"/><text class="s" x="330" y="140">P1 → M1</text>
+        <!-- branch off / merge in -->
+        <path d="M80,50 C80,110 80,110 80,150" fill="none" stroke="#8a93a8" stroke-width="1.6" marker-end="url(#ga)"/><text class="cap" x="112" y="98">branch off</text>
+        <path d="M360,150 C420,150 420,50 470,50" fill="none" stroke="#8a93a8" stroke-width="1.6" marker-end="url(#ga)"/>
+        <!-- gate before merge -->
+        <rect x="372" y="96" width="150" height="30" rx="7" fill="#2a2114" stroke="var(--c)"/><text class="s" x="382" y="115" fill="#ffce86">gate ✓ · review clean</text>
+        <!-- push markers -->
+        <text class="cap" x="260" y="184" fill="#7b8499">↑ push after each milestone</text>
+      </svg>
+      <figcaption><b>Branch → build → push → gate + review → squash-merge → tag.</b>
+        A feature branch only rejoins <span class="mono-chip">main</span> once its milestone gate passes and the code review is clean.</figcaption>
+    </div></figure>
+    <div class="grid g2">
+      <div class="card rail rctrl"><h3 style="margin-top:0">Branch &amp; commit</h3>
+        <p class="small"><b>One branch per RFC/feature</b> — <span class="mono">feature/&lt;name&gt;</span>, cut from
+        an up-to-date <span class="mono">main</span>. <b>Commit per task</b>, each building, subject referencing the
+        milestone. Fixes: <span class="mono">fix/&lt;name&gt;</span>; urgent: <span class="mono">hotfix/&lt;name&gt;</span>.</p></div>
+      <div class="card rail rb"><h3 style="margin-top:0">Push &amp; PR</h3>
+        <p class="small"><b>Push per milestone</b> (and before a review). Open a <b>draft PR</b> early for
+        visibility; the PR body links the RFC/DRP, the milestone, and the code review.</p></div>
+      <div class="card rail ra"><h3 style="margin-top:0">Merge gate</h3>
+        <p class="small">Merge to <span class="mono">main</span> only when <b>all</b> hold: test gate passes ·
+        code review clean (no open Critical/High) · CI green · PR approved. Prefer <b>squash-merge</b>; delete the branch.</p></div>
+      <div class="card rail rc"><h3 style="margin-top:0">Release</h3>
+        <p class="small">Tag <span class="mono">vX.Y.Z</span> when <span class="mono">main</span> reaches a shippable
+        point. <span class="mono">main</span> is never broken, so any tag is releasable.</p></div>
+    </div>
+    <div class="callout key"><div class="clabel">◆ Rule of thumb</div>
+      Branch per feature · commit per task · push per milestone · merge per passed-gate-and-clean-review.
+      Commit &amp; push only when asked.</div>
+  </section>
+
+  <section id="trace">
+    <div class="kicker">The progress trace</div>
+    <h2>Know where the project is — without a meeting</h2>
+    <p>There's no separate status tool. Five things reconstruct the whole state:</p>
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 130" role="img" aria-label="the progress trace">
+        <style>.c{rx:9;stroke-width:1.5}.t{fill:#fff;font:700 11px "Segoe UI",sans-serif;text-anchor:middle}.s{fill:#e7ebf3;font:8px "Segoe UI",sans-serif;text-anchor:middle}</style>
+        <rect class="c" x="16" y="40" width="138" height="52" fill="rgba(240,167,60,.13)" stroke="var(--c)"/><text class="t" x="85" y="62">plan checkboxes</text><text class="s" x="85" y="78">tasks done / left</text>
+        <rect class="c" x="164" y="40" width="138" height="52" fill="rgba(169,116,240,.15)" stroke="var(--ctrl)"/><text class="t" x="233" y="62">milestone reviews</text><text class="s" x="233" y="78">one per milestone</text>
+        <rect class="c" x="312" y="40" width="138" height="52" fill="rgba(169,116,240,.15)" stroke="var(--ctrl)"/><text class="t" x="381" y="62">checkpoints</text><text class="s" x="381" y="78">✅ FIXED tracking</text>
+        <rect class="c" x="460" y="40" width="138" height="52" fill="rgba(62,207,142,.13)" stroke="var(--ok)"/><text class="t" x="529" y="62">DECISIONS.md</text><text class="s" x="529" y="78">the why</text>
+        <rect class="c" x="608" y="40" width="138" height="52" fill="rgba(91,141,239,.13)" stroke="var(--a)"/><text class="t" x="677" y="62">git history</text><text class="s" x="677" y="78">the feature branch</text>
+      </svg>
+      <figcaption><b>The trace is the work, not extra paperwork.</b> Checkboxes + reviews + checkpoints + the decision log + git.</figcaption>
+    </div></figure>
+  </section>
+
+  <section id="style">
+    <div class="kicker">House style</div>
+    <h2>One look, everywhere</h2>
+    <p>All docs share one design system (<span class="mono-chip">assets/house.css</span>): a dark
+    theme with a fixed palette and a small component vocabulary. It's why every artifact feels
+    like part of the same project.</p>
+    <div class="grid g3" style="margin:12px 0">
+      <div class="card"><span class="pill a">a · blue</span> <span class="pill b">b · teal</span>
+        <span class="pill c">c · amber</span> <span class="pill ctrl">ctrl · violet</span>
+        <span class="pill win">ok</span> <span class="pill danger">danger</span>
+        <p class="small" style="margin:10px 0 0">A fixed accent palette + brand orange (<span class="mono-chip">--pt</span>).</p></div>
+      <div class="card"><b>Components</b><p class="small" style="margin:6px 0 0">
+        <span class="mono">.card · .callout · .pill · .kicker · .grid · .tablewrap · .deck</span></p></div>
+      <div class="card"><b>Diagrams — always</b><p class="small" style="margin:6px 0 0">
+        Colorful <b>SVG</b> in HTML; <b>mermaid</b> in Markdown. No external libraries, no raster for structure.</p></div>
+    </div>
+    <div class="callout info"><div class="clabel">◆ App UIs</div>
+      For product interfaces (not docs), the same tokens ship as a buildless component kit in
+      <span class="mono-chip">frontend-kit/</span> — app shell, nav, buttons, cards, tables, forms — so screens match the docs.</div>
+  </section>
+
+  <section id="skills">
+    <div class="kicker">Skills that automate it</div>
+    <h2>The method, one command at a time</h2>
+    <p>Installable skills generate each artifact from the templates, so consistency is automatic:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Command</th><th>Produces</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">/new-project</span></td><td>Scaffolds <span class="mono">docs/</span>, copies templates + house.css, seeds the index &amp; decision log</td></tr>
+        <tr><td><span class="mono">/write-blog</span></td><td>A house-style BLOG</td></tr>
+        <tr><td><span class="mono">/write-rfc</span></td><td>A slide-style RFC (assemble/build/avoid · decisions · phases · risks)</td></tr>
+        <tr><td><span class="mono">/write-drp</span></td><td>A Detailed Requirements &amp; Plan</td></tr>
+        <tr><td><span class="mono">/write-architecture</span></td><td>An ARCHITECTURE doc, or a CHANGE-REQUEST</td></tr>
+        <tr><td><span class="mono">/make-workplan</span></td><td>Phases → milestones → tasks + test gates</td></tr>
+        <tr><td><span class="mono">/milestone-review</span></td><td>A code review + checkpoint; advances the trace</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="start">
+    <div class="kicker">Starting a project</div>
+    <h2>Day one</h2>
+    <div class="deck">
+      <div class="row"><div class="k">Step 1</div><div><span class="mono">/new-project</span> — scaffold docs, templates, house style.</div></div>
+      <div class="row"><div class="k">Step 2</div><div><span class="mono">/write-blog</span> → <span class="mono">/write-rfc</span> → <span class="mono">/write-drp</span> — frame it.</div></div>
+      <div class="row"><div class="k">Step 3</div><div><span class="mono">/write-architecture</span> then <span class="mono">/make-workplan</span> — design &amp; plan.</div></div>
+      <div class="row"><div class="k">Step 4</div><div>Build each milestone on a branch; <span class="mono">/milestone-review</span> before the next.</div></div>
+    </div>
+    <div class="callout key"><div class="clabel">◆ The whole method in one line</div>
+      Write it down, prove it, review it — with one consistent look — and the project stays
+      legible from the first idea to the last commit.</div>
+    <p class="small">Reference: <span class="mono-chip">../README.md</span> and <span class="mono-chip">../METHODOLOGY.md</span> (the spec this page illustrates).</p>
+  </section>
+
+</article>
+</main>
+</div>
+
+<footer class="footer">ONBOARDING — the project operating system · a reusable methodology, templates, skills &amp; UI kit.</footer>
+</body>
+</html>
