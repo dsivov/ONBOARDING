@@ -5,7 +5,7 @@ description: Write a house-style RFC (HTML, slide sections) — the proposal & p
 
 # write-rfc — the proposal (Stage 2)
 
-Produce `docs/<NAME>_RFC.html` from `ONBOARDING/templates/RFC.template.html`.
+Produce `docs/<NAME>_RFC.html` from `docs/templates/RFC.template.html` (copied into the project by new-project; fall back to the ONBOARDING repo if absent).
 
 ## Gather
 - The BLOG it builds on. The **decisions** the plan rests on (+ rejected alternatives).

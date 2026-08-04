@@ -8,7 +8,7 @@ description: Write an ARCHITECTURE doc (HTML) for a system, or a CHANGE_REQUEST 
 Two modes. Pick by what the user needs.
 
 ## Mode A — ARCHITECTURE (new system)
-Produce `docs/<NAME>_ARCHITECTURE.html` from `templates/ARCHITECTURE.template.html`.
+Produce `docs/<NAME>_ARCHITECTURE.html` from `docs/templates/ARCHITECTURE.template.html`.
 - Sections: **guiding principle** · **components** (map SVG + responsibility table) ·
   **data model** (SVG) · **key flows** (SVG) · **boundaries/ownership** · **trade-offs**.
 - Every section gets a colorful **SVG** using house tokens; link `assets/house.css`.
@@ -16,7 +16,7 @@ Produce `docs/<NAME>_ARCHITECTURE.html` from `templates/ARCHITECTURE.template.ht
   its entry-point files.
 
 ## Mode B — CHANGE_REQUEST (change to an existing system)
-Produce `docs/<NAME>_CHANGE_REQUEST.md` from `templates/CHANGE_REQUEST.template.md`.
+Produce `docs/<NAME>_CHANGE_REQUEST.md` from `docs/templates/CHANGE_REQUEST.template.md`.
 - Reference the architecture section(s) it touches.
 - **Mermaid before→after** diagram; scope (changed vs explicitly-unchanged); impact/risk
   table; backward-compat + rollback; acceptance criteria (test gate); tasks.

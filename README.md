@@ -41,9 +41,11 @@ See **[METHODOLOGY.md](METHODOLOGY.md)** for the full lifecycle and the rules th
 ONBOARDING/
   README.md                  ← you are here
   METHODOLOGY.md             ← the full lifecycle spec + conventions
+  install.sh / uninstall.sh  ← install the skills at the user level (safe, non-destructive)
   assets/house.css           ← the shared dark-theme design system (docs)
   templates/                 ← fill-in templates for every artifact
   frontend-kit/              ← standalone themed HTML UI kit (no build)
+  docs/                      ← the illustrated methodology guide + LinkedIn poster
   .claude/skills/            ← installable skills that generate the artifacts
 ```
 
@@ -61,14 +63,21 @@ So there's a bootstrap step. Pick one:
 available in any directory, including an empty new project:
 
 ```bash
-# from the ONBOARDING repo root — symlink so updates propagate (or use cp -r to copy)
-mkdir -p ~/.claude/skills
-ln -s "$PWD"/.claude/skills/* ~/.claude/skills/
-# keep templates + house.css reachable; the skills locate this repo (default: ../ONBOARDING)
+./install.sh              # symlink this kit's skills into ~/.claude/skills (updates propagate)
+./install.sh --copy       # or copy them in (standalone, no dependency on this repo path)
+./uninstall.sh            # remove them again (safe — see below)
 ```
 
-Now, in a fresh project: **`/new-project`** → it scaffolds `docs/`, copies the templates +
-`house.css`, and seeds `DOCS_INDEX.md` + `DECISIONS.md`.
+`install.sh` is **non-destructive**: it only touches this kit's seven skills, never deletes
+the skills directory, and **won't overwrite a same-named skill you already have** (use
+`--force` to replace, which backs the old one up first). `uninstall.sh` removes **only** what
+the installer created (its symlinks / tagged copies) — any skill you made yourself is left in
+place.
+
+Now, in a fresh project: **`/new-project`** → it **copies** the templates + `house.css` into
+the project (so the project is self-contained), scaffolds `docs/`, and seeds `DOCS_INDEX.md` +
+`DECISIONS.md`. By default it scaffolds into the **current directory**; `/new-project <path>`
+targets another.
 
 **B · Run from inside this repo** — open Claude Code in `ONBOARDING/` and ask it to scaffold a
 sibling project; `new-project` targets the path you give. No install needed.

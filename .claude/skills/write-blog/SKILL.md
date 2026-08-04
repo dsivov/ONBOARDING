@@ -5,7 +5,7 @@ description: Write a house-style BLOG (HTML) — the vision/narrative piece that
 
 # write-blog — the vision piece (Stage 1)
 
-Produce `docs/BLOG_<TOPIC>.html` from `ONBOARDING/templates/BLOG.template.html`.
+Produce `docs/BLOG_<TOPIC>.html` from `docs/templates/BLOG.template.html` (copied into the project by new-project; fall back to the ONBOARDING repo if absent).
 
 ## Gather
 - The **topic**, the **audience**, and the **one shift** the post argues for.

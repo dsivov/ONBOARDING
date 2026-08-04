@@ -5,7 +5,7 @@ description: Turn a DRP + architecture into a WORK PLAN (Markdown) — phases �
 
 # make-workplan — the build plan (Stage 5)
 
-Produce `docs/<NAME>_WORK_PLAN.md` from `ONBOARDING/templates/WORK_PLAN.template.md`.
+Produce `docs/<NAME>_WORK_PLAN.md` from `docs/templates/WORK_PLAN.template.md` (copied into the project by new-project; fall back to the ONBOARDING repo if absent).
 
 ## Build it from the DRP
 1. Read the DRP's requirements + acceptance criteria and the architecture's components.

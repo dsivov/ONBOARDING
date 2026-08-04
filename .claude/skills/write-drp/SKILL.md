@@ -5,7 +5,7 @@ description: Write a DRP (Detailed Requirements & Plan, Markdown) — the detail
 
 # write-drp — detailed requirements & plan (Stage 3)
 
-Produce `docs/<NAME>_DRP.md` from `ONBOARDING/templates/DRP.template.md`.
+Produce `docs/<NAME>_DRP.md` from `docs/templates/DRP.template.md` (copied into the project by new-project; fall back to the ONBOARDING repo if absent).
 
 ## Gather
 - The problem, the outcome that means "done", and explicit **non-goals**.

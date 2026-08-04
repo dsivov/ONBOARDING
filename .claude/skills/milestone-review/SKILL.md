@@ -12,7 +12,7 @@ Run at the end of each milestone before starting the next.
   isn't done — report what's failing; don't proceed.
 
 ## 2 · Code review → `docs/<NAME>_CODE_REVIEW.md`
-From `ONBOARDING/templates/CODE_REVIEW.template.md`. Review the milestone's diff:
+From `docs/templates/CODE_REVIEW.template.md` (copied into the project by new-project; fall back to the ONBOARDING repo if absent). Review the milestone's diff:
 - Findings grouped by severity with stable IDs: **C**ritical / **H**igh / **M**edium / **S**ecurity.
 - Each finding: where (`file:line`), the concrete failure, the fix.
 - **Verify before reporting** — try to disprove each finding; drop plausible-but-wrong ones.
@@ -21,7 +21,7 @@ From `ONBOARDING/templates/CODE_REVIEW.template.md`. Review the milestone's diff
 - Include the mermaid severity summary.
 
 ## 3 · Checkpoint (periodic) → `docs/PROJECT_REVIEW_<date>.md`
-From `templates/CHECKPOINT_REVIEW.template.md`. Carry forward open findings, mark
+From `docs/templates/CHECKPOINT_REVIEW.template.md`. Carry forward open findings, mark
 `✅ FIXED`, give the recommended next sequence, and a phase-status mermaid.
 
 ## 4 · Advance the trace
