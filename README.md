@@ -43,7 +43,7 @@ ONBOARDING/
   METHODOLOGY.md             ← the full lifecycle spec + conventions
   install.sh / uninstall.sh  ← install the skills at the user level (safe, non-destructive)
   assets/house.css           ← the shared dark-theme design system (docs)
-  templates/                 ← fill-in templates for every artifact
+  templates/                 ← fill-in templates for every artifact (+ CLAUDE.md, settings, hooks)
   frontend-kit/              ← standalone themed HTML UI kit (no build)
   docs/                      ← the illustrated methodology guide + LinkedIn poster
   .claude/skills/            ← installable skills that generate the artifacts
@@ -90,7 +90,9 @@ hand; copy `.claude/skills/*` into the project's `.claude/skills/` to get the co
 
 ## Then, in every project
 
-1. **Bootstrap:** `/new-project` — scaffolds `docs/`, templates, `house.css`, index + decision log.
+1. **Bootstrap:** `/new-project` — scaffolds `docs/`, templates, `house.css`, index + decision log,
+   **plus a `CLAUDE.md` and a `SessionStart` hook** so every session opens with a methodology
+   banner (docs location · pipeline · branch · next step) that the user sees *and* Claude reads.
 2. **Frame it:** `/write-blog` → `/write-rfc` + `/write-drp` (co-authored) — vision, proposal, requirements.
 3. **Design & plan:** `/write-architecture`, then `/make-workplan` — phases, milestones, test gates.
 4. **Each milestone:** `/milestone-review` — code review + checkpoint, update the progress trace.

@@ -1,0 +1,23 @@
+{
+  "//": "House-methodology Claude Code settings. new-project copies this to .claude/settings.json. If the project already has one, MERGE these keys in (don't overwrite). Hooks run from the project root.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-banner.sh",
+            "timeout": 10,
+            "statusMessage": "Loading methodology context…"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash .claude/hooks/statusline.sh",
+    "padding": 1
+  }
+}

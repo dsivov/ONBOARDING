@@ -30,8 +30,20 @@ this skill was installed from; ask the user if it isn't obvious. You need
    - `docs/DECISIONS.md`  ← `docs/templates/DECISIONS.template.md`
 5. If the project has an app UI, copy `ONBOARDING/frontend-kit/` → the frontend (or copy
    `house-ui.css` into the app's styles) so UI work uses the house tokens.
-6. Add/refresh a short `docs/README.md` pointing at the methodology and listing the pipeline.
-7. Tell the user the next step: `/write-blog`.
+6. **Session banner + working agreement** (so every session opens with the methodology):
+   - Copy `ONBOARDING/templates/hooks/session-banner.sh` and `statusline.sh` →
+     `.claude/hooks/` and `chmod +x` them.
+   - Install the hook + status line into `.claude/settings.json` from
+     `ONBOARDING/templates/settings.template.json`. **If `.claude/settings.json` already
+     exists, MERGE** the `hooks.SessionStart` and `statusLine` keys in — do **not** overwrite
+     the file. (statusLine is optional; drop it if the user doesn't want a status bar.)
+   - Create `CLAUDE.md` from `ONBOARDING/templates/CLAUDE.template.md` (fill project name).
+     **If a `CLAUDE.md` already exists, append/merge** the working-agreement section rather
+     than replacing it. Strip the leading `<!-- TEMPLATE… -->` comment.
+   - The SessionStart hook's stdout is shown to the user **and** added to Claude's context —
+     so the banner both greets the human and reminds the model of the method.
+7. Add/refresh a short `docs/README.md` pointing at the methodology and listing the pipeline.
+8. Tell the user to reopen the session (so the banner fires) and the next step: `/write-blog`.
 
 ## Path convention (so links resolve)
 - Published artifacts live directly in `docs/` (e.g. `docs/PAYMENTS_RFC.html`) and link
