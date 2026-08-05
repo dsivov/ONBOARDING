@@ -7,6 +7,17 @@ description: Run a milestone code review and update the progress trace — produ
 
 Run at the end of each milestone before starting the next.
 
+## Reuse first
+Don't hand-roll a review Claude Code already does rigorously. Reuse the finding engine, keep
+the house format (C/H/M/S IDs, the drift check, the checkpoint carry-forward):
+- **`/code-review`** on the milestone's working diff — its findings become the C/H/M entries.
+- **`/security-review`** — its output feeds the **Security (S)** section directly.
+- **`simplify`** for the quality pass (reuse, dead code, altitude). It fixes rather than
+  reports, so run it *after* the gate passes and review its diff like any other change.
+
+These find issues; this skill decides severity, verifies before reporting, and advances the
+trace. A finding you can't reproduce still gets dropped (§2), whoever surfaced it.
+
 ## 1 · Verify the gate
 - Run the milestone's **test gate** from the work plan. If it doesn't pass, the milestone
   isn't done — report what's failing; don't proceed.

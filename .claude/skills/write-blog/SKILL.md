@@ -7,6 +7,14 @@ description: Write a house-style BLOG (HTML) — the vision/narrative piece that
 
 Produce `docs/BLOG_<TOPIC>.html` from `docs/templates/BLOG.template.html` (copied into the project by new-project; fall back to the ONBOARDING repo if absent).
 
+## Reuse first
+Don't re-derive what Claude Code already does well — reuse the capability, keep the house
+format (template, `house.css` tokens, structure):
+- Before drawing the SVG, load the **`artifact-diagramming`** skill for inline-SVG technique
+  that stays legible in both themes. The house tokens and template structure still win.
+- If a section carries a chart or metric, load **`dataviz`** first — then map its output onto
+  the house palette below.
+
 ## Gather
 - The **topic**, the **audience**, and the **one shift** the post argues for.
 - The concrete pain today (a real scenario or number if available) and why now.

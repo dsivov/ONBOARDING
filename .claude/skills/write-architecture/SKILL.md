@@ -7,8 +7,19 @@ description: Write an ARCHITECTURE doc (HTML) for a system, or a CHANGE_REQUEST 
 
 Two modes. Pick by what the user needs.
 
+## Reuse first
+Reuse the capability, keep the house format (template, `house.css` tokens, section structure):
+- **Inventory with the `Explore` agent** (below) instead of reading the tree inline.
+- **Weighing design alternatives?** Run the **`Plan`** agent first — it returns step-by-step
+  options and architectural trade-offs. Its output feeds the trade-offs table; it does not
+  replace it, and the doc still names what was rejected and why.
+- Before each section's SVG, load **`artifact-diagramming`**; load **`dataviz`** for charts.
+
 ## Before writing — inventory (mandatory if any code already exists)
-Read the repo before designing on top of it (methodology R10):
+Run the **`Explore`** agent over the repo — read-only fan-out that returns the conclusion
+rather than the file dumps, so a large codebase doesn't eat the context you need for the
+design. Ask for "medium" breadth, or "very thorough" when the codebase is unfamiliar. Have it
+report (methodology R10):
 - The **current file-system layout** — what lives where, and the conventions it already follows.
 - The **libraries already installed *and actually used*** (manifest *and* imports — a listed
   dep nobody imports is not a reason to keep it) plus their versions.

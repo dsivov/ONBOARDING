@@ -7,6 +7,15 @@ description: Write a house-style RFC (HTML, slide sections) — the proposal & p
 
 Produce `docs/<NAME>_RFC.html` from `docs/templates/RFC.template.html` (copied into the project by new-project; fall back to the ONBOARDING repo if absent).
 
+## Reuse first
+Reuse the capability, keep the house format (template, `house.css` tokens, slide structure):
+- **Existing code?** Run the **`Explore`** agent over the repo for the R10 inventory —
+  current layout, libraries actually imported, databases, integrations. It fans out read-only
+  and returns the conclusion, so you don't burn context reading the tree inline. Ask it for
+  "medium" breadth, or "very thorough" on an unfamiliar codebase.
+- Before drawing each section's SVG, load **`artifact-diagramming`**; load **`dataviz`** for
+  any chart. House tokens and the slide structure still govern the result.
+
 ## Gather
 - The BLOG it builds on. The **decisions** the plan rests on (+ rejected alternatives).
 - **Assemble / build / avoid**: what we reuse, what's genuinely new, what's out of scope.
