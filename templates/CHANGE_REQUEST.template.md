@@ -34,7 +34,26 @@ flowchart LR
 **Unchanged (explicitly)**
 - {{what this CR does NOT touch}}
 
-## 4 · Impact & risk
+## 4 · Layout & dependency delta
+
+<!-- Mandatory (methodology R10). "None" is a valid answer — say it explicitly. -->
+
+**Files / directories**
+
+| Path | Added / moved / deleted | Owns |
+|------|-------------------------|------|
+| `{{path}}` | {{added}} | {{…}} |
+
+**Dependencies**
+
+| Library | Version | New / reused | Why nothing already installed covers it |
+|---------|---------|:------------:|------------------------------------------|
+| {{lib}} | {{x.y}} | new | {{…}} |
+
+{{Reuse first: existing modules, libraries, databases and integrations stay the one tool for
+their job. If this CR replaces an incumbent, name it here and add the removal task in §7.}}
+
+## 5 · Impact & risk
 
 | Area | Impact | Risk | Mitigation |
 |------|--------|:----:|------------|
@@ -43,13 +62,13 @@ flowchart LR
 - **Backward compatibility:** {{yes / no — migration note}}
 - **Rollback:** {{how to revert}}
 
-## 5 · Acceptance criteria (test gate)
+## 6 · Acceptance criteria (test gate)
 
 - [ ] {{observable, testable}}
 - [ ] {{regression: existing behavior still holds}}
 - [ ] {{measured claim + harness, if applicable}}
 
-## 6 · Tasks
+## 7 · Tasks
 
 - [ ] `{{path}}` — {{…}}
 - [ ] `test_{{…}}.py` — {{…}}

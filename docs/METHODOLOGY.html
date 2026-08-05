@@ -177,6 +177,18 @@
     <div class="callout"><div class="clabel">◆ R7 · Decisions logged, not re-litigated · R8 · Persist the non-obvious</div>
       Log every non-trivial choice in DECISIONS.md; keep project memory that isn't derivable from
       code or git.</div>
+    <div class="callout caveat"><div class="clabel">◆ R9 · In planning, ask when unsure — with options</div>
+      In the <b>planning stages</b> (discussion, RFC, DRP), don't guess at ambiguous scope, requirements, or
+      approach — <b>ask, and present suggested options</b> (recommended first, each with its trade-off) so the
+      person chooses fast. Resolve before finalizing the artifact; record the answer in DECISIONS.md. Ambiguity is
+      cheapest to fix here.</div>
+    <div class="callout key"><div class="clabel">◆ R10 · Design docs name the layout, the libraries, and what already exists</div>
+      Every RFC / DRP / ARCHITECTURE / CR carries a <b>code file-system layout</b> (the tree, and what each
+      path owns) and a <b>external-libraries table</b> (name, version, purpose, why over the alternative).
+      <b>Python?</b> Ask which dependency manager — <span class="mono-chip">conda</span> is the default;
+      uv / poetry / pip+venv the alternatives. <b>Existing codebase?</b> Inventory the current layout, used
+      libraries, databases and integrations first and reuse them — never add a second library that duplicates
+      one already there. Replacing an incumbent means saying so, and planning its removal.</div>
   </section>
 
   <section id="git">

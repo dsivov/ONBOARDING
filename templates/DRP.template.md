@@ -71,13 +71,52 @@ classDiagram
 **Interfaces / endpoints**
 - `{{METHOD}} {{/path}}` — {{purpose}} → {{shape}}
 
-## 7 · Risks & open questions
+## 7 · Code layout & dependencies
+
+<!-- Mandatory (methodology R10). Mark what already exists vs what this plan adds. -->
+
+**Dependency manager:** {{conda (default) | uv | poetry | pip+venv | npm/pnpm | …}} — manifest
+`{{environment.yml | pyproject.toml | requirements.txt | package.json}}`.
+<!-- Python? This was ASKED, not assumed — record the answer in DECISIONS.md. -->
+
+**File-system layout**
+
+```
+{{project}}/
+├── {{src_or_pkg}}/
+│   ├── {{module_a}}/        # {{what it owns}}            [new]
+│   └── {{module_b}}.py      # {{what it owns}}            [exists]
+├── tests/
+│   └── test_{{…}}.py        # {{gate for M{{n}}}}          [new]
+├── scripts/                 # measurement harnesses (R2)  [exists]
+└── {{manifest}}             # {{pinned deps}}
+```
+
+**External libraries**
+
+| Library | Version | Purpose | Reused / New | Why this over the alternative |
+|---------|---------|---------|:------------:|-------------------------------|
+| {{lib}} | {{x.y}} | {{…}} | reused | already in the repo — no second tool for this job |
+| {{lib}} | {{x.y}} | {{…}} | new | {{alternative rejected because …}} |
+
+**Existing code we build on** <!-- delete if greenfield -->
+
+| What's already there | Where | How this plan reuses it |
+|----------------------|-------|-------------------------|
+| {{layout / module}} | `{{path}}` | {{extended, not replaced}} |
+| {{library actually imported}} | `{{manifest}}` | {{kept as the one tool for {{job}}}} |
+| {{database / integration}} | {{host / service}} | {{reused — no new store introduced}} |
+
+{{If anything here is being **replaced**: say which incumbent, why, and the work-plan task
+that removes it. Leaving both in place is not an option (R10).}}
+
+## 8 · Risks & open questions
 
 | Risk / question | Impact | Plan |
 |-----------------|:------:|------|
 | {{…}} | {{high/med}} | {{mitigation or who decides}} |
 
-## 8 · Plan summary
+## 9 · Plan summary
 
 Phases and milestones live in [{{NAME}}_WORK_PLAN.md]({{NAME}}_WORK_PLAN.md). At a glance:
 

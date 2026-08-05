@@ -28,6 +28,7 @@
     <li><a href="#components">Components</a></li>
     <li><a href="#data">Data model</a></li>
     <li><a href="#flows">Key flows</a></li>
+    <li><a href="#layout">Code layout &amp; dependencies</a></li>
     <li><a href="#boundaries">Boundaries &amp; ownership</a></li>
     <li><a href="#tradeoffs">Trade-offs</a></li>
   </ol>
@@ -103,6 +104,72 @@
       </svg>
       <figcaption><b>{{Caption.}}</b> {{one line}}</figcaption>
     </div></figure>
+  </section>
+
+  <!-- CODE LAYOUT & DEPENDENCIES — mandatory (methodology R10). Do not ship without it. -->
+  <section id="layout">
+    <div class="kicker">Code layout &amp; dependencies</div>
+    <h2>Where code lives, and what it stands on</h2>
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 250" role="img" aria-label="repository layout">
+        <style>.dir{rx:8;stroke-width:1.6}.dt{fill:#fff;font:700 12px "Segoe UI",sans-serif}.ds{fill:#aab3c5;font:10px var(--mono),monospace}.tag{fill:#7fe3cf;font:700 9px var(--mono),monospace}.tagn{fill:#cdb1f7;font:700 9px var(--mono),monospace}</style>
+        <rect class="dir" x="24" y="20" width="200" height="38" fill="rgba(240,167,60,.12)" stroke="var(--c)"/>
+        <text class="dt" x="40" y="38">{{project}}/</text><text class="ds" x="40" y="52">repo root</text>
+        <line x1="44" y1="58" x2="44" y2="216" stroke="var(--line)" stroke-width="1.4"/>
+        <line x1="44" y1="84" x2="70" y2="84" stroke="var(--line)" stroke-width="1.4"/>
+        <rect class="dir" x="70" y="66" width="300" height="36" fill="rgba(91,141,239,.14)" stroke="var(--a)"/>
+        <text class="dt" x="84" y="82">{{src_or_pkg}}/</text><text class="ds" x="84" y="96">{{what it owns}}</text>
+        <text class="tagn" x="330" y="88">new</text>
+        <line x1="44" y1="128" x2="70" y2="128" stroke="var(--line)" stroke-width="1.4"/>
+        <rect class="dir" x="70" y="110" width="300" height="36" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+        <text class="dt" x="84" y="126">tests/</text><text class="ds" x="84" y="140">{{gates for M1…}}</text>
+        <text class="tag" x="326" y="132">exists</text>
+        <line x1="44" y1="172" x2="70" y2="172" stroke="var(--line)" stroke-width="1.4"/>
+        <rect class="dir" x="70" y="154" width="300" height="36" fill="rgba(169,116,240,.16)" stroke="var(--ctrl)"/>
+        <text class="dt" x="84" y="170">scripts/</text><text class="ds" x="84" y="184">measurement harnesses (R2)</text>
+        <line x1="44" y1="216" x2="70" y2="216" stroke="var(--line)" stroke-width="1.4"/>
+        <rect class="dir" x="70" y="198" width="300" height="36" fill="var(--panel2)" stroke="var(--line)"/>
+        <text class="dt" x="84" y="214">{{manifest}}</text><text class="ds" x="84" y="228">{{pinned dependencies}}</text>
+        <rect class="dir" x="420" y="66" width="316" height="168" fill="#161922" stroke="var(--line)"/>
+        <text class="dt" x="438" y="90">The rule</text>
+        <text class="ds" x="438" y="112">a reader places a new file</text>
+        <text class="ds" x="438" y="130">without asking anyone</text>
+        <text class="ds" x="438" y="158">one library per job —</text>
+        <text class="ds" x="438" y="176">no duplicate functionality</text>
+        <text class="ds" x="438" y="204">every dep here is pinned</text>
+        <text class="ds" x="438" y="222">and justified below</text>
+      </svg>
+      <figcaption><b>{{Caption.}}</b> {{one line — the layout convention this follows}}</figcaption>
+    </div></figure>
+
+    <div class="callout key"><div class="clabel">◆ Dependency manager</div>
+      {{conda (house default) | uv | poetry | pip+venv | npm/pnpm}} · manifest
+      <span class="mono-chip">{{environment.yml | pyproject.toml | package.json}}</span> —
+      for Python this was <b>asked, not assumed</b>, and logged in DECISIONS.md.</div>
+
+    <h3 style="font-size:16px;margin:16px 0 6px">External libraries</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Library</th><th>Version</th><th>Purpose</th><th>Reused / new</th><th>Why over the alternative</th></tr></thead>
+      <tbody>
+        <tr><td>{{lib}}</td><td>{{x.y}}</td><td>{{…}}</td><td>reused</td><td>already in the repo — no second tool for this job</td></tr>
+        <tr><td>{{lib}}</td><td>{{x.y}}</td><td>{{…}}</td><td>new</td><td>{{alternative rejected because …}}</td></tr>
+      </tbody>
+    </table></div>
+
+    <!-- Delete this block only if the project is genuinely greenfield. -->
+    <h3 style="font-size:16px;margin:16px 0 6px">What already exists, and how we reuse it</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Already there</th><th>Where</th><th>How this design reuses it</th></tr></thead>
+      <tbody>
+        <tr><td>{{module / layout}}</td><td><span class="mono-chip">{{path}}</span></td><td>{{extended, not replaced}}</td></tr>
+        <tr><td>{{library actually imported}}</td><td><span class="mono-chip">{{manifest}}</span></td><td>{{kept as the one tool for {{job}}}}</td></tr>
+        <tr><td>{{database / integration}}</td><td>{{service}}</td><td>{{reused — no new store introduced}}</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout caveat"><div class="clabel">◆ Replacing an incumbent</div>
+      {{If something here is replaced rather than reused: name it, justify it, and point at the
+      work-plan task that deletes the old one. Two libraries doing one job is the failure this
+      section exists to prevent.}}</div>
   </section>
 
   <section id="boundaries">
