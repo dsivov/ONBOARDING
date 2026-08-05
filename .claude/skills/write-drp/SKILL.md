@@ -7,6 +7,16 @@ description: Write a DRP (Detailed Requirements & Plan, Markdown) — the detail
 
 Produce `docs/<NAME>_DRP.md` from `docs/templates/DRP.template.md` (copied into the project by new-project; fall back to the ONBOARDING repo if absent).
 
+## Reuse first
+Reuse the capability, keep the house format (template, section order, mermaid house rule):
+- **Existing code?** Run the **`Explore`** agent for the R10 inventory below — read-only
+  fan-out that returns the conclusion, so a large repo doesn't eat the context the
+  requirements need. "medium" breadth, or "very thorough" on an unfamiliar codebase.
+- If the RFC already inventoried the repo, **read its layout/dependency section instead of
+  re-running Explore** — the DRP details that agreement, it doesn't re-litigate it (R7).
+- No diagramming skill here: a DRP illustrates with **mermaid**, which renders natively.
+  (`artifact-diagramming` and `dataviz` are for the HTML artifacts — BLOG, RFC, ARCHITECTURE.)
+
 ## Gather
 - The problem, the outcome that means "done", and explicit **non-goals**.
 - Requirements (must/should/could) with rationale.
