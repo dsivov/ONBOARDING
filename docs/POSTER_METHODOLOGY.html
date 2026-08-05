@@ -85,8 +85,9 @@
     <line x1="909" y1="608" x2="909" y2="656" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
     <rect x="640" y="662" width="360" height="112" rx="18" fill="rgba(169,116,240,.18)" stroke="#a974f0" stroke-width="2"/>
     <text class="stage-t" x="820" y="704">⟳  build → review → advance</text>
-    <text class="stage-s" x="820" y="734">every milestone: test gate + code review</text>
-    <text class="stage-s" x="820" y="756">branch · commit · push · merge on green</text>
+    <!-- 13px: at 15px these 39–40ch mono lines are wider than the 360px box and overflow it. -->
+    <text class="stage-s" x="820" y="734" style="font-size:13px">every milestone: test gate + code review</text>
+    <text class="stage-s" x="820" y="756" style="font-size:13px">branch · commit · push · merge on green</text>
 
     <rect x="80" y="662" width="520" height="112" rx="18" fill="#161b26" stroke="#2c3346" stroke-width="2"/>
     <text class="stage-t" x="340" y="700" style="font-size:22px">progress trace + docs/ artifacts</text>
@@ -107,8 +108,9 @@
   <!-- rule of thumb band -->
   <rect x="80" y="1064" width="920" height="118" rx="20" fill="rgba(91,141,239,.10)" stroke="rgba(91,141,239,.4)" stroke-width="2"/>
   <text class="cap" x="540" y="1104" fill="#9cc0ff">THE WHOLE METHOD IN ONE LINE</text>
-  <text class="rule" x="540" y="1146">Write it down · prove it · review it —</text>
-  <text class="rule" x="540" y="1166" style="font-size:22px;fill:#aab3c5">…and the project stays legible from the first idea to the last commit.</text>
+  <!-- 32px between baselines: at 20px the 30px line's descenders collided with line 2's ascenders. -->
+  <text class="rule" x="540" y="1138">Write it down · prove it · review it —</text>
+  <text class="rule" x="540" y="1170" style="font-size:22px;fill:#aab3c5">…and the project stays legible from the first idea to the last commit.</text>
 
   <!-- footer / call to action -->
   <text class="foot" x="540" y="1250">Curious how this holds up in the wild — what would you add or cut?</text>
