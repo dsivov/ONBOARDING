@@ -13,12 +13,17 @@
 #   ./install.sh --force      # replace a same-named existing skill (backs it up first)
 #   ./install.sh --uninstall  # remove ONLY the symlinks/copies this script created
 #   ./install.sh --dest DIR   # install into DIR instead of ~/.claude/skills
+#
+#   ./install.sh --new-project DIR [--name N] [--description T] [--yolo]
+#                             # install the skills, then bootstrap DIR unattended
+#                             # (delegates to ./new-project.sh — see its --help)
 # ============================================================================
 set -euo pipefail
 
-SRC="$(cd "$(dirname "$0")/.claude/skills" && pwd)"
+KIT="$(cd "$(dirname "$0")" && pwd)"
+SRC="$KIT/.claude/skills"
 DEST="${HOME}/.claude/skills"
-MODE="symlink"; FORCE=0; UNINSTALL=0
+MODE="symlink"; FORCE=0; UNINSTALL=0; NEWPROJ=""; NPARGS=()
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -26,11 +31,18 @@ while [ $# -gt 0 ]; do
     --force) FORCE=1;;
     --uninstall) UNINSTALL=1;;
     --dest) shift; DEST="$1";;
+    --new-project) shift; NEWPROJ="${1:-}";;
+    # Passed through to new-project.sh when --new-project is used.
+    --name|--description|--desc|--model) NPARGS+=("$1" "${2:-}"); shift;;
+    --yolo|--skip-permissions|--dry-run) NPARGS+=("$1");;
     -h|--help) grep '^#' "$0" | sed 's/^# \{0,1\}//'; exit 0;;
     *) echo "unknown option: $1" >&2; exit 2;;
   esac
   shift
 done
+
+[ -n "$NEWPROJ" ] || [ ${#NPARGS[@]} -eq 0 ] || {
+  echo "those options only apply with --new-project DIR" >&2; exit 2; }
 
 # The skills this kit provides (only these are ever touched).
 SKILLS=(new-project write-blog write-rfc write-drp write-architecture make-workplan milestone-review)
@@ -86,7 +98,14 @@ done
 echo
 if [ "$UNINSTALL" -eq 1 ]; then
   echo "Done. Uninstalled this kit's skills (others untouched)."
-else
-  echo "Done. In any project, run /new-project to scaffold docs + templates + house.css."
-  [ "$MODE" = "symlink" ] && echo "(symlinked — edits in this repo propagate; re-run with --copy for standalone copies.)"
+  exit 0
+fi
+
+echo "Done. In any project, run /new-project to scaffold docs + templates + house.css."
+[ "$MODE" = "symlink" ] && echo "(symlinked — edits in this repo propagate; re-run with --copy for standalone copies.)"
+
+# Skills are in place; hand off to the unattended bootstrap.
+if [ -n "$NEWPROJ" ]; then
+  echo
+  exec "$KIT/new-project.sh" "$NEWPROJ" ${NPARGS[@]+"${NPARGS[@]}"}
 fi
