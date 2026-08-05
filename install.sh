@@ -69,8 +69,11 @@ for name in "${SKILLS[@]}"; do
       echo "  SKIP $name (already exists — not overwriting; use --force to replace)"
       continue
     fi
-    bak="$dst.bak.$(date +%Y%m%d%H%M%S)"
-    mv "$dst" "$bak"; echo "  backed up existing $name → $(basename "$bak")"
+    # Back up OUTSIDE the skills dir — a *.bak dir left inside it gets loaded
+    # as a duplicate skill.
+    bakdir="$(dirname "$DEST")/.onboarding-backups/$(date +%Y%m%d%H%M%S)"
+    mkdir -p "$bakdir"
+    mv "$dst" "$bakdir/$name"; echo "  backed up existing $name → $bakdir/$name"
   fi
 
   if [ "$MODE" = "symlink" ]; then

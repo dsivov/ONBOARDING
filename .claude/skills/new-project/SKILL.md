@@ -33,10 +33,14 @@ this skill was installed from; ask the user if it isn't obvious. You need
 6. **Session banner + working agreement** (so every session opens with the methodology):
    - Copy `ONBOARDING/templates/hooks/session-banner.sh` and `statusline.sh` →
      `.claude/hooks/` and `chmod +x` them.
-   - Install the hook + status line into `.claude/settings.json` from
+   - Install the hook + status line + docs permissions into `.claude/settings.json` from
      `ONBOARDING/templates/settings.template.json`. **If `.claude/settings.json` already
-     exists, MERGE** the `hooks.SessionStart` and `statusLine` keys in — do **not** overwrite
-     the file. (statusLine is optional; drop it if the user doesn't want a status bar.)
+     exists, MERGE** the `permissions.allow`, `hooks.SessionStart` and `statusLine` keys in —
+     do **not** overwrite the file, and **append** to `permissions.allow` rather than
+     replacing it. (statusLine is optional; drop it if the user doesn't want a status bar.)
+   - The `permissions.allow` block gives the write-* skills unprompted `Read`/`Edit`/`Write`
+     on `docs/**` — authoring an artifact shouldn't need a permission click. Scoped to
+     `docs/` deliberately: code changes still prompt.
    - Create `CLAUDE.md` from `ONBOARDING/templates/CLAUDE.template.md` (fill project name).
      **If a `CLAUDE.md` already exists, append/merge** the working-agreement section rather
      than replacing it. Strip the leading `<!-- TEMPLATE… -->` comment.
