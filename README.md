@@ -1,8 +1,18 @@
 # ONBOARDING — the project operating system
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-8fd9c9.svg)](LICENSE)
+[![Built for Claude Code](https://img.shields.io/badge/built%20for-Claude%20Code-a974f0.svg)](https://claude.com/claude-code)
+[![Docs](https://img.shields.io/badge/docs-illustrated%20guide-5b8def.svg)](docs/METHODOLOGY.html)
+
 A reusable **methodology + templates + skills + UI kit** for starting and running a
 project the way we run them: documentation-first, evidence-driven, reviewed at every
 milestone, with a consistent house visual style.
+
+**The problem it solves:** agentic coding makes it cheap to produce code and expensive to
+know whether that code was a good idea. This repo is the operating system that goes around
+the agent — a fixed set of artifacts, ten rules, and seven skills that turn "ask an agent to
+build it" into a traceable pipeline where every build points back to a written proposal,
+every claim points to a measurement, and every milestone is reviewed before the next starts.
 
 Install the skills once (see **Install** below) and you get the whole workflow — from the
 first BLOG to shipped, reviewed code — in any project, without reinventing it.
@@ -156,3 +166,23 @@ their own; `--copy` freezes them and needs a re-run to update.
 - **Every milestone is reviewed** before the next one starts, and has explicit **test gates**.
 - **Feature branches; never merge to main unverified.** Commit/push only when asked.
 - **Docs are honest and current** — the final doc describes the destination, not the journey.
+- **Ask in planning, don't guess** — ambiguity is cheapest to fix before the artifact is written.
+- **Design docs name the layout, the libraries, and what already exists** — and reuse it; never
+  two libraries for one job.
+
+The full set is [METHODOLOGY.md §2](METHODOLOGY.md#2--the-rules-that-make-it-work) (R1–R10),
+or the illustrated version in [docs/METHODOLOGY.html](docs/METHODOLOGY.html).
+
+## Built on, not instead of
+
+The skills **delegate** to what Claude Code already does well and keep only what's house —
+templates, design tokens, severity scheme, progress trace. The `Explore` agent runs the
+existing-code inventory; the `Plan` agent weighs design alternatives; `artifact-diagramming`
+and `dataviz` handle the SVGs; `/code-review`, `/security-review` and `simplify` find the
+issues a milestone review then triages. One tool per job — the same rule the methodology
+applies to your dependencies, applied to itself.
+
+## License
+
+[MIT](LICENSE) — use it, fork it, adapt it to your own house style. If it's useful, a link
+back is appreciated but not required.
