@@ -76,6 +76,54 @@
   </table></div>
 </section>
 
+<!-- CODE LAYOUT & DEPENDENCIES — mandatory (methodology R10). Not an appendix. -->
+<section class="slide" id="layout">
+  <div class="kicker k-b">Code layout &amp; dependencies</div>
+  <h2>Where the code lives, and what it stands on</h2>
+  <figure><div class="fig svgwrap">
+    <svg viewBox="0 0 760 190" role="img" aria-label="repository layout and dependency stack">
+      <style>.bx2{rx:9;stroke-width:1.6}.t2{fill:#fff;font:700 12px "Segoe UI",sans-serif}.s2{fill:#aab3c5;font:10px var(--mono),monospace}.h2l{font:800 11px "Segoe UI",sans-serif}</style>
+      <text class="h2l" x="30" y="20" fill="#9dbcff">layout</text>
+      <rect class="bx2" x="24" y="30" width="330" height="34" fill="rgba(240,167,60,.12)" stroke="var(--c)"/>
+      <text class="t2" x="38" y="52">{{project}}/ {{src_or_pkg}}/ tests/ scripts/</text>
+      <rect class="bx2" x="24" y="74" width="330" height="34" fill="rgba(91,141,239,.14)" stroke="var(--a)"/>
+      <text class="t2" x="38" y="90">{{module_a}}/</text><text class="s2" x="38" y="102">{{what it owns}}</text>
+      <rect class="bx2" x="24" y="118" width="330" height="34" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+      <text class="t2" x="38" y="134">{{manifest}}</text><text class="s2" x="38" y="146">{{pinned deps}}</text>
+      <text class="h2l" x="410" y="20" fill="#7fe3cf">dependencies</text>
+      <rect class="bx2" x="404" y="30" width="332" height="34" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+      <text class="t2" x="418" y="52">reused — {{already installed}}</text>
+      <rect class="bx2" x="404" y="74" width="332" height="34" fill="rgba(169,116,240,.16)" stroke="var(--ctrl)"/>
+      <text class="t2" x="418" y="96">new — {{lib}} {{x.y}}</text>
+      <rect class="bx2" x="404" y="118" width="332" height="34" fill="#161922" stroke="var(--line)"/>
+      <text class="s2" x="418" y="134">one library per job · no duplicate</text>
+      <text class="s2" x="418" y="147">functionality with what exists</text>
+    </svg>
+    <figcaption><b>{{Caption.}}</b> {{one line}}</figcaption>
+  </div></figure>
+  <div class="deck">
+    <div class="row"><div class="k">Manager</div><div>{{conda (house default) | uv | poetry | pip+venv | npm}} · <span class="mono-chip">{{manifest}}</span> — for Python this was <b class="hl">asked, not assumed</b>.</div></div>
+  </div>
+  <h3 style="font-size:16px;margin:16px 0 6px">External libraries</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Library</th><th>Version</th><th>Purpose</th><th>Reused / new</th><th>Why over the alternative</th></tr></thead>
+    <tbody>
+      <tr><td>{{lib}}</td><td>{{x.y}}</td><td>{{…}}</td><td>reused</td><td>already in the repo</td></tr>
+      <tr><td>{{lib}}</td><td>{{x.y}}</td><td>{{…}}</td><td>new</td><td>{{rejected: …}}</td></tr>
+    </tbody>
+  </table></div>
+  <!-- Delete only if genuinely greenfield. -->
+  <h3 style="font-size:16px;margin:16px 0 6px">Existing code, data &amp; integrations we reuse</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Already there</th><th>Where</th><th>How we reuse it</th></tr></thead>
+    <tbody>
+      <tr><td>{{module / layout}}</td><td><span class="mono-chip">{{path}}</span></td><td>{{extended, not replaced}}</td></tr>
+      <tr><td>{{db / integration}}</td><td>{{service}}</td><td>{{reused — no new store}}</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Replacing an incumbent? Name it, justify it, and plan its removal — never leave both.</p>
+</section>
+
 <!-- ROADMAP -->
 <section class="slide" id="roadmap">
   <div class="kicker k-c">Roadmap</div>

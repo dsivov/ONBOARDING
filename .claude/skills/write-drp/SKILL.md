@@ -13,6 +13,13 @@ Produce `docs/<NAME>_DRP.md` from `docs/templates/DRP.template.md` (copied into 
 - Constraints & assumptions (flag unverified assumptions).
 - **Acceptance criteria** — observable and testable (these become milestone gates).
 - Data shapes and interfaces/endpoints.
+- The **code file-system layout** and the **external libraries** with versions and rationale
+  (methodology R10) — agreed with the RFC, spelled out in detail here.
+- **Existing code?** Inventory it first: current layout, libraries actually imported,
+  databases, integrations. Requirements build on those; duplicating them is out of scope.
+- **Python?** Ask which dependency manager — `conda` (default), `uv`, `poetry`, `pip`+`venv`.
+
+Ambiguous scope, requirements, or approach → **ask with options** before writing (R9).
 
 ## Write
 1. Copy the template; fill every `{{PLACEHOLDER}}`; link the BLOG + RFC as sources.
@@ -20,6 +27,9 @@ Produce `docs/<NAME>_DRP.md` from `docs/templates/DRP.template.md` (copied into 
    `classDiagram`, and the phase-summary `flowchart`.
 3. Make acceptance criteria checkbox items — the work plan lifts them as test gates.
 4. Any performance/accuracy criterion must name how it will be **measured** (methodology R2).
+5. Include the **layout tree** (annotated: what each path owns, which entries already exist)
+   and the **dependency table** — library · version · purpose · reused-or-new · why not the
+   alternative. Name the dependency manager and its manifest file.
 
 ## Finish
 - Add to `docs/DOCS_INDEX.md`. Suggest `/make-workplan` next.
@@ -27,3 +37,6 @@ Produce `docs/<NAME>_DRP.md` from `docs/templates/DRP.template.md` (copied into 
 ## Rules
 - Non-goals are mandatory — they prevent scope creep.
 - Requirements are testable statements, not aspirations.
+- No design without a layout and a dependency table (R10).
+- **One library per job.** A dependency that overlaps an installed one needs an explicit
+  replace-and-remove plan, not a quiet coexistence (R10).

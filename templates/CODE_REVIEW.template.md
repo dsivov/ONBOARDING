@@ -46,10 +46,17 @@ pie showData
 ### S1 — {{one-line claim}}
 - **Where:** `{{file}}:{{line}}`  ·  **Risk:** {{…}}  ·  **Fix:** {{…}}
 
+## Layout & dependency drift (methodology R10)
+- **Layout matches the doc?** {{yes | no — `{{path}}` isn't in the architecture layout}}
+- **Manifest matches the declared library table?** {{yes | no — `{{lib}}` added off-plan}}
+- **Any duplicate functionality introduced?** {{none | `{{lib_a}}` overlaps `{{lib_b}}` — one must go}}
+- Resolution: {{update the doc, or move the code — never leave the drift silent}}
+
 ## Non-issues confirmed (checked, clean)
 - {{thing that looked suspicious but is correct — say why, so it isn't re-flagged}}
 
 ## Verdict
 - [ ] All **Critical** fixed → milestone gate can pass.
 - [ ] **High** fixed or logged as open findings in the next checkpoint.
+- [ ] Layout & dependencies match the design docs (or the docs were updated).
 - Decisions arising: log in `DECISIONS.md`.

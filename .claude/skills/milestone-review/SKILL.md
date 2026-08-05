@@ -19,6 +19,11 @@ From `docs/templates/CODE_REVIEW.template.md` (copied into the project by new-pr
   Prefer confirmed issues over a long speculative list.
 - List **non-issues confirmed** so they aren't re-flagged next time.
 - Include the mermaid severity summary.
+- **Check layout & dependency drift** (methodology R10): does the code sit where the
+  architecture/DRP layout says it does, and does the manifest match the declared library
+  table? Flag any dependency added off-plan, and any **new library that duplicates one
+  already used** (two HTTP clients, two ORMs, two config loaders) — that's a High finding.
+  Either the doc is updated to match reality, or the code moves; drift is never left silent.
 
 ## 3 · Checkpoint (periodic) → `docs/PROJECT_REVIEW_<date>.md`
 From `docs/templates/CHECKPOINT_REVIEW.template.md`. Carry forward open findings, mark

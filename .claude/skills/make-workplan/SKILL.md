@@ -13,7 +13,11 @@ Produce `docs/<NAME>_WORK_PLAN.md` from `docs/templates/WORK_PLAN.template.md` (
    engine, then surface/UI). Assign **milestones** (`M1…`) to the phases that ship a
    demonstrable slice.
 3. For each phase: concrete **checkbox tasks** naming real files/paths, including the
-   **test files**. Lift the DRP's acceptance criteria into each milestone's **test gate**.
+   **test files**. Paths must match the DRP/architecture **layout tree** (R10) — if a task
+   needs a path the layout doesn't have, fix the layout, don't invent the path here.
+   Lift the DRP's acceptance criteria into each milestone's **test gate**.
+   `P0` includes the environment task: the dependency manifest (`environment.yml`,
+   `pyproject.toml`, `requirements.txt`, `package.json`) pinned to the agreed libraries.
 4. Add the phase-overview table and a **mermaid** phase→gate flowchart.
 5. Include the Definition of Done block and the progress-trace note.
 
@@ -22,6 +26,8 @@ Produce `docs/<NAME>_WORK_PLAN.md` from `docs/templates/WORK_PLAN.template.md` (
 - Tasks name files, not vague activities.
 - Nothing is planned that isn't traceable to a DRP requirement; if new work appears later,
   add a task here first (methodology R1).
+- **No dependency arrives off-plan.** A library not in the DRP's table gets added there
+  first, with its justification against what's already installed (methodology R10).
 
 ## Finish
 - Add to `docs/DOCS_INDEX.md`. The checkboxes are the progress trace — keep them current.

@@ -95,6 +95,42 @@ context, options, choice, and why. This prevents re-opening settled questions.
 Keep project memory (goals, constraints, decided calls, gotchas) that isn't derivable from
 the code or git history. Don't persist what the repo already records.
 
+### R9 — In planning, ask when unsure — with options
+During the **planning stages** (initial discussion, RFC, DRP) don't guess at ambiguous
+scope, requirements, or approach. **Ask the person a clear question and present suggested
+options** — recommended one first, each with its trade-off — so they can choose fast instead
+of writing prose. Resolve the ambiguity *before* finalizing the artifact, and record the
+chosen answer in `DECISIONS.md`. Guessing is cheapest to fix here and most expensive to fix
+later — so this is where questions pay off most. (In the build stages you act on the decided
+spec; if a genuine ambiguity surfaces there, add it to the plan and, if it changes direction,
+ask.)
+
+### R10 — Design docs name the layout, the libraries, and what already exists
+Every architectural artifact (RFC, DRP, ARCHITECTURE, CHANGE_REQUEST) must carry two
+concrete sections, not prose gestures at them:
+
+1. **Code file-system layout** — the directory tree as it will exist, with what each path
+   owns. A reader should know where a new file goes without asking.
+2. **External libraries** — every proposed dependency by name, with version/pin, what it's
+   for, and why it over the alternative. Unlisted dependencies don't get added mid-build;
+   they go through the plan (R1).
+
+Two conditions attach to this:
+
+**Python projects — ask which dependency manager.** Never assume. Ask (R9-style, with
+options): **conda** is the house default; `uv`, `poetry`, and `pip` + `venv` are the usual
+alternatives. Record the answer in `DECISIONS.md` and name it in the doc — the layout
+section then shows the real file (`environment.yml`, `pyproject.toml`, `requirements.txt`).
+
+**Existing codebase — inventory first, reuse hard.** When the work starts from code that
+already exists, the design must open with what's there: the current layout, the libraries
+already installed and actually used, the databases, and the live integrations. Build on
+them. **Do not introduce a second library, service, or module that duplicates functionality
+already present** — one HTTP client, one ORM, one test runner, one config loader. If you
+genuinely must replace an incumbent, say so explicitly, justify it, and plan the removal of
+the old one in the same work plan; a half-migration that leaves both is the failure mode
+this rule exists to prevent.
+
 ---
 
 ## 3 · The GitHub cycle

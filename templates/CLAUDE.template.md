@@ -21,6 +21,14 @@ RFC & DRP are **co-authored** (RFC leads on approach, DRP on detail), agreed bef
 - **R5 Branches** — work on `feature/<name>`; never merge to `main` unverified; commit/push only when asked.
 - **R6 Honest & current docs** — describe the destination, not the journey; fix docs when a measurement corrects a belief.
 - **R7 Log decisions** in `docs/DECISIONS.md`; don't re-litigate them.
+- **R8 Persist the non-obvious** — project memory the repo and git history don't already record.
+- **R9 In planning, ask when unsure** — during discussion/RFC/DRP, don't guess at ambiguous scope
+  or approach: ask, with suggested options (recommended first + trade-offs). Log the answer.
+- **R10 Layout, libraries, reuse** — every RFC/DRP/architecture/CR carries a **file-system layout**
+  and an **external-library table** (name, version, purpose, why over the alternative). Python?
+  **Ask** the dependency manager (`conda` default; uv/poetry/pip+venv). Existing code? Inventory the
+  current layout, used libs, DBs and integrations first and **reuse them** — never a second library
+  for a job something already does; replacing an incumbent means planning its removal.
 
 ## GitHub cycle
 Branch per feature · commit per task · push per milestone · merge only when the gate passes

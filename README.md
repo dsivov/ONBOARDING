@@ -42,6 +42,8 @@ ONBOARDING/
   README.md                  ← you are here
   METHODOLOGY.md             ← the full lifecycle spec + conventions
   install.sh / uninstall.sh  ← install the skills at the user level (safe, non-destructive)
+  new-project.sh             ← bootstrap a project unattended (drives /new-project headless)
+  sync-project.sh            ← push methodology updates into an already-onboarded project
   assets/house.css           ← the shared dark-theme design system (docs)
   templates/                 ← fill-in templates for every artifact (+ CLAUDE.md, settings, hooks)
   frontend-kit/              ← standalone themed HTML UI kit (no build)
@@ -79,8 +81,32 @@ the project (so the project is self-contained), scaffolds `docs/`, and seeds `DO
 `DECISIONS.md`. By default it scaffolds into the **current directory**; `/new-project <path>`
 targets another.
 
-**B · Run from inside this repo** — open Claude Code in `ONBOARDING/` and ask it to scaffold a
-sibling project; `new-project` targets the path you give. No install needed.
+**B · One command, fully unattended** — install the skills *and* scaffold a new project without
+touching a permission prompt:
+
+```bash
+./install.sh --new-project ~/work/budget-guard \
+             --name "Budget Guard" \
+             --description "Checks whether a grocery basket fits the family budget"
+
+./new-project.sh ~/work/budget-guard --name "Budget Guard"   # same thing, skills already installed
+./new-project.sh ~/work/budget-guard --dry-run               # print the command, run nothing
+```
+
+Creates the directory if it doesn't exist. **`--name` defaults to the directory's basename**, so
+`./new-project.sh ~/work/budget-guard` names the project `budget-guard`. `--description` is
+optional. `--model` picks the model.
+
+*Permissions:* the run is scoped — `--permission-mode acceptEdits` plus the specific shell
+commands the scaffold uses (`mkdir`/`cp`/`chmod`/`ls`). It is **not** a blanket bypass, so a
+command outside that set still stops. `--yolo` swaps in `--dangerously-skip-permissions`, which
+disables every check for that run **machine-wide, not just in the target directory** — reach for
+it only if you know why. The script installs `.claude/hooks/` and `.claude/settings.json` itself
+rather than asking the model to: writing hooks and settings is permission-gated in every mode
+short of a bypass, and it's a plain copy needing no judgment.
+
+> **Trust:** the `docs/**` permissions sit inactive until the workspace is trusted. The first
+> interactive session there prompts for it — that's what switches them on.
 
 **C · Manual first copy** — copy `templates/` and `assets/house.css` into the new project by
 hand; copy `.claude/skills/*` into the project's `.claude/skills/` to get the commands locally.
@@ -99,6 +125,29 @@ hand; copy `.claude/skills/*` into the project's `.claude/skills/` to get the co
 
 Skills read the templates in `templates/` and the design system in `assets/house.css`, so
 every project comes out consistent.
+
+Bootstrapped projects also get `permissions.allow` for `Read`/`Edit`/`Write` on `docs/**`, so
+the architect and manager skills author artifacts without a permission click. It's scoped to
+`docs/` deliberately — code changes still ask.
+
+## Keeping projects current
+
+`/new-project` **copies** templates and `house.css` into each project so it's self-contained —
+which means a later methodology change doesn't reach it. Push updates in with:
+
+```bash
+./sync-project.sh ~/work/budget-guard             # refresh the kit files
+./sync-project.sh ~/work/budget-guard --dry-run   # see what would change first
+```
+
+It refreshes only kit-owned files (`docs/templates/`, `docs/assets/house.css`,
+`docs/METHODOLOGY.md`) and **never touches your authored artifacts**. `CLAUDE.md` and
+`.claude/settings.json` carry project-specific content, so those are *reported* — it names
+which methodology rules are missing and whether the `docs/**` permission is absent — and you
+merge them.
+
+Install the skills with `./install.sh` (symlink, the default) and skill updates propagate on
+their own; `--copy` freezes them and needs a re-run to update.
 
 ## The non-negotiables (why it works)
 
