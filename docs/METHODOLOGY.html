@@ -38,6 +38,8 @@
     <li><a href="#trace">The progress trace</a></li>
     <li><a href="#style">House style</a></li>
     <li><a href="#skills">Skills that automate it</a></li>
+    <li><a href="#reuse">Reuse before building</a></li>
+    <li><a href="#tooling">Install, bootstrap, keep current</a></li>
     <li><a href="#start">Starting a project</a></li>
   </ol>
 </nav>
@@ -298,6 +300,123 @@
         <tr><td><span class="mono">/milestone-review</span></td><td>A code review + checkpoint; advances the trace</td></tr>
       </tbody>
     </table></div>
+    <div class="callout ok"><div class="clabel">◆ Authoring never asks permission</div>
+      A bootstrapped project grants <span class="mono">Read</span>/<span class="mono">Edit</span>/<span class="mono">Write</span>
+      on <span class="mono-chip">docs/**</span> in <span class="mono-chip">.claude/settings.json</span>, so the architect and
+      manager skills write artifacts without a permission click. Scoped to <span class="mono">docs/</span> deliberately —
+      code changes still ask. The grant stays inactive until the workspace is trusted; the first interactive session's
+      trust prompt switches it on.</div>
+  </section>
+
+  <section id="reuse">
+    <div class="kicker">Reuse before building</div>
+    <h2>The skills delegate — they don't re-derive</h2>
+    <p>R10 says one tool per job. That rule points at the method itself: where Claude Code already
+      does something well, the house skill calls it and keeps only what's ours — the templates, the
+      tokens, the severity scheme, the trace.</p>
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 250" role="img" aria-label="house skills delegating to built-in agents and skills">
+        <defs><marker id="rd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker></defs>
+        <style>.rb{rx:9;stroke-width:1.6}.rt{fill:#fff;font:700 11.5px "Segoe UI",sans-serif}.rs{fill:#aab3c5;font:9px var(--mono),monospace}.rh{font:800 10px "Segoe UI",sans-serif}</style>
+        <text class="rh" x="24" y="24" fill="#9dbcff">house skill · the stage</text>
+        <text class="rh" x="430" y="24" fill="#7fe3cf">built-in it calls</text>
+
+        <rect class="rb" x="24" y="34" width="290" height="38" fill="rgba(91,141,239,.14)" stroke="var(--a)"/>
+        <text class="rt" x="38" y="50">write-blog · write-rfc · write-architecture</text><text class="rs" x="38" y="65">drawing a section's SVG</text>
+        <line x1="316" y1="53" x2="427" y2="53" stroke="#8a93a8" stroke-width="1.6" marker-end="url(#rd)"/>
+        <rect class="rb" x="430" y="34" width="306" height="38" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+        <text class="rt" x="444" y="50">artifact-diagramming · dataviz</text><text class="rs" x="444" y="65">SVG technique, legible in both themes</text>
+
+        <rect class="rb" x="24" y="82" width="290" height="38" fill="rgba(91,141,239,.14)" stroke="var(--a)"/>
+        <text class="rt" x="38" y="98">write-rfc · write-architecture</text><text class="rs" x="38" y="113">R10 inventory of existing code</text>
+        <line x1="316" y1="101" x2="427" y2="101" stroke="#8a93a8" stroke-width="1.6" marker-end="url(#rd)"/>
+        <rect class="rb" x="430" y="82" width="306" height="38" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+        <text class="rt" x="444" y="98">Explore agent</text><text class="rs" x="444" y="113">read-only fan-out — returns the conclusion</text>
+
+        <rect class="rb" x="24" y="130" width="290" height="38" fill="rgba(91,141,239,.14)" stroke="var(--a)"/>
+        <text class="rt" x="38" y="146">write-architecture</text><text class="rs" x="38" y="161">weighing design alternatives</text>
+        <line x1="316" y1="149" x2="427" y2="149" stroke="#8a93a8" stroke-width="1.6" marker-end="url(#rd)"/>
+        <rect class="rb" x="430" y="130" width="306" height="38" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+        <text class="rt" x="444" y="146">Plan agent</text><text class="rs" x="444" y="161">options + trade-offs → feeds the table</text>
+
+        <rect class="rb" x="24" y="178" width="290" height="38" fill="rgba(169,116,240,.16)" stroke="var(--ctrl)"/>
+        <text class="rt" x="38" y="194">milestone-review</text><text class="rs" x="38" y="209">finding issues in the diff</text>
+        <line x1="316" y1="197" x2="427" y2="197" stroke="#8a93a8" stroke-width="1.6" marker-end="url(#rd)"/>
+        <rect class="rb" x="430" y="178" width="306" height="38" fill="rgba(169,116,240,.16)" stroke="var(--ctrl)"/>
+        <text class="rt" x="444" y="194">/code-review · /security-review · simplify</text><text class="rs" x="444" y="209">C/H/M · the S section · the quality pass</text>
+
+        <rect class="rb" x="24" y="226" width="712" height="20" fill="#161922" stroke="var(--line)"/>
+        <text class="rh" x="380" y="240" fill="#c9d3e6" style="text-anchor:middle">the house keeps: templates · house.css tokens · severity IDs · verify-before-reporting · the progress trace</text>
+      </svg>
+      <figcaption><b>Reuse the capability, keep the format.</b> Built-ins know nothing about the
+        templates or <span class="mono-chip">house.css</span>; the house skills don't need to re-derive how to search a
+        repo or draw a theme-safe SVG. The <b>Explore</b> row matters most — R10's inventory would
+        otherwise read a whole codebase inline and eat the context the design needs.</figcaption>
+    </div></figure>
+    <div class="callout caveat"><div class="clabel">◆ Composition, not stage-switching</div>
+      There is no per-stage enable hook — <span class="mono">skillOverrides</span> is static per project, and a project
+      passes through every stage. So each <span class="mono-chip">SKILL.md</span> names what to call and when, which is
+      explicit and debuggable. The <b>SessionStart banner already detects the stage</b> from what exists in
+      <span class="mono">docs/</span> and prints the matching next step — no extra machinery needed.</div>
+    <div class="callout"><div class="clabel">◆ Deliberately not reused</div>
+      The per-session task list, for work plans. Work-plan checkboxes are the durable cross-session
+      trace; mirroring them would create two sources of truth that drift — the very thing R10 forbids.</div>
+  </section>
+
+  <section id="tooling">
+    <div class="kicker">Install, bootstrap, keep current</div>
+    <h2>How the method reaches a project — and stays there</h2>
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 280" role="img" aria-label="skills are symlinked, templates are copied, sync pushes updates back">
+        <defs><marker id="tw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker>
+          <marker id="tv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#a974f0"/></marker></defs>
+        <style>.tb{rx:9;stroke-width:1.6}.tt{fill:#fff;font:700 11.5px "Segoe UI",sans-serif;text-anchor:middle}.ts{fill:#aab3c5;font:9px var(--mono),monospace;text-anchor:middle}.th{font:800 10px "Segoe UI",sans-serif;text-anchor:middle}</style>
+
+        <text class="th" x="380" y="20" fill="#7fe3cf">skills — symlinked, so method updates propagate on their own</text>
+        <rect class="tb" x="24" y="30" width="190" height="48" fill="rgba(240,167,60,.12)" stroke="var(--c)"/>
+        <text class="tt" x="119" y="50">ONBOARDING kit</text><text class="ts" x="119" y="66">.claude/skills/</text>
+        <line x1="216" y1="54" x2="283" y2="54" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#tw)"/>
+        <text class="ts" x="249" y="44" fill="#7fe3cf">install.sh</text>
+        <rect class="tb" x="286" y="30" width="188" height="48" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+        <text class="tt" x="380" y="50">~/.claude/skills/</text><text class="ts" x="380" y="66">symlink → the kit</text>
+        <line x1="476" y1="54" x2="543" y2="54" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#tw)"/>
+        <rect class="tb" x="546" y="30" width="190" height="48" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+        <text class="tt" x="641" y="50">every project</text><text class="ts" x="641" y="66">/write-rfc, /milestone-review…</text>
+
+        <text class="th" x="380" y="120" fill="#9dbcff">templates + house.css — copied, so each project stands alone</text>
+        <rect class="tb" x="24" y="132" width="190" height="60" fill="rgba(240,167,60,.12)" stroke="var(--c)"/>
+        <text class="tt" x="119" y="154">ONBOARDING kit</text><text class="ts" x="119" y="170">templates/</text><text class="ts" x="119" y="184">assets/house.css</text>
+        <path d="M216,150 L541,150" fill="none" stroke="#8a93a8" stroke-width="1.7" marker-end="url(#tw)"/>
+        <text class="ts" x="378" y="142" fill="#9cc0ff">new-project.sh — bootstrap (one copy in)</text>
+        <path d="M216,178 C330,214 430,214 541,180" fill="none" stroke="#a974f0" stroke-width="1.7" marker-end="url(#tv)"/>
+        <text class="ts" x="378" y="212" fill="#cdb1f7">sync-project.sh — push later updates back in</text>
+        <rect class="tb" x="544" y="132" width="192" height="60" fill="rgba(91,141,239,.14)" stroke="var(--a)"/>
+        <text class="tt" x="640" y="152">your project</text><text class="ts" x="640" y="168">docs/templates/ · docs/assets/</text><text class="ts" x="640" y="182">.claude/ hooks + docs/** perms</text>
+
+        <rect class="tb" x="24" y="234" width="712" height="34" fill="#161922" stroke="var(--line)"/>
+        <text class="th" x="380" y="249" fill="#c9d3e6">copies never follow their source — that's the trade for a self-contained project</text>
+        <text class="ts" x="380" y="263" fill="#7b8499">sync-project.sh refreshes kit files only, and reports what needs a hand-merge — it never touches an authored artifact</text>
+      </svg>
+      <figcaption><b>Two different couplings, on purpose.</b> Skills are <b>symlinked</b> once, so a
+        methodology change reaches every project immediately. Templates and the design system are
+        <b>copied</b>, so a project keeps working with the kit moved or gone — at the cost of drifting,
+        which <span class="mono-chip">sync-project.sh</span> repairs.</figcaption>
+    </div></figure>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Command</th><th>When</th><th>Does</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">./install.sh</span></td><td>once</td><td>Symlinks the skills into <span class="mono-chip">~/.claude/skills</span> — updates propagate. <span class="mono">--copy</span> freezes them instead.</td></tr>
+        <tr><td><span class="mono">./new-project.sh &lt;dir&gt;</span></td><td>day one</td><td>Bootstraps a project unattended — <span class="mono">--name</span> (defaults to the directory name), <span class="mono">--description</span>, <span class="mono">--dry-run</span>.</td></tr>
+        <tr><td><span class="mono">./install.sh --new-project &lt;dir&gt;</span></td><td>day one</td><td>Both of the above in one command.</td></tr>
+        <tr><td><span class="mono">./sync-project.sh &lt;dir&gt;</span></td><td>after a method change</td><td>Refreshes the copied templates, <span class="mono">house.css</span> and methodology; reports what needs a hand-merge.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout caveat"><div class="clabel">◆ The unattended run is scoped, not a bypass</div>
+      <span class="mono">new-project.sh</span> runs headless with <span class="mono">--permission-mode acceptEdits</span> plus the
+      few shell commands the scaffold uses, so anything outside that set still stops. <span class="mono">--yolo</span> swaps in
+      <span class="mono">--dangerously-skip-permissions</span>, which is <b>not confined to the target directory</b>. The script
+      installs <span class="mono-chip">.claude/</span> itself, because writing hooks and settings is permission-gated in every
+      mode short of a bypass — and it's a plain copy needing no judgment.</div>
   </section>
 
   <section id="start">

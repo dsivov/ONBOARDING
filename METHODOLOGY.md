@@ -261,5 +261,40 @@ The `.claude/skills/` here automate each stage against these templates:
 | `make-workplan` | Turns a DRP/architecture into phases, milestones, tasks + test gates |
 | `milestone-review` | Runs a code review + updates the progress trace / checkpoint |
 
-Install by copying `.claude/skills/*` into a project's `.claude/skills/` (or the user
-skills dir). Each skill's `SKILL.md` points at the templates here.
+### Reuse before building
+R10 applies to the method itself: where Claude Code already does something well, the skill
+**calls it** and keeps only what's ours — the templates, the tokens, the severity scheme,
+the trace.
+
+| Stage | Delegates to | The house keeps |
+|-------|--------------|-----------------|
+| Drawing a section's SVG (blog/rfc/architecture) | `artifact-diagramming`, `dataviz` | house tokens, template structure |
+| The R10 inventory of existing code | **`Explore`** agent | the layout tree + library table |
+| Weighing design alternatives | **`Plan`** agent | the trade-offs table, what was rejected |
+| Finding issues in a milestone diff | `/code-review`, `/security-review`, `simplify` | C/H/M/S IDs, verify-before-reporting, the trace |
+
+There's no per-stage enable hook, and none is wanted: `skillOverrides` is static per project
+while a project passes through every stage. Each `SKILL.md` names what to call and when —
+explicit and debuggable. The SessionStart banner already detects the stage from what exists
+in `docs/`. **Not** reused: the per-session task list for work plans — the checkboxes are the
+durable cross-session trace, and mirroring them would create two sources of truth (§6).
+
+### Getting it into a project, and keeping it there
+
+| Command | When | Does |
+|---------|------|------|
+| `./install.sh` | once | Symlinks the skills into `~/.claude/skills` — updates propagate. `--copy` freezes them. |
+| `./new-project.sh <dir>` | day one | Bootstraps unattended. `--name` (defaults to the directory name), `--description`, `--dry-run`, `--yolo`. |
+| `./install.sh --new-project <dir>` | day one | Both, in one command. |
+| `./sync-project.sh <dir>` | after a method change | Refreshes copied templates/`house.css`/methodology; reports what needs a hand-merge. |
+
+Two couplings, on purpose: skills are **symlinked** so a methodology change reaches every
+project at once; templates and `house.css` are **copied** so a project stands alone if the kit
+moves — at the cost of drift, which `sync-project.sh` repairs. It never touches an authored
+artifact.
+
+Bootstrapped projects also grant `Read`/`Edit`/`Write` on `docs/**` in `.claude/settings.json`,
+so artifact authoring doesn't prompt; code changes still do. The grant is inactive until the
+workspace is trusted. `new-project.sh` runs scoped (`--permission-mode acceptEdits` plus the
+scaffold's shell commands), not as a blanket bypass — `--yolo` is that, and it isn't confined
+to the target directory.
