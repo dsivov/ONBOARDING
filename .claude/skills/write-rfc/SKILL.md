@@ -42,6 +42,12 @@ dependency-manager question above — offering a recommended option first.
 
 ## Finish
 - Add to `docs/DOCS_INDEX.md`. Suggest `/write-drp` and `/make-workplan` next.
+- **Seal the agreement into the contract (R11).** Once the RFC *and* its DRP are agreed — this
+  skill or `/write-drp`, whichever finishes second — create `docs/CONSTRAINTS.md` from
+  `docs/templates/CONSTRAINTS.template.md` if it doesn't exist. Otherwise **reconcile**: an RFC
+  that contradicts a standing constraint is a drift — report it (ID · says vs needs · options)
+  before writing, don't quietly overwrite the contract. See `/write-drp` for how to pick the
+  constraints.
 
 ## Rules
 - Decisions must state *why* + what was rejected.

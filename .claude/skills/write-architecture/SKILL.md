@@ -15,6 +15,19 @@ Reuse the capability, keep the house format (template, `house.css` tokens, secti
   replace it, and the doc still names what was rejected and why.
 - Before each section's SVG, load **`artifact-diagramming`**; load **`dataviz`** for charts.
 
+## Before writing — read the contract (methodology R11)
+`docs/CONSTRAINTS.md` holds the agreed top-level design (`A1…`). Both modes below are checked
+against it **before** anything is written:
+- **Mode A** designs *within* it, then **extends** it — an architecture commits to boundaries and
+  stores the RFC/DRP only implied. Add those as new constraints (keep the one-page cap: merge or
+  retire weaker ones rather than growing the list past ~15).
+- **Mode B** must not silently contradict it. A CR that needs a constraint changed is a **drift**:
+  stop, report (ID · what the contract says · what the CR needs · why · comply/amend/defer), and
+  get approval. If approved, amend `CONSTRAINTS.md` first (bump version, amendment row) and log
+  the `D-NN` — then write the CR against the amended contract.
+- If the file doesn't exist yet (RFC/DRP predate R11), create it from
+  `docs/templates/CONSTRAINTS.template.md` and have the human confirm it before continuing.
+
 ## Before writing — inventory (mandatory if any code already exists)
 Run the **`Explore`** agent over the repo — read-only fan-out that returns the conclusion
 rather than the file dumps, so a large codebase doesn't eat the context you need for the
@@ -53,6 +66,9 @@ Produce `docs/<NAME>_CHANGE_REQUEST.md` from `docs/templates/CHANGE_REQUEST.temp
   with its justification — including why nothing already installed covers it.
 
 ## Finish (both)
+- **Update `docs/CONSTRAINTS.md`** — Mode A: add the constraints this design commits to (and the
+  version/date). Mode B: only if an amendment was approved, with its amendment row. Re-confirm
+  with the human that the contract still reads true.
 - Log the design decisions in `docs/DECISIONS.md`.
 - Add to `docs/DOCS_INDEX.md`. Suggest `/make-workplan` (new) or add tasks to the plan (CR).
 
@@ -61,3 +77,5 @@ Produce `docs/<NAME>_CHANGE_REQUEST.md` from `docs/templates/CHANGE_REQUEST.temp
 - Trade-offs section names what was rejected and why.
 - Ship no architecture without a **file-system layout** and an **external-library table** (R10).
 - **One tool per job** — no two libraries with overlapping functionality (R10).
+- **Never contradict the contract in silence** (R11). Design inside it, extend it deliberately,
+  or report the drift and ask — in that order of preference.

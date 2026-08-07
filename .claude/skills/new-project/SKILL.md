@@ -28,6 +28,9 @@ this skill was installed from; ask the user if it isn't obvious. You need
 4. **Seed the running docs** from the copied templates, filling project name/date:
    - `docs/DOCS_INDEX.md` ← `docs/templates/DOCS_INDEX.template.md`
    - `docs/DECISIONS.md`  ← `docs/templates/DECISIONS.template.md`
+   - **Not** `docs/CONSTRAINTS.md` — the architecture contract (R11) is written when the RFC +
+     DRP are agreed, by `/write-rfc` / `/write-drp`. An empty contract at scaffold time would be
+     a file of placeholders the agent still loads every session. Its template is copied in step 3.
 5. If the project has an app UI, copy `ONBOARDING/frontend-kit/` → the frontend (or copy
    `house-ui.css` into the app's styles) so UI work uses the house tokens.
 6. **Session banner + working agreement** (so every session opens with the methodology):
@@ -43,7 +46,9 @@ this skill was installed from; ask the user if it isn't obvious. You need
      `docs/` deliberately: code changes still prompt.
    - Create `CLAUDE.md` from `ONBOARDING/templates/CLAUDE.template.md` (fill project name).
      **If a `CLAUDE.md` already exists, append/merge** the working-agreement section rather
-     than replacing it. Strip the leading `<!-- TEMPLATE… -->` comment.
+     than replacing it. Strip the leading `<!-- TEMPLATE… -->` comment. **Keep the
+     `@docs/CONSTRAINTS.md` import line** — that's what puts the architecture contract in
+     context every session (R11); it's inert until the contract is written.
    - The SessionStart hook's stdout is shown to the user **and** added to Claude's context —
      so the banner both greets the human and reminds the model of the method.
 7. Add/refresh a short `docs/README.md` pointing at the methodology and listing the pipeline.

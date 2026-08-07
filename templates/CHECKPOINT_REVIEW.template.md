@@ -4,6 +4,7 @@
 # {{PROJECT}} — Checkpoint Review ({{YYYY-MM-DD}})
 
 - **Since:** {{last checkpoint / milestone}}  ·  **Branch:** `feature/{{name}}`
+- **Contract:** `CONSTRAINTS.md` {{v1}} — {{in force, unamended | amended {{n}}× since the last checkpoint}}
 
 ## Where the project is
 
@@ -17,6 +18,16 @@ flowchart LR
 ```
 
 {{One paragraph: momentum, what shipped, what's blocked.}}
+
+## Contract standing (methodology R11)
+> The project-level version of the milestone check: is the system we're building still the one
+> that was agreed — and is the contract still describing the system honestly?
+
+- **Constraints violated by shipped code:** {{none | {{A#}} — {{where}} → P0 finding}}
+- **Amendments since the last checkpoint:** {{none | {{A#}} v{{n}} ({{D-NN}}) — {{one line}}}}
+- **Constraints now stale** (true when written, no longer describes the design): {{none | {{A#}} — amend or retire}}
+- **Drift pressure** — where the contract keeps getting argued with: {{…}}. {{Repeated pressure on
+  one constraint is a signal the design is wrong, not that the team is careless — raise it.}}
 
 ## What was fixed in this pass
 - {{finding → resolution}}  ✅

@@ -5,6 +5,7 @@
 # {{NAME}} — Work Plan
 
 - **Sources:** [{{NAME}}_DRP.md]({{NAME}}_DRP.md) · [{{NAME}}_ARCHITECTURE.html]({{NAME}}_ARCHITECTURE.html)
+- **Contract:** [CONSTRAINTS.md](CONSTRAINTS.md) {{v1}} — every milestone opens with a contract check (R11)
 - **Branch:** `feature/{{name}}`  ·  **Status:** {{in progress · P1}}
 
 ## Phase overview
@@ -38,6 +39,8 @@ flowchart LR
 
 ## P1 · {{Thin vertical}} → **M1**
 
+- [ ] **Contract check (R11)** — re-read `CONSTRAINTS.md`; this milestone's tasks touch
+      {{A2, A6}} and stay inside them. {{Or: drift found → reported, see D-NN.}}
 - [ ] `{{path}}` — {{the first real end-to-end path}}
 - [ ] `{{path}}` — {{…}}
 - [ ] `test_{{…}}_e2e.py` — {{input → assert the observable outcome}}
@@ -48,6 +51,7 @@ flowchart LR
 
 ## P2 · {{Engine}} → **M2**
 
+- [ ] **Contract check (R11)** — constraints this phase touches: {{A#}}.
 - [ ] `{{path}}` — {{…}}
 - [ ] `test_{{…}}.py` — {{…}}
 
@@ -67,6 +71,8 @@ flowchart LR
 ## Definition of Done (every task)
 
 - Code + tests committed on `feature/{{name}}`.
+- **No constraint in `CONSTRAINTS.md` was made false** — or the drift was reported, approved,
+  and the contract amended before the code landed (methodology R11).
 - Milestone **gate passes**; **code review** clean (no open Critical/High).
 - Any measured claim has a reproducible harness in `scripts/` (methodology R2).
 - Docs updated; `DECISIONS.md` and `DOCS_INDEX.md` current.

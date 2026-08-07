@@ -19,6 +19,15 @@ if [ -n "$branch" ]; then
   fi
 fi
 
+# The architecture contract (R11) — in force, or owed once the RFC/DRP are agreed.
+if [ -f docs/CONSTRAINTS.md ]; then
+  n="$(grep -c '^| A[0-9]' docs/CONSTRAINTS.md 2>/dev/null)"
+  v="$(grep -m1 -o 'v[0-9]\+' docs/CONSTRAINTS.md 2>/dev/null)"
+  echo "  Contract:  docs/CONSTRAINTS.md · ${n:-?} constraints · ${v:-v1} — drift from it stops the build (R11)"
+elif ls docs/*_RFC.html >/dev/null 2>&1 || ls docs/*_DRP.md >/dev/null 2>&1; then
+  echo "  Contract:  ⚠ docs/CONSTRAINTS.md missing — agree it now that the RFC/DRP exist (R11)"
+fi
+
 # Next-step hint based on what already exists.
 if ! ls docs/BLOG_*.html >/dev/null 2>&1; then
   echo "  Next:      /write-blog — start the vision"
@@ -29,5 +38,6 @@ else
 fi
 
 echo "  Rules:     docs-first · measure every claim · review each milestone · don't merge to main unverified"
+echo "             check CONSTRAINTS.md before any top-level change — drift ⇒ stop, report, ask"
 echo "──────────────────────────────────────────────────────────────"
 exit 0

@@ -44,9 +44,26 @@ Ambiguous scope, requirements, or approach → **ask with options** before writi
 ## Finish
 - Add to `docs/DOCS_INDEX.md`. Suggest `/make-workplan` next.
 
+### Seal the agreement into the contract (methodology R11)
+The RFC + DRP agreement is the first point where a top-level design exists to hold anyone to.
+Whichever of `/write-rfc` and `/write-drp` finishes second creates `docs/CONSTRAINTS.md` from
+`docs/templates/CONSTRAINTS.template.md` (if it's already there, reconcile instead of overwrite).
+
+- **Ask the human to confirm it before it's in force** (R9) — it's a contract, not a summary;
+  it's only worth anything if they've agreed to be stopped by it.
+- Distil, don't summarise: **~15 max**, each a **falsifiable sentence** (`A1…`) about *shape,
+  boundaries, state, data flow, interfaces, stack, runtime, trust, ops*. The test for inclusion:
+  *would I stop the build over this?* If not, it's a DRP detail, not a constraint.
+- Copy the DRP's **non-goals** in, and add any **project-specific tripwire** the generic list
+  misses (a fragile integration, a licence limit, a regulated data path).
+- **One page, hard cap** — it's imported into every session's context by `CLAUDE.md`. No
+  diagrams, no rationale essays, no history: link the RFC/DRP for the *why*.
+
 ## Rules
 - Non-goals are mandatory — they prevent scope creep.
 - Requirements are testable statements, not aspirations.
 - No design without a layout and a dependency table (R10).
 - **One library per job.** A dependency that overlaps an installed one needs an explicit
   replace-and-remove plan, not a quiet coexistence (R10).
+- The DRP doesn't ship without its **contract** (R11) — and the contract is confirmed by a
+  human, not assumed.

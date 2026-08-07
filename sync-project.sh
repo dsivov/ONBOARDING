@@ -80,8 +80,22 @@ if [ -f "$CM" ]; then
   else
     echo "  CLAUDE.md — rules current ✓"
   fi
+  # R11's always-resident layer is the import line, not the rule text — check it separately.
+  if grep -q '^@docs/CONSTRAINTS\.md' "$CM"; then
+    echo "  CLAUDE.md — contract import present ✓"
+  else
+    echo "  CLAUDE.md — no '@docs/CONSTRAINTS.md' import (R11: the contract won't load each session)"
+    echo "    → add the import line from templates/CLAUDE.template.md"
+  fi
 else
   echo "  CLAUDE.md — absent; create it from templates/CLAUDE.template.md"
+fi
+
+if [ -f "$PROJ/docs/CONSTRAINTS.md" ]; then
+  echo "  docs/CONSTRAINTS.md — contract in force ✓ (authored; never synced)"
+elif ls "$PROJ"/docs/*_RFC.html >/dev/null 2>&1 || ls "$PROJ"/docs/*_DRP.md >/dev/null 2>&1; then
+  echo "  docs/CONSTRAINTS.md — absent though the RFC/DRP exist (R11)"
+  echo "    → write it from templates/CONSTRAINTS.template.md and have it confirmed"
 fi
 
 SJ="$PROJ/.claude/settings.json"

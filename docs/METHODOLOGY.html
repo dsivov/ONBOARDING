@@ -109,13 +109,14 @@
 
   <section id="artifacts">
     <div class="kicker">The artifacts</div>
-    <h2>Nine documents, each with one job</h2>
+    <h2>Ten documents, each with one job</h2>
     <div class="tablewrap"><table>
       <thead><tr><th>Artifact</th><th>Format</th><th>Answers</th></tr></thead>
       <tbody>
         <tr><td><span class="pill a">BLOG</span></td><td>HTML</td><td>Why this? For whom? What changes?</td></tr>
         <tr><td><span class="pill a">RFC</span></td><td>HTML</td><td>What we assemble / build / avoid · decisions · phased plan</td></tr>
         <tr><td><span class="pill b">DRP</span></td><td>Markdown</td><td>Detailed requirements, constraints, acceptance criteria, non-goals</td></tr>
+        <tr><td><span class="pill danger">CONSTRAINTS</span></td><td>Markdown</td><td>The contract: the agreed top-level design in ~15 falsifiable sentences. Drift stops the build</td></tr>
         <tr><td><span class="pill b">ARCHITECTURE</span></td><td>HTML</td><td>How it's built — components, data, boundaries, flows</td></tr>
         <tr><td><span class="pill c">CHANGE-REQUEST</span></td><td>Markdown</td><td>A scoped change on top of an existing architecture</td></tr>
         <tr><td><span class="pill c">WORK PLAN</span></td><td>Markdown</td><td>Phases → milestones → tasks, each with a test gate</td></tr>
@@ -191,6 +192,103 @@
       uv / poetry / pip+venv the alternatives. <b>Existing codebase?</b> Inventory the current layout, used
       libraries, databases and integrations first and reuse them — never add a second library that duplicates
       one already there. Replacing an incumbent means saying so, and planning its removal.</div>
+    <div class="callout danger"><div class="clabel">◆ R11 · The architecture contract is checked, not remembered</div>
+      The moment the RFC + DRP are agreed, that agreement is frozen into
+      <span class="mono-chip">docs/CONSTRAINTS.md</span> — <b>~15 falsifiable sentences</b>
+      (<span class="mono-chip">A1…</span>), plus non-goals, tripwires and an amendment log. Not a summary of the
+      architecture: the parts that, if violated, mean we're building a <b>different system</b> than the one
+      agreed. <b>If a change would make one of those sentences false — stop.</b> Report the drift (constraint ID ·
+      what the contract says · what the change needs · why) and offer <b>comply / amend / defer</b>. If the human
+      approves the amendment, edit the contract <b>first</b> — version bump, amendment row, a
+      <span class="mono-chip">D-NN</span> in DECISIONS — then build. Never drift silently.</div>
+
+    <h3>Why a contract, and when the agent reads it</h3>
+    <p>A long build doesn't jump the rails; it drifts one reasonable-looking local decision at a time.
+    Each step is defensible on its own, and thirty steps later the system is not the one that was
+    approved. Reviews catch that late, when the drift is expensive. The contract catches it at the
+    edit that causes it — but only if the agent actually consults it, and <b>"check it when the
+    decision is serious" is not a trigger anything can execute.</b> So the trigger is three layers:</p>
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 320" role="img" aria-label="the three layers that trigger a contract check">
+        <defs><marker id="cf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker>
+          <marker id="cg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#3ecf8e"/></marker></defs>
+        <style>.cbx{rx:10;stroke-width:1.7}.ct{fill:#fff;font:700 11.5px "Segoe UI",sans-serif;text-anchor:middle}.cs{fill:#e7ebf3;font:8.5px var(--mono),monospace;text-anchor:middle}.cl{font:800 9.5px "Segoe UI",sans-serif;text-anchor:middle}</style>
+        <!-- feedback lane: approved amendment -->
+        <path d="M664,54 L664,22 Q664,12 654,12 L94,12 Q84,12 84,22 L84,60" fill="none" stroke="var(--ok)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#cg)"/>
+        <text class="cl" x="474" y="27" fill="#7ee3b4">approved amendment · v+1 · D-NN</text>
+        <!-- the contract -->
+        <rect class="cbx" x="18" y="62" width="132" height="190" fill="rgba(240,167,60,.14)" stroke="var(--c)"/>
+        <text class="ct" x="84" y="112">CONSTRAINTS.md</text>
+        <text class="cs" x="84" y="132">the contract</text>
+        <text class="cs" x="84" y="164">A1 … A15</text>
+        <text class="cs" x="84" y="180">falsifiable</text>
+        <text class="cs" x="84" y="196">sentences</text>
+        <text class="cs" x="84" y="222" fill="#ffce86">one page, capped</text>
+        <!-- three layers -->
+        <rect class="cbx" x="176" y="30" width="214" height="64" fill="rgba(91,141,239,.14)" stroke="var(--a)"/>
+        <text class="ct" x="283" y="52">1 · Always resident</text>
+        <text class="cs" x="283" y="70">CLAUDE.md imports it →</text>
+        <text class="cs" x="283" y="84">in context every session</text>
+        <rect class="cbx" x="176" y="126" width="214" height="64" fill="rgba(25,184,154,.14)" stroke="var(--b)"/>
+        <text class="ct" x="283" y="148">2 · Written checkpoints</text>
+        <text class="cs" x="283" y="166">artifact close · milestone start</text>
+        <text class="cs" x="283" y="180">code review · checkpoint</text>
+        <rect class="cbx" x="176" y="222" width="214" height="64" fill="rgba(169,116,240,.16)" stroke="var(--ctrl)"/>
+        <text class="ct" x="283" y="244">3 · Tripwires</text>
+        <text class="cs" x="283" y="262">dep · dir · boundary · API</text>
+        <text class="cs" x="283" y="276">state · trust · non-goal</text>
+        <!-- contract → layers -->
+        <path d="M150,120 L172,64" fill="none" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#cf)"/>
+        <path d="M150,157 L170,158" fill="none" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#cf)"/>
+        <path d="M150,196 L172,252" fill="none" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#cf)"/>
+        <!-- the test -->
+        <polygon points="486,104 552,158 486,212 420,158" fill="rgba(27,39,64,.9)" stroke="#8a93a8" stroke-width="1.6"/>
+        <text class="cs" x="486" y="153">would it make a</text>
+        <text class="cs" x="486" y="167">constraint false?</text>
+        <path d="M390,62 L430,140" fill="none" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#cf)"/>
+        <path d="M390,158 L416,158" fill="none" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#cf)"/>
+        <path d="M390,254 L430,176" fill="none" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#cf)"/>
+        <!-- outcomes -->
+        <rect class="cbx" x="584" y="54" width="160" height="86" fill="rgba(239,91,110,.13)" stroke="var(--danger)"/>
+        <text class="ct" x="664" y="78">STOP · report</text>
+        <text class="cs" x="664" y="98">ID · says vs needs · why</text>
+        <text class="cs" x="664" y="114">comply / amend / defer</text>
+        <text class="cs" x="664" y="130" fill="#f6a2ad">human decides</text>
+        <rect class="cbx" x="584" y="216" width="160" height="64" fill="rgba(62,207,142,.13)" stroke="var(--ok)"/>
+        <text class="ct" x="664" y="240">Build on</text>
+        <text class="cs" x="664" y="260">the check still gets</text>
+        <text class="cs" x="664" y="274">written down</text>
+        <path d="M552,140 L582,104" fill="none" stroke="var(--danger)" stroke-width="1.7" marker-end="url(#cf)"/>
+        <text class="cl" x="556" y="118" fill="#f6a2ad">yes</text>
+        <path d="M552,176 L582,232" fill="none" stroke="var(--ok)" stroke-width="1.7" marker-end="url(#cf)"/>
+        <text class="cl" x="558" y="206" fill="#7ee3b4">no</text>
+      </svg>
+      <figcaption><b>Three layers, because one isn't a trigger.</b> The one-page cap is what buys
+        layer 1 — the contract is cheap enough to sit in context permanently, so there's no
+        "remember to go look". Layer 2 fixes <i>when</i> the check is written down. Layer 3 is what
+        actually catches drift: named edits that force a re-read <b>before</b> the edit.</figcaption>
+    </div></figure>
+    <div class="grid g3">
+      <div class="card rail ra"><h3 style="margin-top:0">1 · Always resident</h3>
+        <p class="small"><span class="mono-chip">CLAUDE.md</span> imports the contract
+        (<span class="mono-chip">@docs/CONSTRAINTS.md</span>), so it's in context from the first token of
+        every session. This is why the file is hard-capped at one page and carries no diagrams or
+        rationale — every line is paid for on every turn.</p></div>
+      <div class="card rail rb"><h3 style="margin-top:0">2 · Written checkpoints</h3>
+        <p class="small">The check is <b>recorded, not merely thought</b>: closing any RFC/DRP/ARCHITECTURE/CR,
+        <b>starting each milestone</b> (a task in the plan), and a contract-check section in every code review
+        and checkpoint — each constraint marked <span class="mono-chip">held</span> /
+        <span class="mono-chip">drifted</span> / <span class="mono-chip">n/a</span>.</p></div>
+      <div class="card rail rctrl"><h3 style="margin-top:0">3 · Tripwires</h3>
+        <p class="small">Named edits that force a re-read first: a new dependency, service or store · a new
+        top-level directory or deployable · crossing a stated boundary · changing a public contract ·
+        introducing state, concurrency or caching · changing auth/tenancy/trust or the deployment target ·
+        anything on the non-goals list.</p></div>
+    </div>
+    <p class="pull">If the change would make a sentence in CONSTRAINTS.md false — stop, report, ask.</p>
+    <p>That last line is the whole mechanism. It turns "are we still aligned with the architecture?" —
+    a judgment call that quietly degrades over a long session — into a <b>text-consistency check</b>
+    against fifteen sentences. Which is exactly the kind of check that survives.</p>
   </section>
 
   <section id="git">

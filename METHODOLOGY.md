@@ -21,6 +21,7 @@ Each stage produces a durable artifact in `docs/`. Later stages reference earlie
 | 5 | **Plan** | `<NAME>_WORK_PLAN.md` | Markdown | Phases → milestones (M1…) → tasks, with **test gates** |
 | 6 | **Milestone review** | `<NAME>_CODE_REVIEW.md` | Markdown | Findings by severity (C/H/M/S) for the milestone's diff |
 | 7 | **Checkpoint** | `PROJECT_REVIEW_<date>.md` | Markdown | Project-level health; prioritized open findings; `✅ FIXED` tracking |
+| — | **Contract** | `CONSTRAINTS.md` | Markdown | The top-level architecture in ~15 falsifiable sentences. Loaded every session; drift from it stops the build (R11) |
 | — | **Running log** | `DECISIONS.md` | Markdown | Every non-trivial choice + rationale (ADR-lite) |
 | — | **Map** | `DOCS_INDEX.md` | Markdown | Index of everything in `docs/` |
 
@@ -31,6 +32,8 @@ Templates for all of these live in [`templates/`](templates/).
 - A **BLOG** can spawn one or more **RFCs**. An RFC always cites its BLOG.
 - **ARCHITECTURE** is written once per system; **CHANGE-REQUEST** is used for every change
   after the architecture exists (it references the architecture section it touches).
+- The moment the **RFC + DRP are agreed**, that agreement is compressed into
+  **`CONSTRAINTS.md`** — the architecture contract every later decision is checked against (R11).
 - The **WORK PLAN** turns the DRP + architecture into phases and milestones. Nothing gets
   built that isn't a task in the plan.
 - Each **milestone** ends with a **CODE REVIEW**; the project periodically gets a
@@ -131,6 +134,70 @@ genuinely must replace an incumbent, say so explicitly, justify it, and plan the
 the old one in the same work plan; a half-migration that leaves both is the failure mode
 this rule exists to prevent.
 
+### R11 — The architecture contract is checked, not remembered
+The agreed top-level design is compressed into **`docs/CONSTRAINTS.md`** — the *contract*. A
+long build drifts one reasonable-looking local decision at a time; the contract is what makes
+each of those decisions checkable while it's still cheap.
+
+**What it is.** One page, hard-capped: ~15 constraints, each a **falsifiable sentence** you can
+hold against a diff and call true or false (`A1…An`), plus **non-goals**, **tripwires**, and an
+**amendment log**. Not a summary of the architecture — the parts that, if violated, mean we are
+building a different system than the one agreed. Anything you wouldn't stop the build over is a
+detail and belongs in the DRP. It carries no diagrams and no history: it is a control file that
+sits in context every session, and every line costs.
+
+**Who writes it, when.** Created the moment the **RFC + DRP are agreed** — that's the first
+point where a top-level design exists to hold anyone to. The **ARCHITECTURE** extends it (adding
+constraints its design commits to); a **CHANGE-REQUEST** never silently contradicts it.
+
+**When the agent reads it** — three layers, because "check on serious decisions" is not a trigger
+anything can execute:
+
+1. **Always resident.** `CLAUDE.md` imports it (`@docs/CONSTRAINTS.md`), so it is in context from
+   the first token of every session. The one-page cap is what buys this. No recall step, no
+   judgment call about whether this decision is "serious enough" to go look.
+2. **Written checkpoints** — the check is *recorded*, not merely thought, at four fixed points:
+   closing any architectural artifact (RFC · DRP · ARCHITECTURE · CR), **starting each
+   milestone**, every **CODE REVIEW** (a Contract-check section: each constraint `held` /
+   `drifted` / `n/a`), and every **CHECKPOINT REVIEW**.
+3. **Tripwires** — the event-driven layer, and the one that catches real drift. The contract
+   lists the concrete edits that force a re-read *before* the edit: a new dependency, service or
+   datastore · a new top-level directory or deployable · crossing a stated boundary · changing a
+   public contract (API, schema, CLI, event, file format) · introducing state, concurrency,
+   caching or background work · changing the auth/tenancy/trust model or deployment target ·
+   a second tool for a job something already does (R10) · anything on the non-goals list.
+
+The test that makes all of this executable: **if the change would make a sentence in
+`CONSTRAINTS.md` false, stop.** That is a text-consistency check, not a judgment call — which is
+exactly why it survives a long session.
+
+**The drift protocol (mandatory).** On a violation the agent **must not implement and then
+mention it**. It stops and reports: the **constraint ID**, what the contract says, what the change
+needs, why the change is being proposed, and options — **comply** (fit the contract),
+**amend** (change the contract), **defer** (park it as an open finding). Then it waits for a human
+decision. If the amendment is approved: edit `CONSTRAINTS.md` **first** (bump the version, add an
+amendment row), log a `D-NN` in `DECISIONS.md` (R7), then build. Contract changes never arrive as
+a side effect of a commit.
+
+```mermaid
+flowchart TD
+  A[Agreed RFC + DRP] --> B[CONSTRAINTS.md · v1]
+  B --> C[Imported by CLAUDE.md<br/>in context every session]
+  C --> D{Tripwire fires?<br/>dep · dir · boundary · contract<br/>state · trust · non-goal}
+  D -- no --> E[Build · checkpoints still<br/>record the check]
+  D -- yes --> F{Would it make a<br/>constraint false?}
+  F -- no --> E
+  F -- yes --> G[STOP · report drift<br/>ID · says vs needs · why]
+  G --> H{Human decides}
+  H -- comply --> E
+  H -- defer --> I[Open finding]
+  H -- amend --> J[Edit CONSTRAINTS.md · v+1<br/>+ amendment row] --> K[Log D-NN in DECISIONS.md] --> E
+  classDef c fill:#1b2740,stroke:#5b8def,color:#e7ebf3;
+  classDef s fill:#2a1a1a,stroke:#e5534b,color:#ffb3ae;
+  classDef g fill:#12302a,stroke:#3ecf8e,color:#e7ebf3;
+  class A,B,C,E,I c; class D,F,H c; class G s; class J,K g;
+```
+
 ---
 
 ## 3 · The GitHub cycle
@@ -225,11 +292,12 @@ BLOG_<TOPIC>.html                 BLOG_PLATFORM_ARCHITECTURE.html
 <NAME>_WORK_PLAN.md               PAYMENTS_WORK_PLAN.md
 <NAME>_CODE_REVIEW.md             PAYMENTS_CODE_REVIEW.md
 PROJECT_REVIEW_<YYYY-MM-DD>.md    PROJECT_REVIEW_2026-07-06.md
-DECISIONS.md  DOCS_INDEX.md
+CONSTRAINTS.md  DECISIONS.md  DOCS_INDEX.md
 ```
 
 Milestones are `M1, M2, …`; phases are `P0, P1, …`; review findings are `C1/H1/M1/S1`
-(Critical/High/Medium/Security).
+(Critical/High/Medium/Security); architecture constraints are `A1, A2, …` and decisions
+`D-001, D-002, …`.
 
 ---
 
@@ -245,6 +313,10 @@ There is no separate "status" tool. The trace *is*:
 
 Anyone can reconstruct where the project is from these five, without a meeting.
 
+`CONSTRAINTS.md` is not part of the trace — it describes the *destination*, always in the
+present tense (R6). Its **amendment log** is the exception: it records every approved change of
+direction, and pairs with the `D-NN` entry that explains why.
+
 ---
 
 ## 7 · Using the skills
@@ -257,9 +329,10 @@ The `.claude/skills/` here automate each stage against these templates:
 | `write-blog` | Generates a house-style BLOG from a topic |
 | `write-rfc` | Generates a slide-style RFC (assemble/build/avoid · decisions · phases · risks) |
 | `write-drp` | Generates a Detailed Requirements & Plan |
-| `write-architecture` | Generates an ARCHITECTURE doc (or a CHANGE-REQUEST) |
-| `make-workplan` | Turns a DRP/architecture into phases, milestones, tasks + test gates |
-| `milestone-review` | Runs a code review + updates the progress trace / checkpoint |
+| `write-rfc` / `write-drp` | Whichever finishes second seals the agreement into `CONSTRAINTS.md` (R11) |
+| `write-architecture` | Generates an ARCHITECTURE doc (or a CHANGE-REQUEST); extends the contract |
+| `make-workplan` | Turns a DRP/architecture into phases, milestones, tasks + test gates + per-phase contract checks |
+| `milestone-review` | Runs a code review + contract check; updates the progress trace / checkpoint |
 
 ### Reuse before building
 R10 applies to the method itself: where Claude Code already does something well, the skill

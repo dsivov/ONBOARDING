@@ -46,6 +46,19 @@ pie showData
 ### S1 — {{one-line claim}}
 - **Where:** `{{file}}:{{line}}`  ·  **Risk:** {{…}}  ·  **Fix:** {{…}}
 
+## Contract check (methodology R11)
+> Walk `CONSTRAINTS.md` against this milestone's diff. Every constraint gets a verdict — a
+> silent omission reads as "held". An unreported drift is a **Critical** finding on its own.
+
+| ID | Verdict | Evidence |
+|----|---------|----------|
+| {{A1}} | {{held \| drifted \| n/a}} | {{`file:line` — what the diff does}} |
+| {{A2}} | {{held}} | {{…}} |
+
+- **Any drift reported to the human before it landed?** {{yes — D-NN \| no → C# finding}}
+- **Contract amended this milestone?** {{no \| yes → v{{n}}, amendment row + `D-NN` logged}}
+- **Non-goals still respected?** {{yes \| no — {{which}}}}
+
 ## Layout & dependency drift (methodology R10)
 - **Layout matches the doc?** {{yes | no — `{{path}}` isn't in the architecture layout}}
 - **Manifest matches the declared library table?** {{yes | no — `{{lib}}` added off-plan}}
@@ -59,4 +72,5 @@ pie showData
 - [ ] All **Critical** fixed → milestone gate can pass.
 - [ ] **High** fixed or logged as open findings in the next checkpoint.
 - [ ] Layout & dependencies match the design docs (or the docs were updated).
+- [ ] **Every constraint in `CONSTRAINTS.md` still holds** (or was amended with approval).
 - Decisions arising: log in `DECISIONS.md`.

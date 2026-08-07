@@ -10,7 +10,7 @@ milestone, with a consistent house visual style.
 
 **The problem it solves:** agentic coding makes it cheap to produce code and expensive to
 know whether that code was a good idea. This repo is the operating system that goes around
-the agent — a fixed set of artifacts, ten rules, and seven skills that turn "ask an agent to
+the agent — a fixed set of artifacts, eleven rules, and seven skills that turn "ask an agent to
 build it" into a traceable pipeline where every build points back to a written proposal,
 every claim points to a measurement, and every milestone is reviewed before the next starts.
 
@@ -21,14 +21,17 @@ first BLOG to shipped, reviewed code — in any project, without reinventing it.
 
 ```
           ┌── RFC (approach) ──┐
-BLOG ─▶   │   co-authored ↕    │ ─▶ ARCHITECTURE / CHANGE-REQUEST ─▶ WORK PLAN ─▶ ⟳ milestones
-          └── DRP (detail) ────┘                                     (tasks + test gates)   │
-                    └──────────────── DECISIONS log ────────────────────────────────────┐  │
-                                                                                          ▼  ▼
-                                                          CODE REVIEW + CHECKPOINT each milestone
-                                                                                          │
-                                                          progress trace + docs/ artifacts + memory
+BLOG ─▶   │   co-authored ↕    │ ─▶ CONSTRAINTS ─▶ ARCHITECTURE / CHANGE-REQUEST ─▶ WORK PLAN ─▶ ⟳ milestones
+          └── DRP (detail) ────┘    (the contract)                                  (tasks + gates)  │
+                    └──────────────── DECISIONS log ─────────────────────────────────────────────┐  │
+                                                                                                 ▼  ▼
+                                                             CODE REVIEW + CHECKPOINT each milestone
+                                                                                                 │
+                                                             progress trace + docs/ artifacts + memory
 ```
+
+Once the RFC + DRP are agreed, that agreement is frozen into **`CONSTRAINTS.md`** — one page the
+agent carries in context every session and checks every top-level decision against.
 
 RFC & DRP are a **coupled pair** — co-author them (RFC leads on approach, DRP on detail);
 sequential or merged-into-one are variants. See [METHODOLOGY.md](METHODOLOGY.md) §1.
@@ -36,6 +39,8 @@ sequential or merged-into-one are variants. See [METHODOLOGY.md](METHODOLOGY.md)
 - **BLOG** (`.html`) — the vision / narrative. Why this, why now, for whom.
 - **RFC** (`.html`) — the proposal: what we assemble, build, avoid; decisions; phased plan.
 - **DRP** (`.md`) — Detailed Requirements & Plan: scope, requirements, constraints, acceptance criteria.
+- **CONSTRAINTS** (`.md`) — the architecture contract: the agreed top-level design in ~15
+  falsifiable sentences. Loaded every session; drift from it stops the build and goes to a human.
 - **ARCHITECTURE** (`.html`) / **CHANGE-REQUEST** (`.md`) — how it's built, or a scoped change on top.
 - **WORK PLAN** (`.md`) — phases → milestones (M1, M2…) → checkbox tasks, each milestone with **test gates**.
 - **CODE REVIEW** (`.md`) — per-milestone review, findings by severity (C/H/M/S).
@@ -169,8 +174,11 @@ their own; `--copy` freezes them and needs a re-run to update.
 - **Ask in planning, don't guess** — ambiguity is cheapest to fix before the artifact is written.
 - **Design docs name the layout, the libraries, and what already exists** — and reuse it; never
   two libraries for one job.
+- **The architecture contract is checked, not remembered** — `CONSTRAINTS.md` holds the agreed
+  design as ~15 falsifiable sentences, loaded into context every session. Would a change make one
+  of them false? Stop, report the drift, ask. Approved changes amend the contract first.
 
-The full set is [METHODOLOGY.md §2](METHODOLOGY.md#2--the-rules-that-make-it-work) (R1–R10),
+The full set is [METHODOLOGY.md §2](METHODOLOGY.md#2--the-rules-that-make-it-work) (R1–R11),
 or the illustrated version in [docs/METHODOLOGY.html](docs/METHODOLOGY.html).
 
 ## Built on, not instead of

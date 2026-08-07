@@ -30,6 +30,14 @@ From `docs/templates/CODE_REVIEW.template.md` (copied into the project by new-pr
   Prefer confirmed issues over a long speculative list.
 - List **non-issues confirmed** so they aren't re-flagged next time.
 - Include the mermaid severity summary.
+- **Check the contract** (methodology R11): walk `docs/CONSTRAINTS.md` against the milestone's
+  diff and give **every** constraint a verdict — `held` / `drifted` / `n/a` — with evidence.
+  This is the backstop for the tripwires: if one was missed mid-build, this is where it surfaces,
+  at the last cheap moment. **Drift that shipped without being reported is a Critical finding**
+  regardless of whether the code is good — the failure is the silence, not the design. Drift that
+  *was* reported and approved must show its amendment row and `D-NN`. Also flag constraints that
+  have gone **stale** (still enforced, no longer describe the design) — those get amended, not
+  worked around.
 - **Check layout & dependency drift** (methodology R10): does the code sit where the
   architecture/DRP layout says it does, and does the manifest match the declared library
   table? Flag any dependency added off-plan, and any **new library that duplicates one
@@ -38,10 +46,15 @@ From `docs/templates/CODE_REVIEW.template.md` (copied into the project by new-pr
 
 ## 3 · Checkpoint (periodic) → `docs/PROJECT_REVIEW_<date>.md`
 From `docs/templates/CHECKPOINT_REVIEW.template.md`. Carry forward open findings, mark
-`✅ FIXED`, give the recommended next sequence, and a phase-status mermaid.
+`✅ FIXED`, give the recommended next sequence, and a phase-status mermaid. Include the
+**contract standing** section (R11): amendments since the last checkpoint, constraints gone
+stale, and where the contract keeps getting argued with — sustained pressure on one constraint
+usually means the design is wrong, and that's a finding worth raising to the human.
 
 ## 4 · Advance the trace
 - Check off completed tasks in the work plan; mark the milestone done.
 - Log any decisions in `DECISIONS.md`; update `DOCS_INDEX.md`.
+- **Open the next milestone with its contract check** (R11) — re-read `CONSTRAINTS.md` and name
+  the constraints the upcoming phase touches before its first task starts.
 - Critical/High must be fixed (or explicitly deferred as a logged open finding) before the
   next milestone starts (methodology R4). Don't merge to main unverified (R5).

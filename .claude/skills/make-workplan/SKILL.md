@@ -19,7 +19,13 @@ Produce `docs/<NAME>_WORK_PLAN.md` from `docs/templates/WORK_PLAN.template.md` (
    `P0` includes the environment task: the dependency manifest (`environment.yml`,
    `pyproject.toml`, `requirements.txt`, `package.json`) pinned to the agreed libraries.
 4. Add the phase-overview table and a **mermaid** phase→gate flowchart.
-5. Include the Definition of Done block and the progress-trace note.
+5. **Wire in the contract (R11):** link `CONSTRAINTS.md` in the header, and open every phase with
+   a `- [ ] **Contract check (R11)**` task naming the constraint IDs (`A#`) that phase touches.
+   That is the *written* trigger — the always-loaded file makes the contract available; this task
+   is what makes checking it happen at a fixed point rather than when someone remembers.
+   A phase whose tasks can't be traced to constraints without contradicting one is a drift: raise
+   it now, while it's still a plan and costs nothing.
+6. Include the Definition of Done block and the progress-trace note.
 
 ## Rules
 - Every milestone has an explicit, testable **gate** (methodology R3) — written now, not later.
@@ -28,6 +34,8 @@ Produce `docs/<NAME>_WORK_PLAN.md` from `docs/templates/WORK_PLAN.template.md` (
   add a task here first (methodology R1).
 - **No dependency arrives off-plan.** A library not in the DRP's table gets added there
   first, with its justification against what's already installed (methodology R10).
+- **Nothing is planned that breaks `CONSTRAINTS.md`** (R11). If the plan needs it, the contract
+  gets amended with the human's approval *before* the task is written — never after.
 
 ## Finish
 - Add to `docs/DOCS_INDEX.md`. The checkboxes are the progress trace — keep them current.

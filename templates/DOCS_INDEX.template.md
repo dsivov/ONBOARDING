@@ -10,13 +10,17 @@ See [../ONBOARDING/METHODOLOGY.md](../ONBOARDING/METHODOLOGY.md) for the method.
 flowchart LR
   BLOG --> RFC
   RFC <--> DRP
-  RFC --> ARCH[ARCHITECTURE]
-  DRP --> ARCH
+  RFC --> CON[CONSTRAINTS.md]
+  DRP --> CON
+  CON --> ARCH[ARCHITECTURE]
   ARCH --> WP[WORK PLAN] --> REV[reviews]
+  CON -.checked by.-> WP
+  CON -.checked by.-> REV
   DEC[DECISIONS.md] -.-> RFC
   DEC -.-> ARCH
   classDef n fill:#1b2740,stroke:#5b8def,color:#e7ebf3;
-  class BLOG,RFC,DRP,ARCH,WP,REV,DEC n;
+  classDef c fill:#2a2114,stroke:#f0a73c,color:#ffce86;
+  class BLOG,RFC,DRP,ARCH,WP,REV,DEC n; class CON c;
 ```
 _RFC & DRP are co-authored (approach ↔ detail); see METHODOLOGY.md §1._
 
@@ -26,6 +30,10 @@ _RFC & DRP are co-authored (approach ↔ detail); see METHODOLOGY.md §1._
 ## Proposal & requirements
 - [{{NAME}}_RFC.html]({{NAME}}_RFC.html) — {{one line}}
 - [{{NAME}}_DRP.md]({{NAME}}_DRP.md) — {{one line}}
+
+## The contract
+- [CONSTRAINTS.md](CONSTRAINTS.md) — the agreed top-level architecture in ~15 falsifiable
+  sentences. Loaded every session; drift from it stops the build (R11).
 
 ## Design
 - [{{NAME}}_ARCHITECTURE.html]({{NAME}}_ARCHITECTURE.html) — {{one line}}
