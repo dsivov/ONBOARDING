@@ -25,7 +25,14 @@ Produce `docs/<NAME>_WORK_PLAN.md` from `docs/templates/WORK_PLAN.template.md` (
    is what makes checking it happen at a fixed point rather than when someone remembers.
    A phase whose tasks can't be traced to constraints without contradicting one is a drift: raise
    it now, while it's still a plan and costs nothing.
-6. Include the Definition of Done block and the progress-trace note.
+6. **Mark each milestone's handoff (R12 · §8):** every milestone ends with a
+   `**Handoff (§8):**` line — the developer sends `M<n> READY` (branch · sha · gate result) and
+   **stops**; the manager reviews and replies `FINDINGS M<n>` or `PROCEED`. Write it whether or not
+   two sessions are running today: single-session, it's the same review with no message, and the
+   plan shouldn't have to be rewritten to switch modes. The plan is also the developer's whole
+   brief, so a task it can't act on without asking is a task that isn't finished — resolve the
+   ambiguity here (R9), not over a `BLOCKED` signal later.
+7. Include the Definition of Done block and the progress-trace note.
 
 ## Rules
 - Every milestone has an explicit, testable **gate** (methodology R3) — written now, not later.

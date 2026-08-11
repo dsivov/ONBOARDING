@@ -48,6 +48,8 @@ flowchart LR
 
 **Gate (M1):** {{the exact assertions that must pass}}.
 **Review:** run `/milestone-review` → `{{NAME}}_CODE_REVIEW.md` (M1). Fix Critical/High before P2.
+**Handoff (§8):** developer sends `M1 READY` (branch · sha · gate result) and **stops**; manager
+reviews and replies `FINDINGS M1` or `PROCEED`. Single-session? Same review, no message.
 
 ## P2 · {{Engine}} → **M2**
 
@@ -57,6 +59,7 @@ flowchart LR
 
 **Gate (M2):** {{…}}.
 **Review:** code review; update checkpoint.
+**Handoff (§8):** `M2 READY` → wait for `FINDINGS M2` / `PROCEED`.
 
 ## P3 · {{Surface / UI}} → **M3**
 
@@ -65,6 +68,7 @@ flowchart LR
 - [ ] `test_{{…}}.py` — {{…}}
 
 **Gate (M3):** {{…}}.
+**Handoff (§8):** `M3 READY` → wait for `FINDINGS M3` / `PROCEED`.
 
 ---
 
@@ -75,7 +79,8 @@ flowchart LR
   and the contract amended before the code landed (methodology R11).
 - Milestone **gate passes**; **code review** clean (no open Critical/High).
 - Any measured claim has a reproducible harness in `scripts/` (methodology R2).
-- Docs updated; `DECISIONS.md` and `DOCS_INDEX.md` current.
+- Docs updated; `DECISIONS.md` and `DOCS_INDEX.md` current — **by the manager** if two sessions
+  are running (R12): the developer never edits `docs/`, not even to tick a box here.
 
 ## Progress trace
 

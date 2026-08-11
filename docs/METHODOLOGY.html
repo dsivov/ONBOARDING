@@ -35,6 +35,7 @@
     <li><a href="#lifecycle">A project, end to end</a></li>
     <li><a href="#rules">The rules that matter</a></li>
     <li><a href="#git">The GitHub cycle</a></li>
+    <li><a href="#roles">Two sessions: manager &amp; developer</a></li>
     <li><a href="#trace">The progress trace</a></li>
     <li><a href="#style">House style</a></li>
     <li><a href="#skills">Skills that automate it</a></li>
@@ -289,6 +290,20 @@
     <p>That last line is the whole mechanism. It turns "are we still aligned with the architecture?" —
     a judgment call that quietly degrades over a long session — into a <b>text-consistency check</b>
     against fifteen sentences. Which is exactly the kind of check that survives.</p>
+
+    <h3>One more rule — and it's about who's in the room</h3>
+    <div class="callout key"><div class="clabel">◆ R12 · One human interface</div>
+      The human talks to <b>exactly one session</b>: the <b>manager</b>. It owns every document, every
+      review, and every call that needs a person. Any other session — a <b>developer</b> building against
+      the plan — reports to the manager and waits. It never asks the human directly, and never invents an
+      answer to keep moving. Four things force a report and nothing else does: a <b>finished milestone</b>,
+      a <b>blocker</b>, a <b>contract drift</b> (R11), and <b>work the plan doesn't have</b> (R1/R10).
+      Alone in a session? You're the manager, and R12 is already satisfied.</div>
+    <p>There are two different bottlenecks here and they want opposite treatment. Judgment is limited by
+    <b>human attention</b> — it improves when every question arrives in one place, in order, to someone with
+    the docs open. Typing is limited by <b>permission prompts</b> — it improves when nothing needs approving
+    at all. One session can't be optimised for both; two can. That shape is
+    <a href="#roles">the next section</a>.</p>
   </section>
 
   <section id="git">
@@ -342,6 +357,166 @@
     <div class="callout key"><div class="clabel">◆ Rule of thumb</div>
       Branch per feature · commit per task · push per milestone · merge per passed-gate-and-clean-review.
       Commit &amp; push only when asked.</div>
+  </section>
+
+  <section id="roles">
+    <div class="kicker">Two sessions</div>
+    <h2>One session talks to you. The other never stops.</h2>
+    <p class="lead-p">R12 says the human talks to one session. This is the shape that makes it pay off:
+    <b>two sessions, one repo, different jobs and deliberately different permission levels.</b> A mode,
+    not a requirement — small work stays single-session.</p>
+    <p>An agent that both writes the docs and types the code stops constantly: for permission, for a
+    question, to show you something. Most of those stops don't need <i>you</i> — they need a decision from
+    someone holding the plan. So separate them. One session holds the documents, the reviews and the human.
+    The other holds nothing but the current milestone, and runs flat out inside a sandbox where nothing
+    needs approving.</p>
+
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 372" role="img" aria-label="the manager and developer sessions, the four signals between them, and the human on the manager's side only">
+        <defs>
+          <marker id="sl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#f0a73c"/></marker>
+          <marker id="sg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#3ecf8e"/></marker>
+          <marker id="sh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker>
+        </defs>
+        <style>.rbx{rx:11;stroke-width:1.8}.rt{fill:#fff;font:800 13px "Segoe UI",sans-serif;text-anchor:middle}.rk{fill:#e7ebf3;font:8.5px var(--mono),monospace;text-anchor:middle}.rl{fill:#c9d1e0;font:9.5px "Segoe UI",sans-serif;text-anchor:start}.sg{font:800 9px var(--mono),monospace;text-anchor:middle}.cap{fill:#8a93a8;font:italic 9.5px "Segoe UI",sans-serif;text-anchor:middle}</style>
+
+        <!-- human -->
+        <rect class="rbx" x="10" y="132" width="82" height="62" fill="rgba(231,235,243,.08)" stroke="#8a93a8"/>
+        <text class="rt" x="51" y="160">HUMAN</text>
+        <text class="rk" x="51" y="178">you</text>
+        <path d="M94,152 L150,152" fill="none" stroke="#8a93a8" stroke-width="1.6" marker-end="url(#sh)"/>
+        <path d="M150,176 L96,176" fill="none" stroke="#8a93a8" stroke-width="1.6" marker-end="url(#sh)"/>
+        <text class="cap" x="122" y="206">R12 · the</text>
+        <text class="cap" x="122" y="218">only link</text>
+        <text class="cap" x="122" y="230">to a person</text>
+
+        <!-- manager -->
+        <rect class="rbx" x="152" y="26" width="196" height="300" fill="rgba(240,167,60,.13)" stroke="var(--c)"/>
+        <text class="rt" x="250" y="54">MANAGER</text>
+        <text class="rk" x="250" y="72" fill="#ffce86">host · mgr-&lt;project&gt;</text>
+        <text class="rk" x="250" y="88" fill="#ffce86">normal permissions</text>
+        <line x1="168" y1="102" x2="332" y2="102" stroke="var(--c)" stroke-width="1" opacity=".45"/>
+        <text class="rl" x="172" y="126">▸ every doc in docs/</text>
+        <text class="rl" x="172" y="148">▸ the milestone reviews</text>
+        <text class="rl" x="172" y="170">▸ the contract + amendments</text>
+        <text class="rl" x="172" y="192">▸ DECISIONS.md</text>
+        <text class="rl" x="172" y="214">▸ the servers — host, 0.0.0.0</text>
+        <text class="rl" x="172" y="236">▸ integration &amp; environment</text>
+        <line x1="168" y1="258" x2="332" y2="258" stroke="var(--c)" stroke-width="1" opacity=".45"/>
+        <text class="rl" x="172" y="280" fill="#8a93a8">✗ never edits the tree</text>
+        <text class="rl" x="172" y="298" fill="#8a93a8">   mid-milestone — a</text>
+        <text class="rl" x="172" y="312" fill="#8a93a8">   finding goes back as one</text>
+
+        <!-- developer -->
+        <rect class="rbx" x="556" y="26" width="192" height="300" fill="rgba(169,116,240,.15)" stroke="var(--ctrl)"/>
+        <text class="rt" x="652" y="54">DEVELOPER</text>
+        <text class="rk" x="652" y="72" fill="#d3b6f7">sandbox · dev-&lt;project&gt;</text>
+        <text class="rk" x="652" y="88" fill="#d3b6f7">no permission prompts</text>
+        <line x1="572" y1="102" x2="732" y2="102" stroke="var(--ctrl)" stroke-width="1" opacity=".45"/>
+        <text class="rl" x="576" y="126">▸ the plan's tasks</text>
+        <text class="rl" x="576" y="148">▸ the code and its tests</text>
+        <text class="rl" x="576" y="170">▸ runs the test gate</text>
+        <text class="rl" x="576" y="192">▸ commits per task</text>
+        <line x1="572" y1="214" x2="732" y2="214" stroke="var(--ctrl)" stroke-width="1" opacity=".45"/>
+        <text class="rl" x="576" y="236" fill="#8a93a8">✗ never edits docs/</text>
+        <text class="rl" x="576" y="254" fill="#8a93a8">✗ never starts a server</text>
+        <text class="rl" x="576" y="272" fill="#8a93a8">✗ never messages the human</text>
+        <text class="rl" x="576" y="290" fill="#8a93a8">✗ never decides — reports</text>
+        <text class="rk" x="652" y="314" fill="#d3b6f7">more permission, less authority</text>
+
+        <!-- the four signals: developer → manager -->
+        <text class="sg" x="452" y="34" fill="#ffce86">the four reasons to stop</text>
+        <text class="rk" x="452" y="60">M&lt;n&gt; READY · gate passed</text>
+        <path d="M552,70 L356,70" fill="none" stroke="var(--c)" stroke-width="1.6" marker-end="url(#sl)"/>
+        <text class="rk" x="452" y="102">BLOCKED · can't proceed</text>
+        <path d="M552,112 L356,112" fill="none" stroke="var(--c)" stroke-width="1.6" marker-end="url(#sl)"/>
+        <text class="rk" x="452" y="144">DRIFT A&lt;n&gt; · R11</text>
+        <path d="M552,154 L356,154" fill="none" stroke="var(--c)" stroke-width="1.6" marker-end="url(#sl)"/>
+        <text class="rk" x="452" y="186">PLAN GAP · R1 / R10</text>
+        <path d="M552,196 L356,196" fill="none" stroke="var(--c)" stroke-width="1.6" marker-end="url(#sl)"/>
+
+        <!-- replies: manager → developer -->
+        <text class="rk" x="452" y="248" fill="#7ee3b4">FINDINGS · PROCEED</text>
+        <text class="rk" x="452" y="262" fill="#7ee3b4">ANSWER · AMENDED</text>
+        <path d="M356,276 L548,276" fill="none" stroke="var(--ok)" stroke-width="1.7" marker-end="url(#sg)"/>
+        <text class="cap" x="452" y="300">between signals it does not</text>
+        <text class="cap" x="452" y="313">stop — and after one, it waits</text>
+      </svg>
+      <figcaption><b>More machine permission, less authority.</b> The developer can do anything to the
+        sandbox and nothing to the plan. Every arrow that reaches a person passes through the manager —
+        that's R12, and it's what lets the right-hand side run without ever asking.</figcaption>
+    </div></figure>
+
+    <h3>The four signals, and what comes back</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Signal</th><th>Fires when</th><th>Carries</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill c">M&lt;n&gt; READY</span></td><td>the milestone's test gate passes (R3)</td>
+          <td>branch + commit sha · the gate command and its result · one sentence on what changed. <b>Requests the review</b> (R4)</td></tr>
+        <tr><td><span class="pill c">BLOCKED</span></td><td>it genuinely cannot proceed</td>
+          <td>what's blocked · what was already tried · what it needs</td></tr>
+        <tr><td><span class="pill danger">DRIFT A&lt;n&gt;</span></td><td>a change would make a constraint false (R11)</td>
+          <td>constraint ID · what the contract says · what the change needs · why · comply / amend / defer</td></tr>
+        <tr><td><span class="pill c">PLAN GAP</span></td><td>the work needs a task the plan doesn't have (R1), or a library not in the DRP's table (R10)</td>
+          <td>what's missing · the task or dependency proposed · what it displaces</td></tr>
+        <tr><td><span class="pill win">FINDINGS M&lt;n&gt;</span></td><td>the manager finished the review</td>
+          <td>the Critical/High IDs, the order to fix them in, the path to the CODE_REVIEW</td></tr>
+        <tr><td><span class="pill win">PROCEED · ANSWER · AMENDED</span></td><td>cleared · decided · contract changed</td>
+          <td>the next milestone · the decision (+ its <span class="mono">D-NN</span>) · the new contract version</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout danger"><div class="clabel">◆ Having sent a signal, the developer stops</div>
+      It does not start the next milestone. It does not find a smaller task to fill the wait. It does not
+      "just tidy something up". <b>The value of a checkpoint is that the code being reviewed isn't moving
+      while it's reviewed</b> — so waiting is the correct state, and a silent developer mid-milestone is
+      the system working, not a session to go poke.</div>
+
+    <h3>Why the servers belong to the manager</h3>
+    <p>This one is mechanical rather than stylistic. The sandbox publishes no ports, so a server started
+    inside it is unreachable from a browser — and we work remotely, so <span class="mono-chip">127.0.0.1</span>
+    is unreachable too. Long-lived servers therefore run on the <b>host</b>, started by the manager, always
+    bound to <span class="mono-chip">0.0.0.0</span>. Short-lived test servers that live and die inside a
+    test are the developer's business and stay there.</p>
+
+    <h3>What the sandbox has to provide</h3>
+    <p>Three requirements, and they exist so the messaging works at all — sessions advertise themselves in
+    <span class="mono-chip">~/.claude/sessions/&lt;pid&gt;.json</span>, listen on a unix socket, and check each
+    other's liveness against <span class="mono-chip">/proc/&lt;pid&gt;</span>.</p>
+    <div class="grid g3">
+      <div class="card rail ra"><h3 style="margin-top:0">Same path, both sides</h3>
+        <p class="small">The repo mounted at the <b>identical path</b> in the sandbox and on the host —
+        otherwise a pointer in a message doesn't resolve, and pointers are all the messages carry.</p></div>
+      <div class="card rail rb"><h3 style="margin-top:0">Shared <span class="mono">~/.claude</span></h3>
+        <p class="small">That's the session registry. Without it neither side can discover the other, so
+        <span class="mono">ListAgents</span> comes back empty and there's nothing to address.</p></div>
+      <div class="card rail rctrl"><h3 style="margin-top:0">Shared PID ns + sockets</h3>
+        <p class="small"><span class="mono">--pid=host</span> and the
+        <span class="mono">cc-socks</span> directory. Liveness is <span class="mono">/proc/&lt;pid&gt;</span>,
+        so without a shared namespace each side prunes the other as a dead process.</p></div>
+    </div>
+    <div class="callout info"><div class="clabel">◆ What the container actually buys you</div>
+      A sandbox mounting your source and <span class="mono-chip">~/.claude</span> read-write, sharing the host
+      PID namespace, <b>reduces blast radius — it is not a security boundary</b>.
+      <span class="mono-chip">--dangerously-skip-permissions</span> inside it is a bet that the agent won't wreck
+      something git can't restore. It is not a bet that a hostile process can't get out. Worth knowing which
+      bet you're making.</div>
+
+    <h3>Running it</h3>
+    <p><span class="mono-chip">/new-project</span> installs both launchers and both role briefs into
+    <span class="mono-chip">.claude/roles/</span>, inert until you use them. The launchers name the sessions
+    (<span class="mono">claude -n mgr-&lt;project&gt;</span> / <span class="mono">dev-&lt;project&gt;</span>) and
+    load the matching brief into the system prompt, so neither side has to discover anything:</p>
+    <div class="callout"><div class="clabel">◆ Two commands</div>
+      <span class="mono">.claude/roles/manager.sh</span> — host, normal permissions, talks to you.<br>
+      <span class="mono">.claude/roles/developer.sh</span> — starts the sandbox, then the developer inside it.
+      <span class="mono">--here</span> skips the container; <span class="mono">CLAUDE_DOCKER=&lt;path&gt;</span>
+      points at a different one.</div>
+    <p class="pull">Build → signal → wait → fix → build. You only ever see the manager's half of it.</p>
+    <p>And the degenerate case is the important one: <b>a single session <i>is</i> the manager.</b> It owns the
+    docs, it talks to you, R12 holds trivially and this whole section is simply off. The artifacts, the gates
+    and the reviews are identical either way — the split changes <i>who</i> does each part, never <i>what</i>
+    gets done.</p>
   </section>
 
   <section id="trace">

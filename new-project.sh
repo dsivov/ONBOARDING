@@ -79,12 +79,36 @@ install_claude_dir() {
   echo "  installed .claude/ (hooks + settings.json)"
 }
 
+# Role files for the two-session split (methodology R12 · §8). Installed always and
+# inert until used — a solo session is the manager, so this costs nothing but makes
+# switching modes later a one-command move. Bash does it for the same reason as
+# install_claude_dir: chmod +x and a placeholder substitution need no model judgment.
+install_roles() {
+  local dst="$DIR/.claude/roles" slug src out
+  slug="$(basename "$DIR")"
+  mkdir -p "$dst"
+  cp "$KIT"/templates/roles/*.sh "$dst/" 2>/dev/null || true
+  chmod +x "$dst"/*.sh 2>/dev/null || true
+
+  for pair in "ROLE_MANAGER.template.md:MANAGER.md" "ROLE_DEVELOPER.template.md:DEVELOPER.md"; do
+    src="$KIT/templates/${pair%%:*}"; out="$dst/${pair##*:}"
+    [ -f "$src" ] || continue
+    [ -f "$out" ] && continue   # never clobber a brief someone has tuned
+    # Drop the leading TEMPLATE comment; fill the display name and the session slug
+    # (which is what manager.sh/developer.sh derive from the directory).
+    sed -e '/^<!-- TEMPLATE:/,/-->/d' \
+        -e "s|{{PROJECT}}|${NAME}|g" \
+        -e "s|{{project}}|${slug}|g" "$src" > "$out"
+  done
+  echo "  installed .claude/roles/ (manager.sh · developer.sh · MANAGER.md · DEVELOPER.md)"
+}
+
 PROMPT="Use the new-project skill to bootstrap the house methodology in ${DIR}.
 Project name: ${NAME}.
 Description: ${DESC:-(none given — ask nothing, leave the one-liner generic)}.
 The ONBOARDING kit is at ${KIT} — copy templates, assets/house.css and the hooks from there.
-SKIP the .claude/ part of step 6: hooks and settings.json are ALREADY installed. Leave
-.claude/ untouched and don't report it as missing. Do everything else in the skill.
+SKIP every .claude/ step: hooks, settings.json and .claude/roles/ (step 7) are ALREADY
+installed. Leave .claude/ untouched and don't report it as missing. Do everything else.
 Run non-interactively: do not ask questions, do not commit anything (methodology R5).
 Finish by printing a one-line summary of what was created."
 
@@ -113,6 +137,7 @@ if [ "$DRY" -eq 1 ]; then
 fi
 
 install_claude_dir
+install_roles
 echo
 
 cd "$DIR"

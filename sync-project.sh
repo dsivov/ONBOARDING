@@ -6,9 +6,11 @@
 # That means methodology updates don't reach it. This script pushes them back in.
 #
 # SAFE BY DESIGN: only refreshes kit-owned files (templates/, assets/house.css,
-# docs/METHODOLOGY.md). Never touches authored artifacts (your BLOG/RFC/DRP/
-# ARCHITECTURE/WORK_PLAN/DECISIONS/DOCS_INDEX). CLAUDE.md and settings.json are
-# only REPORTED on — they carry project-specific content, so you merge those.
+# docs/METHODOLOGY.md, and the kit's own executables under .claude/hooks + .claude/roles
+# — those are verbatim copies of templates/, with no project-specific content).
+# Never touches authored artifacts (your BLOG/RFC/DRP/ARCHITECTURE/WORK_PLAN/
+# DECISIONS/DOCS_INDEX), and never an edited role brief. CLAUDE.md and settings.json
+# are only REPORTED on — they carry project-specific content, so you merge those.
 #
 # Usage:
 #   ./sync-project.sh <project-dir>     # refresh kit files, report what needs a merge
@@ -51,14 +53,51 @@ for f in "$KIT"/templates/*; do
   [ -f "$f" ] || continue
   cp_if_changed "$f" "$PROJ/docs/templates/$(basename "$f")" "$(basename "$f")"
 done
-if [ -d "$KIT/templates/hooks" ]; then
-  [ "$DRY" -eq 1 ] || mkdir -p "$PROJ/docs/templates/hooks"
-  for f in "$KIT"/templates/hooks/*; do
+for sub in hooks roles; do
+  [ -d "$KIT/templates/$sub" ] || continue
+  [ "$DRY" -eq 1 ] || mkdir -p "$PROJ/docs/templates/$sub"
+  for f in "$KIT"/templates/"$sub"/*; do
     [ -f "$f" ] || continue
-    cp_if_changed "$f" "$PROJ/docs/templates/hooks/$(basename "$f")" "hooks/$(basename "$f")"
+    cp_if_changed "$f" "$PROJ/docs/templates/$sub/$(basename "$f")" "$sub/$(basename "$f")"
   done
-fi
+done
 
+# ---- live kit executables under .claude/ ----------------------------------
+# Copying into docs/templates/ alone would never reach the running project: the hook
+# Claude Code actually executes is .claude/hooks/session-banner.sh. These are verbatim
+# kit files with nothing project-specific in them, so they get refreshed in place.
+echo
+echo "live hooks + role launchers (.claude/)"
+for sub in hooks roles; do
+  [ -d "$KIT/templates/$sub" ] || continue
+  [ -d "$PROJ/.claude/$sub" ] || [ "$sub" = "roles" ] || continue   # don't create hooks/ where there was none
+  [ "$DRY" -eq 1 ] || mkdir -p "$PROJ/.claude/$sub"
+  for f in "$KIT"/templates/"$sub"/*.sh; do
+    [ -f "$f" ] || continue
+    cp_if_changed "$f" "$PROJ/.claude/$sub/$(basename "$f")" ".claude/$sub/$(basename "$f")"
+    [ "$DRY" -eq 1 ] || chmod +x "$PROJ/.claude/$sub/$(basename "$f")"
+  done
+done
+
+# Role briefs (R12 · §8): seeded once with the project's name, then yours to tune.
+SLUG="$(basename "$PROJ")"
+for pair in "ROLE_MANAGER.template.md:MANAGER.md" "ROLE_DEVELOPER.template.md:DEVELOPER.md"; do
+  src="$KIT/templates/${pair%%:*}"; out="$PROJ/.claude/roles/${pair##*:}"
+  [ -f "$src" ] || continue
+  if [ -f "$out" ]; then
+    # Carries a substituted project name and may have been tuned, so it's treated as
+    # authored: never overwritten. The fresh kit copy lands in docs/templates/ above
+    # if you want to hand-merge a methodology change into it.
+    echo "  ${pair##*:} — present ✓ (authored; merge from docs/templates/${pair%%:*} if the kit moved on)"
+  else
+    say "create .claude/roles/${pair##*:}"
+    [ "$DRY" -eq 1 ] || sed -e '/^<!-- TEMPLATE:/,/-->/d' \
+                            -e "s|{{PROJECT}}|${SLUG}|g" \
+                            -e "s|{{project}}|${SLUG}|g" "$src" > "$out"
+  fi
+done
+
+echo
 echo "design system + methodology"
 [ "$DRY" -eq 1 ] || mkdir -p "$PROJ/docs/assets"
 cp_if_changed "$KIT/assets/house.css" "$PROJ/docs/assets/house.css" "assets/house.css"

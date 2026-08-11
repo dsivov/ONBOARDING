@@ -171,6 +171,25 @@ The test that makes all of this executable: **if the change would make a sentenc
 `CONSTRAINTS.md` false, stop.** That is a text-consistency check, not a judgment call — which is
 exactly why it survives a long session.
 
+### R12 — One human interface
+The human talks to **exactly one session**. That session — the **manager** — owns every document,
+every review, and every call that needs a person. Any other session (a **developer** building
+against the plan) reports to the manager and waits. It never asks the human directly, and it never
+invents an answer to keep moving.
+
+Four things force a report, and nothing else does: a **finished milestone**, a **blocker**, a
+**contract drift** (R11), and **work the plan doesn't have** (R1/R10). Between those, the developer
+builds without stopping.
+
+Why the rule exists: there are two different bottlenecks and they want opposite treatment. Judgment
+is limited by *human attention* — it gets better when every question arrives in one place, in
+order, to someone with the docs open. Typing is limited by *permission prompts* — it gets better
+when nothing needs approving at all. One session can't be optimised for both. Split them and each
+gets what it needs.
+
+A single-session project satisfies R12 trivially: that session is the manager. The two-session
+shape the rule governs is **§8**.
+
 **The drift protocol (mandatory).** On a violation the agent **must not implement and then
 mention it**. It stops and reports: the **constraint ID**, what the contract says, what the change
 needs, why the change is being proposed, and options — **comply** (fit the contract),
@@ -332,7 +351,7 @@ The `.claude/skills/` here automate each stage against these templates:
 | `write-rfc` / `write-drp` | Whichever finishes second seals the agreement into `CONSTRAINTS.md` (R11) |
 | `write-architecture` | Generates an ARCHITECTURE doc (or a CHANGE-REQUEST); extends the contract |
 | `make-workplan` | Turns a DRP/architecture into phases, milestones, tasks + test gates + per-phase contract checks |
-| `milestone-review` | Runs a code review + contract check; updates the progress trace / checkpoint |
+| `milestone-review` | Runs a code review + contract check; updates the progress trace / checkpoint. In §8 mode it's also the manager's answer to an `M<n> READY` signal |
 
 ### Reuse before building
 R10 applies to the method itself: where Claude Code already does something well, the skill
@@ -359,7 +378,8 @@ durable cross-session trace, and mirroring them would create two sources of trut
 | `./install.sh` | once | Symlinks the skills into `~/.claude/skills` — updates propagate. `--copy` freezes them. |
 | `./new-project.sh <dir>` | day one | Bootstraps unattended. `--name` (defaults to the directory name), `--description`, `--dry-run`, `--yolo`. |
 | `./install.sh --new-project <dir>` | day one | Both, in one command. |
-| `./sync-project.sh <dir>` | after a method change | Refreshes copied templates/`house.css`/methodology; reports what needs a hand-merge. |
+| `./sync-project.sh <dir>` | after a method change | Refreshes copied templates/`house.css`/methodology **and the kit's live `.claude/hooks` + `.claude/roles` executables**; reports what needs a hand-merge. |
+| `.claude/roles/manager.sh` · `developer.sh` | when a build is long enough to want two sessions | Starts the manager (host) / developer (sandbox) sides of §8. Installed by `new-project`, inert until used. |
 
 Two couplings, on purpose: skills are **symlinked** so a methodology change reaches every
 project at once; templates and `house.css` are **copied** so a project stands alone if the kit
@@ -371,3 +391,157 @@ so artifact authoring doesn't prompt; code changes still do. The grant is inacti
 workspace is trusted. `new-project.sh` runs scoped (`--permission-mode acceptEdits` plus the
 scaffold's shell commands), not as a blanket bypass — `--yolo` is that, and it isn't confined
 to the target directory.
+
+---
+
+## 8 · The two-session split (manager · developer)
+
+R12 says the human talks to one session. This is the shape that makes that pay off: **two
+sessions, one repo, different jobs and deliberately different permission levels.**
+
+An agent that is both writing the docs and typing the code stops constantly — for permission, for
+a question, to show you something. Most of those stops don't actually need *you*; they need a
+decision from someone holding the plan. So separate the two. One session holds the documents, the
+reviews and the human. The other holds nothing but the current milestone, and runs flat out inside
+a sandbox where nothing needs approving.
+
+This is a **mode, not a requirement** — small work stays single-session (see *The degenerate case*
+below). It earns its keep once the build is long enough that permission prompts, rather than
+thinking, are what's slowing it down.
+
+### Who owns what
+
+| | **Manager** — host, normal permissions | **Developer** — sandbox, `--dangerously-skip-permissions` |
+|---|---|---|
+| **Talks to** | the human — the only session that does | the manager — the only session it talks to |
+| **Owns** | everything in `docs/`: BLOG · RFC · DRP · CONSTRAINTS · ARCHITECTURE · CR · WORK PLAN · CODE REVIEW · CHECKPOINT · DECISIONS · DOCS_INDEX | the code and its tests |
+| **Does** | plans, reviews each milestone (R4), amends the contract (R11), logs decisions (R7), answers the developer's questions | implements plan tasks, writes tests, runs the gate, commits granularly on the feature branch |
+| **Runs** | the servers — on the **host**, always bound to `0.0.0.0` | test processes only, inside the sandbox |
+| **Handles** | integration, environment, cross-service and "it works for you but not for me" problems | the milestone in front of it, and nothing else |
+| **Never** | reaches into the working tree mid-milestone — findings go back as *findings* | edits `docs/`, messages the human, or decides anything on its own |
+
+The asymmetry is the whole design: the developer has **more machine permission and less
+authority**. It can do anything to the sandbox and nothing to the plan.
+
+**Servers belong to the manager**, and this is mechanical rather than stylistic: the sandbox
+publishes no ports, so a server started inside it is invisible to the human's browser — and we
+work remotely, so `localhost` is invisible too. The manager starts long-lived servers on the host
+bound to `0.0.0.0`. Short-lived test servers inside the sandbox, torn down by the test that
+started them, are the developer's business and stay there.
+
+### The four signals that stop the developer
+
+Each message opens with its tag on the first line, so the manager can triage without reading
+prose:
+
+| Signal | Fires when | Carries |
+|--------|-----------|---------|
+| `M<n> READY` | the milestone's test gate passes (R3) | branch + commit sha · the gate command and its result · what changed in a sentence. **Requests the review** (R4). |
+| `BLOCKED` | it cannot proceed | what's blocked · what was already tried · what it needs from the manager |
+| `DRIFT A<n>` | an R11 tripwire fired and the change would make a constraint false | constraint ID · what the contract says · what the change needs · why · comply / amend / defer |
+| `PLAN GAP` | the work needs a task the plan doesn't have (R1), or a dependency not in the library table (R10) | what's missing · the task or dependency it proposes · what it would displace |
+
+Everything else, it just does.
+
+**Having sent a signal, the developer stops.** It does not start the next milestone and it does not
+find a smaller task to fill the wait. The value of a checkpoint is that the code being reviewed
+isn't moving while it's reviewed.
+
+### The manager's replies
+
+| Reply | Means |
+|-------|-------|
+| `FINDINGS M<n>` | review done — path to the `CODE_REVIEW`, the Critical/High list, the order to fix them in |
+| `PROCEED` | cleared to continue — the next milestone, or the next task |
+| `ANSWER` | the question is decided (with the `D-NN` if it was worth logging) |
+| `AMENDED A<n>` | the contract changed — new version, what changed, build against it now |
+
+The loop is: **build → signal → wait → fix → build.** Only the manager's side of it is visible to
+the human, and that is the point of R12.
+
+### The wire
+
+Sessions address each other by **name**, so both sides get a fixed one:
+
+```bash
+mgr-<project>     # manager, on the host
+dev-<project>     # developer, in the sandbox
+```
+
+`claude -n <name>` sets it. `ListAgents` lists the peers a session can see; `SendMessage` addresses
+one by name. The launchers in `.claude/roles/` set the names, so neither side has to discover
+anything.
+
+**Messages are signals, not payloads.** Both sides see the same working tree and the same git
+history, so a message carries a tag, a pointer, and a sentence:
+
+```
+M2 READY · feature/ingest @ 4a1c2f · gate: pytest -q tests/ingest → 34 passed
+Backfill path is in; the retry budget is per-batch, not per-record — worth a look in review.
+```
+
+Never paste a diff. The repo is the channel; the message says where to look.
+
+### What the sandbox has to provide
+
+Three requirements, and they exist so the messaging works at all:
+
+1. **The same repo at the same path** on both sides — otherwise a pointer in a message doesn't
+   resolve.
+2. **A shared `~/.claude`** — that's where sessions register themselves (`sessions/<pid>.json`).
+3. **A shared PID namespace and socket directory** (`$XDG_RUNTIME_DIR/cc-socks`) — liveness is
+   checked against `/proc/<pid>`, so without this the host and the sandbox each prune the other's
+   sessions as dead.
+
+The reference implementation is a sibling repo, `claude-docker` — an Ubuntu image with the Claude
+Code CLI whose `run.sh` mounts the work tree at its host path, shares `~/.claude`, and passes
+`--pid=host` with the socket directory. Any sandbox meeting the three requirements works just as
+well: a VM, a separate user account, a remote box.
+
+Be honest about what it buys: a container that mounts your `~/.claude` and your source read-write
+and shares the host PID namespace **reduces blast radius, it is not a security boundary**.
+`--dangerously-skip-permissions` inside it is a bet that the agent won't wreck a directory you can
+restore from git — not a bet that a hostile process can't escape.
+
+### Running it
+
+```bash
+.claude/roles/manager.sh              # host: claude -n mgr-<project>
+.claude/roles/developer.sh            # host: launches the sandbox, then dev-<project> inside it
+.claude/roles/developer.sh --here     # already inside the sandbox (or don't want one)
+```
+
+Both are installed by `new-project` alongside `.claude/roles/MANAGER.md` and `DEVELOPER.md` — the
+role briefs each session reads on startup. `CLAUDE_DOCKER=<path>` points the developer launcher at
+your sandbox if it isn't `../claude-docker`.
+
+```mermaid
+sequenceDiagram
+  actor H as Human
+  participant M as mgr-project<br/>(host · docs · review)
+  participant D as dev-project<br/>(sandbox · no prompts)
+  H->>M: "build M2"
+  M->>M: work plan · contract check (R11)
+  M->>D: PROCEED · M2, tasks 1–7
+  loop until the gate passes
+    D->>D: implement · test · commit
+  end
+  D-->>M: DRIFT A4 · needs a second datastore
+  M->>H: constraint A4 · comply / amend / defer?
+  H-->>M: amend
+  M->>M: CONSTRAINTS v2 + D-07 (R11)
+  M-->>D: AMENDED A4 · build against v2
+  D->>D: gate passes
+  D-->>M: M2 READY · feature/x @ 4a1c2f
+  M->>M: /milestone-review → CODE_REVIEW (R4)
+  M-->>D: FINDINGS M2 · C1, H2 first
+  D->>D: fix · re-run gate
+  D-->>M: M2 READY · fixes in
+  M->>H: M2 reviewed and clean — merge?
+```
+
+### The degenerate case
+
+One session on its own **is** the manager: it owns the docs, it talks to the human, R12 is
+satisfied and §8 is simply off. Nothing in the pipeline changes — the artifacts, the gates and the
+reviews are identical either way. The split changes *who* does each part, never *what* gets done.

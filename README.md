@@ -10,7 +10,7 @@ milestone, with a consistent house visual style.
 
 **The problem it solves:** agentic coding makes it cheap to produce code and expensive to
 know whether that code was a good idea. This repo is the operating system that goes around
-the agent — a fixed set of artifacts, eleven rules, and seven skills that turn "ask an agent to
+the agent — a fixed set of artifacts, twelve rules, and seven skills that turn "ask an agent to
 build it" into a traceable pipeline where every build points back to a written proposal,
 every claim points to a measurement, and every milestone is reviewed before the next starts.
 
@@ -61,6 +61,7 @@ ONBOARDING/
   sync-project.sh            ← push methodology updates into an already-onboarded project
   assets/house.css           ← the shared dark-theme design system (docs)
   templates/                 ← fill-in templates for every artifact (+ CLAUDE.md, settings, hooks)
+  templates/roles/           ← manager/developer launchers for the two-session mode (R12 · §8)
   frontend-kit/              ← standalone themed HTML UI kit (no build)
   docs/                      ← the illustrated methodology guide + LinkedIn poster
   .claude/skills/            ← installable skills that generate the artifacts
@@ -145,6 +146,48 @@ Bootstrapped projects also get `permissions.allow` for `Read`/`Edit`/`Write` on 
 the architect and manager skills author artifacts without a permission click. It's scoped to
 `docs/` deliberately — code changes still ask.
 
+## Two sessions: a manager and a developer
+
+Optional mode, and the one that changes how a long build *feels*. Instead of one session that
+alternates between writing docs and typing code — stopping for permission every few minutes —
+run **two sessions against one repo**:
+
+```bash
+.claude/roles/manager.sh      # host · normal permissions · owns docs/, reviews, servers, you
+.claude/roles/developer.sh    # sandbox · --dangerously-skip-permissions · owns the code
+```
+
+**You only ever talk to the manager** (that's rule R12). It holds every document, runs every
+milestone review, amends the contract, and starts the servers — on the host, bound `0.0.0.0`,
+because we work remotely. The developer holds nothing but the current milestone and runs flat out
+inside a container where no prompt can interrupt it.
+
+It stops for exactly four things, and reports each to the manager over Claude Code's
+`SendMessage`, then waits:
+
+| Signal | Fires when |
+|---|---|
+| `M<n> READY` | the milestone's test gate passes — requests the code review |
+| `BLOCKED` | it genuinely can't proceed |
+| `DRIFT A<n>` | a change would make a `CONSTRAINTS.md` sentence false (R11) |
+| `PLAN GAP` | the work needs a task the plan doesn't have, or a library not in the DRP's table |
+
+The manager reviews, and replies `FINDINGS M<n>` / `PROCEED` / `ANSWER` / `AMENDED A<n>`. So the
+build runs at full speed between checkpoints, every question still reaches you in one place and
+in order, and the code being reviewed isn't moving while it's reviewed.
+
+The sandbox needs three things so the two sessions can see each other: the repo at the **same
+path** on both sides, a shared **`~/.claude`**, and a shared **PID namespace + `cc-socks`**
+directory. A sibling `claude-docker` repo (Ubuntu + the Claude Code CLI, `--pid=host`, the work
+tree at its host path) is the reference implementation and does all three;
+`CLAUDE_DOCKER=<path>` points the launcher at a different one. Be clear-eyed about what it buys:
+a container mounting your source and `~/.claude` read-write bounds the blast radius, it is not a
+security boundary.
+
+`/new-project` installs the launchers and both role briefs into `.claude/roles/` — inert until you
+use them. **A solo session is the manager**, R12 holds trivially, and nothing else about the
+method changes. Full spec: [METHODOLOGY.md §8](METHODOLOGY.md#8--the-two-session-split-manager--developer).
+
 ## Keeping projects current
 
 `/new-project` **copies** templates and `house.css` into each project so it's self-contained —
@@ -177,8 +220,11 @@ their own; `--copy` freezes them and needs a re-run to update.
 - **The architecture contract is checked, not remembered** — `CONSTRAINTS.md` holds the agreed
   design as ~15 falsifiable sentences, loaded into context every session. Would a change make one
   of them false? Stop, report the drift, ask. Approved changes amend the contract first.
+- **One human interface** — you talk to exactly one session, the manager; it owns the docs, the
+  reviews and every call that needs a person. A second, sandboxed session builds at full speed and
+  reports to the manager, never to you. Solo? Then you're already talking to the manager.
 
-The full set is [METHODOLOGY.md §2](METHODOLOGY.md#2--the-rules-that-make-it-work) (R1–R11),
+The full set is [METHODOLOGY.md §2](METHODOLOGY.md#2--the-rules-that-make-it-work) (R1–R12),
 or the illustrated version in [docs/METHODOLOGY.html](docs/METHODOLOGY.html).
 
 ## Built on, not instead of

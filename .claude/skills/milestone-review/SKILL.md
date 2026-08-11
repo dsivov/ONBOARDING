@@ -7,6 +7,22 @@ description: Run a milestone code review and update the progress trace — produ
 
 Run at the end of each milestone before starting the next.
 
+## Entry: the human, or an `M<n> READY` signal
+Two ways in, same review either way:
+- **Solo / the human asks** — the normal case.
+- **A developer session signalled `M<n> READY`** (methodology R12 · §8). You are the manager; the
+  developer is now **idle and waiting on you**, so don't leave it hanging. Its message names the
+  branch, the commit and the gate result — verify those yourself rather than taking them on trust
+  (§1), review that commit range, and finish by **replying over `SendMessage`**:
+  - findings → `FINDINGS M<n>` · the Critical/High IDs and the order to fix them in · the path to
+    the `CODE_REVIEW`. The developer fixes, re-runs the gate, and signals `M<n> READY` again.
+  - clean → `PROCEED` · the next milestone and its first tasks.
+  Fix the code yourself only if the developer is gone; while it's alive, **findings go back as
+  findings** — two sessions editing one working tree loses more time than it saves.
+
+Anything the developer surfaced mid-milestone (`BLOCKED`, `DRIFT A<n>`, `PLAN GAP`) is not a review
+matter — those get answered when they arrive, not batched to here.
+
 ## Reuse first
 Don't hand-roll a review Claude Code already does rigorously. Reuse the finding engine, keep
 the house format (C/H/M/S IDs, the drift check, the checkpoint carry-forward):
@@ -58,3 +74,6 @@ usually means the design is wrong, and that's a finding worth raising to the hum
   the constraints the upcoming phase touches before its first task starts.
 - Critical/High must be fixed (or explicitly deferred as a logged open finding) before the
   next milestone starts (methodology R4). Don't merge to main unverified (R5).
+- **If a developer session is waiting, reply now** (R12 · §8) — `FINDINGS M<n>` or `PROCEED`. The
+  trace is only updated on this side: the developer never edits `docs/`, so the checkboxes,
+  `DECISIONS.md` and `DOCS_INDEX.md` are yours to move.

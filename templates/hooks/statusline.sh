@@ -6,19 +6,29 @@
 input="$(cat)"
 branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '-')"
 
+# §8 role chip — set by the .claude/roles/ launchers; empty for a solo session.
+role="${CC_ROLE:-}"
+[ -z "$role" ] && [ -f /.dockerenv ] && role="developer"
+case "$role" in
+  manager)   chip="MGR · ";;
+  developer) chip="DEV · ";;
+  *)         chip="";;
+esac
+
 # Pass JSON via env (not stdin) so `python3 -c` isn't fighting the script source.
-line="$(SL_JSON="$input" SL_BRANCH="$branch" python3 -c '
+line="$(SL_JSON="$input" SL_BRANCH="$branch" SL_CHIP="$chip" python3 -c '
 import os, json
 try:
     d = json.loads(os.environ.get("SL_JSON") or "{}")
 except Exception:
     d = {}
 branch = os.environ.get("SL_BRANCH", "-")
+chip = os.environ.get("SL_CHIP", "")
 model = (d.get("model") or {}).get("display_name", "?")
 cw = d.get("context_window") or {}
 pct = cw.get("used_percentage")
 pct = f"{int(pct)}%" if isinstance(pct, (int, float)) else "?"
-print(f"⬢ methodology · {model} · ctx {pct} · {branch}")
+print(f"⬢ {chip}methodology · {model} · ctx {pct} · {branch}")
 ' 2>/dev/null)"
 
-if [ -n "$line" ]; then echo "$line"; else echo "⬢ methodology · ${branch}"; fi
+if [ -n "$line" ]; then echo "$line"; else echo "⬢ ${chip}methodology · ${branch}"; fi

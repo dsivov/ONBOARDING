@@ -51,6 +51,10 @@ amendment is approved, edit `CONSTRAINTS.md` first (bump version + amendment row
   agreed top-level architecture as ~15 falsifiable sentences (`A1…`). Written contract-check at
   every milestone start and in every review; **tripwire** re-read before the edits listed above.
   Drift ⇒ stop and ask; approved change ⇒ amend the file **first**, then log `D-NN`. Never silent.
+- **R12 One human interface** — the human talks to exactly one session, the **manager**: it owns
+  every doc, every review, and every call that needs a person. A second **developer** session
+  reports to the manager and waits — it never asks the human directly and never invents an answer
+  to keep moving. Alone in a session? Then you are the manager and R12 is already satisfied.
 
 ## GitHub cycle
 Branch per feature · commit per task · push per milestone · merge only when the gate passes
@@ -63,6 +67,26 @@ system: `docs/assets/house.css`. App UIs use the `frontend-kit` tokens.
 ## Skills
 `/write-blog · /write-rfc · /write-drp · /write-architecture · /make-workplan · /milestone-review`
 generate each artifact from `docs/templates/`.
+
+## Roles — when two sessions are running (R12 · methodology §8)
+
+Optional mode. Started with `.claude/roles/manager.sh` and `.claude/roles/developer.sh`, which
+name the sessions `mgr-{{project}}` / `dev-{{project}}` and load the matching brief in
+`.claude/roles/`. Find the peer with `ListAgents`, talk to it with `SendMessage`. The session
+banner says which role you are; if it says nothing, you're solo and this section is inert.
+
+| | **Manager** (host) | **Developer** (sandbox, no permission prompts) |
+|---|---|---|
+| Owns | all of `docs/` · reviews · contract · decisions · the servers (host, bound `0.0.0.0`) | the code and its tests |
+| Talks to | the human | the manager only |
+| Never | edits the working tree mid-milestone | edits `docs/` · starts a long-lived server · messages the human |
+
+**Developer → manager**, first line is the tag, then stop and wait:
+`M<n> READY` (gate passed, requests review) · `BLOCKED` · `DRIFT A<n>` (R11) · `PLAN GAP` (R1/R10).
+**Manager → developer:** `FINDINGS M<n>` · `PROCEED` · `ANSWER` · `AMENDED A<n>`.
+
+Messages are **signals, not payloads** — you share a working tree and a git history, so send a
+branch, a commit, a `file:line` or a doc path. Never paste a diff.
 
 ## Project-specific notes
 {{Add anything specific to THIS project: stack, run commands, gotchas, key paths.}}

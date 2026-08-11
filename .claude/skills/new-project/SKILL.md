@@ -51,8 +51,18 @@ this skill was installed from; ask the user if it isn't obvious. You need
      context every session (R11); it's inert until the contract is written.
    - The SessionStart hook's stdout is shown to the user **and** added to Claude's context —
      so the banner both greets the human and reminds the model of the method.
-7. Add/refresh a short `docs/README.md` pointing at the methodology and listing the pipeline.
-8. Tell the user to reopen the session (so the banner fires) and the next step: `/write-blog`.
+7. **Role files for the two-session split** (R12 · methodology §8) — installed always, inert until
+   used, because they're what makes the mode a one-command switch later:
+   - Copy `ONBOARDING/templates/roles/manager.sh` and `developer.sh` → `.claude/roles/` and
+     `chmod +x` them.
+   - `ONBOARDING/templates/ROLE_MANAGER.template.md` → `.claude/roles/MANAGER.md` and
+     `ROLE_DEVELOPER.template.md` → `.claude/roles/DEVELOPER.md`. Strip the leading
+     `<!-- TEMPLATE… -->` comment and substitute `{{PROJECT}}` (display name) and `{{project}}`
+     (the session-name slug — the directory basename, which is what the launchers derive).
+   - Don't start either session and don't mention the sandbox as a prerequisite unless the user
+     asks: a solo session is the manager and the mode costs nothing until it's wanted.
+8. Add/refresh a short `docs/README.md` pointing at the methodology and listing the pipeline.
+9. Tell the user to reopen the session (so the banner fires) and the next step: `/write-blog`.
 
 ## Path convention (so links resolve)
 - Published artifacts live directly in `docs/` (e.g. `docs/PAYMENTS_RFC.html`) and link
