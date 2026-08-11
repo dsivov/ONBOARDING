@@ -27,6 +27,9 @@
       <stop offset="0" stop-color="#cfe0ff"/><stop offset=".5" stop-color="#8fd9c9"/><stop offset="1" stop-color="#cdb1f7"/>
     </linearGradient>
     <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker>
+    <!-- coloured heads for the §8 rail: signals go up-stream amber, replies come back green -->
+    <marker id="pl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#f0a73c"/></marker>
+    <marker id="pg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#3ecf8e"/></marker>
     <style>
       .eyebrow{fill:#7b8499;font:700 22px "Segoe UI",sans-serif;letter-spacing:6px}
       .h1{font:800 82px "Segoe UI",sans-serif;fill:url(#title)}
@@ -48,73 +51,114 @@
   <rect width="1080" height="1350" fill="url(#glowB)"/>
   <rect x="1" y="1" width="1078" height="1348" fill="none" stroke="#1e2536" stroke-width="2" rx="4"/>
 
-  <!-- header -->
-  <text class="eyebrow" x="80" y="130">A PROJECT OPERATING SYSTEM</text>
-  <text class="h1" x="76" y="222">How we run</text>
-  <text class="h1" x="76" y="312">projects</text>
-  <text class="lede" x="80" y="372">Documentation-first. Evidence-driven.</text>
-  <text class="lede" x="80" y="408">Reviewed at every milestone. One house style.</text>
+  <!-- header — pulled up 36px for the R11 contract rail, then tightened again for the §8 rail.
+       82px leading on the h1 is safe: "How we run" carries no descenders. -->
+  <text class="eyebrow" x="80" y="86">A PROJECT OPERATING SYSTEM</text>
+  <text class="h1" x="76" y="172">How we run</text>
+  <text class="h1" x="76" y="254">projects</text>
+  <text class="lede" x="80" y="310">Documentation-first. Evidence-driven.</text>
+  <text class="lede" x="80" y="344">Reviewed at every milestone. One house style.</text>
 
+  <!-- Pipeline block, shifted up 56px as one unit so the two-session rail (R12/§8) gets a
+       full lane above the principles. Coordinates inside stay as authored. -->
+  <g transform="translate(0,-56)">
   <!-- pipeline -->
-  <text class="cap" x="540" y="486" style="text-anchor:start" transform="translate(-460,0)">THE PIPELINE — idea to shipped</text>
+  <text class="cap" x="540" y="450" style="text-anchor:start" transform="translate(-460,0)">THE PIPELINE — idea to shipped</text>
   <!-- row 1: BLOG -> [RFC|DRP] -> ARCH -->
   <g>
-    <rect x="80" y="512" width="200" height="96" rx="16" fill="rgba(91,141,239,.16)" stroke="#5b8def" stroke-width="2"/>
-    <text class="stage-t" x="180" y="558">BLOG</text><text class="stage-s" x="180" y="584">vision · html</text>
+    <rect x="80" y="476" width="200" height="96" rx="16" fill="rgba(91,141,239,.16)" stroke="#5b8def" stroke-width="2"/>
+    <text class="stage-t" x="180" y="522">BLOG</text><text class="stage-s" x="180" y="548">vision · html</text>
 
     <!-- coupled RFC/DRP pair -->
-    <rect x="316" y="496" width="230" height="128" rx="18" fill="none" stroke="#a974f0" stroke-width="2" stroke-dasharray="7 5"/>
-    <text class="badge" x="431" y="486">co-authored ↔</text>
-    <rect x="332" y="512" width="198" height="48" rx="12" fill="rgba(91,141,239,.16)" stroke="#5b8def" stroke-width="2"/>
-    <text class="stage-t" x="431" y="544" style="font-size:20px">RFC · approach</text>
-    <rect x="332" y="568" width="198" height="42" rx="12" fill="rgba(25,184,154,.16)" stroke="#19b89a" stroke-width="2"/>
-    <text class="stage-t" x="431" y="596" style="font-size:20px">DRP · detail</text>
+    <rect x="316" y="460" width="230" height="128" rx="18" fill="none" stroke="#a974f0" stroke-width="2" stroke-dasharray="7 5"/>
+    <text class="badge" x="431" y="450">co-authored ↔</text>
+    <rect x="332" y="476" width="198" height="48" rx="12" fill="rgba(91,141,239,.16)" stroke="#5b8def" stroke-width="2"/>
+    <text class="stage-t" x="431" y="508" style="font-size:20px">RFC · approach</text>
+    <rect x="332" y="532" width="198" height="42" rx="12" fill="rgba(25,184,154,.16)" stroke="#19b89a" stroke-width="2"/>
+    <text class="stage-t" x="431" y="560" style="font-size:20px">DRP · detail</text>
 
-    <rect x="582" y="512" width="200" height="96" rx="16" fill="rgba(25,184,154,.16)" stroke="#19b89a" stroke-width="2"/>
-    <text class="stage-t" x="682" y="552">ARCH / CR</text><text class="stage-s" x="682" y="578">design</text>
+    <rect x="582" y="476" width="200" height="96" rx="16" fill="rgba(25,184,154,.16)" stroke="#19b89a" stroke-width="2"/>
+    <text class="stage-t" x="682" y="516">ARCH / CR</text><text class="stage-s" x="682" y="542">design</text>
 
-    <rect x="818" y="512" width="182" height="96" rx="16" fill="rgba(240,167,60,.16)" stroke="#f0a73c" stroke-width="2"/>
-    <text class="stage-t" x="909" y="552" style="font-size:21px">WORK PLAN</text><text class="stage-s" x="909" y="578">phases · gates</text>
+    <rect x="818" y="476" width="182" height="96" rx="16" fill="rgba(240,167,60,.16)" stroke="#f0a73c" stroke-width="2"/>
+    <text class="stage-t" x="909" y="516" style="font-size:21px">WORK PLAN</text><text class="stage-s" x="909" y="542">phases · gates</text>
 
-    <line x1="280" y1="560" x2="315" y2="560" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
-    <line x1="546" y1="560" x2="581" y2="560" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
-    <line x1="782" y1="560" x2="817" y2="560" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+    <line x1="280" y1="524" x2="315" y2="524" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+    <line x1="546" y1="524" x2="581" y2="524" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+    <line x1="782" y1="524" x2="817" y2="524" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+  </g>
+  <!-- the contract (R11) — a rail under the pipeline, not a stage in it: born from the
+       agreed RFC+DRP, then checked against every top-level decision downstream. Stops at
+       x=820 so the WORK PLAN → milestone-loop arrow has a clear lane at x=909. -->
+  <g>
+    <line x1="431" y1="590" x2="431" y2="602" stroke="#ef5b6e" stroke-width="2" stroke-dasharray="4 4" opacity=".6"/>
+    <line x1="682" y1="576" x2="682" y2="602" stroke="#ef5b6e" stroke-width="2" stroke-dasharray="4 4" opacity=".6"/>
+    <rect x="80" y="606" width="740" height="68" rx="20" fill="rgba(239,91,110,.09)" stroke="rgba(239,91,110,.75)" stroke-width="2"/>
+    <circle cx="112" cy="640" r="9" fill="#ef5b6e"/>
+    <text class="chip-t" x="136" y="632" style="font-size:23px">CONSTRAINTS.md · the contract</text>
+    <text class="chip-s" x="136" y="660">in context every session · ~15 falsifiable sentences</text>
+    <text x="800" y="646" style="fill:#f6a2ad;font:800 20px 'Segoe UI',sans-serif;text-anchor:end">drift ⇒ stop &amp; ask</text>
   </g>
   <!-- row 2: milestone loop + outputs -->
   <g>
-    <line x1="909" y1="608" x2="909" y2="656" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
-    <rect x="640" y="662" width="360" height="112" rx="18" fill="rgba(169,116,240,.18)" stroke="#a974f0" stroke-width="2"/>
-    <text class="stage-t" x="820" y="704">⟳  build → review → advance</text>
+    <line x1="909" y1="576" x2="909" y2="706" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+    <rect x="640" y="712" width="360" height="112" rx="18" fill="rgba(169,116,240,.18)" stroke="#a974f0" stroke-width="2"/>
+    <text class="stage-t" x="820" y="754">⟳  build → review → advance</text>
     <!-- 13px: at 15px these 39–40ch mono lines are wider than the 360px box and overflow it. -->
-    <text class="stage-s" x="820" y="734" style="font-size:13px">every milestone: test gate + code review</text>
-    <text class="stage-s" x="820" y="756" style="font-size:13px">branch · commit · push · merge on green</text>
+    <text class="stage-s" x="820" y="784" style="font-size:13px">every milestone: test gate + code review</text>
+    <text class="stage-s" x="820" y="806" style="font-size:13px">branch · commit · push · merge on green</text>
 
-    <rect x="80" y="662" width="520" height="112" rx="18" fill="#161b26" stroke="#2c3346" stroke-width="2"/>
-    <text class="stage-t" x="340" y="700" style="font-size:22px">progress trace + docs/ artifacts</text>
-    <text class="stage-s" x="340" y="730" style="font-size:14px">checkboxes · reviews · checkpoints · DECISIONS log · git</text>
-    <text class="stage-s" x="340" y="752" style="font-size:14px">every claim measured · docs honest &amp; current</text>
-    <line x1="640" y1="718" x2="601" y2="718" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+    <rect x="80" y="712" width="520" height="112" rx="18" fill="#161b26" stroke="#2c3346" stroke-width="2"/>
+    <text class="stage-t" x="340" y="750" style="font-size:22px">progress trace + docs/ artifacts</text>
+    <text class="stage-s" x="340" y="780" style="font-size:14px">checkboxes · reviews · checkpoints · DECISIONS log · git</text>
+    <text class="stage-s" x="340" y="802" style="font-size:14px">every claim measured · docs honest &amp; current</text>
+    <line x1="640" y1="768" x2="601" y2="768" stroke="#8a93a8" stroke-width="2.4" marker-end="url(#pa)"/>
+  </g>
+  </g>
+
+  <!-- the two-session split (R12 · §8) — a rail, like the contract's: not a stage in the
+       pipeline but the mode the pipeline is run in. Manager and developer share one repo;
+       the four signals are the only reasons the developer stops, and every arrow that
+       reaches a person passes through the manager. -->
+  <!-- style=, not fill=: .cap sets fill in CSS, which beats a presentation attribute. -->
+  <text class="cap" x="540" y="804" style="fill:#cdb1f7">R12 · §8 — TWO SESSIONS, ONE HUMAN INTERFACE</text>
+  <g>
+    <rect x="80" y="820" width="920" height="112" rx="20" fill="rgba(169,116,240,.08)" stroke="rgba(169,116,240,.55)" stroke-width="2"/>
+
+    <rect x="100" y="838" width="252" height="76" rx="14" fill="rgba(240,167,60,.16)" stroke="#f0a73c" stroke-width="2"/>
+    <text class="chip-t" x="226" y="870" style="font-size:21px;text-anchor:middle">MANAGER · host</text>
+    <text class="chip-s" x="226" y="894" style="font-size:15px;text-anchor:middle">docs · reviews · servers · you</text>
+
+    <rect x="728" y="838" width="252" height="76" rx="14" fill="rgba(169,116,240,.18)" stroke="#a974f0" stroke-width="2"/>
+    <text class="chip-t" x="854" y="870" style="font-size:21px;text-anchor:middle">DEVELOPER · sandbox</text>
+    <text class="chip-s" x="854" y="894" style="font-size:15px;text-anchor:middle">code · tests · no prompts</text>
+
+    <!-- 14px mono: the 39-char signal line is 328px inside a 376px lane; 15px would overflow. -->
+    <text class="stage-s" x="540" y="858" style="font-size:14px;fill:#ffce86">M&lt;n&gt; READY · BLOCKED · DRIFT · PLAN GAP</text>
+    <line x1="720" y1="870" x2="360" y2="870" stroke="#f0a73c" stroke-width="2.4" marker-end="url(#pl)"/>
+    <text class="stage-s" x="540" y="894" style="font-size:14px;fill:#7ee3b4">FINDINGS · PROCEED · ANSWER · AMENDED</text>
+    <line x1="360" y1="906" x2="720" y2="906" stroke="#3ecf8e" stroke-width="2.4" marker-end="url(#pg)"/>
   </g>
 
   <!-- principles -->
-  <line x1="80" y1="836" x2="1000" y2="836" stroke="#1e2536" stroke-width="2"/>
+  <line x1="80" y1="958" x2="1000" y2="958" stroke="#1e2536" stroke-width="2"/>
   <g transform="translate(0,0)">
-    <circle cx="108" cy="906" r="9" fill="#5b8def"/><text class="chip-t" x="132" y="900">Docs before code</text><text class="chip-s" x="132" y="928">every build traces to a written proposal</text>
-    <circle cx="588" cy="906" r="9" fill="#19b89a"/><text class="chip-t" x="612" y="900">Every claim measured</text><text class="chip-s" x="612" y="928">a reproducible harness, or it's a hypothesis</text>
-    <circle cx="108" cy="990" r="9" fill="#f0a73c"/><text class="chip-t" x="132" y="984">Reviewed at each gate</text><text class="chip-s" x="132" y="1012">no milestone advances unverified</text>
-    <circle cx="588" cy="990" r="9" fill="#a974f0"/><text class="chip-t" x="612" y="984">One house style</text><text class="chip-s" x="612" y="1012">every artifact looks like the same project</text>
+    <circle cx="108" cy="1006" r="9" fill="#5b8def"/><text class="chip-t" x="132" y="1000">Docs before code</text><text class="chip-s" x="132" y="1028">every build traces to a written proposal</text>
+    <circle cx="588" cy="1006" r="9" fill="#19b89a"/><text class="chip-t" x="612" y="1000">Every claim measured</text><text class="chip-s" x="612" y="1028">a reproducible harness, or it's a hypothesis</text>
+    <circle cx="108" cy="1084" r="9" fill="#f0a73c"/><text class="chip-t" x="132" y="1078">Reviewed at each gate</text><text class="chip-s" x="132" y="1106">no milestone advances unverified</text>
+    <circle cx="588" cy="1084" r="9" fill="#a974f0"/><text class="chip-t" x="612" y="1078">One house style</text><text class="chip-s" x="612" y="1106">every artifact looks like the same project</text>
   </g>
 
   <!-- rule of thumb band -->
-  <rect x="80" y="1064" width="920" height="118" rx="20" fill="rgba(91,141,239,.10)" stroke="rgba(91,141,239,.4)" stroke-width="2"/>
-  <text class="cap" x="540" y="1104" fill="#9cc0ff">THE WHOLE METHOD IN ONE LINE</text>
+  <rect x="80" y="1138" width="920" height="118" rx="20" fill="rgba(91,141,239,.10)" stroke="rgba(91,141,239,.4)" stroke-width="2"/>
+  <text class="cap" x="540" y="1178" style="fill:#9cc0ff">THE WHOLE METHOD IN ONE LINE</text>
   <!-- 32px between baselines: at 20px the 30px line's descenders collided with line 2's ascenders. -->
-  <text class="rule" x="540" y="1138">Write it down · prove it · review it —</text>
-  <text class="rule" x="540" y="1170" style="font-size:22px;fill:#aab3c5">…and the project stays legible from the first idea to the last commit.</text>
+  <text class="rule" x="540" y="1212">Write it down · prove it · review it —</text>
+  <text class="rule" x="540" y="1244" style="font-size:22px;fill:#aab3c5">…and the project stays legible from the first idea to the last commit.</text>
 
   <!-- footer / call to action -->
-  <text class="foot" x="540" y="1250">Curious how this holds up in the wild — what would you add or cut?</text>
-  <text class="foot" x="540" y="1284" style="fill:#7b8499;font-size:17px">BLOG → RFC ↔ DRP → ARCHITECTURE → WORK PLAN → milestone reviews</text>
+  <text class="foot" x="540" y="1298">Curious how this holds up in the wild — what would you add or cut?</text>
+  <text class="foot" x="540" y="1330" style="fill:#7b8499;font-size:17px">BLOG → RFC ↔ DRP → CONSTRAINTS → ARCHITECTURE → WORK PLAN → milestone reviews</text>
 </svg>
 </div>
 <p class="hint">Poster is 1080×1350 (LinkedIn 4:5). To export a PNG: screenshot at 2×, or right-click the image → “Save image”. Edit copy directly in the SVG.</p>
