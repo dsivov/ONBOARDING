@@ -29,6 +29,25 @@ flowchart LR
 - **Drift pressure** — where the contract keeps getting argued with: {{…}}. {{Repeated pressure on
   one constraint is a signal the design is wrong, not that the team is careless — raise it.}}
 
+## Requirement & NFR coverage (methodology R3 · R13)
+> The question no other artifact asks: **which requirements still have no gate?** Walk the work
+> plan's coverage table. An orphan found here is cheap; found at the last milestone it is a
+> shipped-unverified requirement.
+
+| | Count | Detail |
+|---|:---:|---|
+| Requirements proven by a passed gate | {{n}} | {{F1, F2, F3…}} |
+| Requirements with a gate not yet run | {{n}} | {{F5 → M3}} |
+| **Requirements with no gate at all** | {{n}} | {{F7 — deliberately deferred ({{D-NN}}) \| ⚠️ unplanned}} |
+| **NFR targets measured** | {{n}} | {{NFR-latency: p99 {{n}} ms vs target {{n}} ms}} |
+| **NFR targets still unmeasured** | {{n}} | {{NFR-throughput — no harness yet → P{{n}} finding}} |
+
+## Reversibility & operability standing (methodology §3, condition 5)
+- **Irreversible changes merged since the last checkpoint:** {{none | {{which, and whether the
+  expand-then-contract `drop` step is still outstanding}}}}
+- **Feature flags still open** (and the task that removes each): {{none | {{flag → task}}}}
+- **Rollback rehearsed?** {{yes, {{date}} — took {{n}} min vs RTO target {{n}} | never — finding}}
+
 ## What was fixed in this pass
 - {{finding → resolution}}  ✅
 

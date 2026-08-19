@@ -10,7 +10,7 @@ milestone, with a consistent house visual style.
 
 **The problem it solves:** agentic coding makes it cheap to produce code and expensive to
 know whether that code was a good idea. This repo is the operating system that goes around
-the agent — a fixed set of artifacts, twelve rules, and seven skills that turn "ask an agent to
+the agent — a fixed set of artifacts, thirteen rules, and eight skills that turn "ask an agent to
 build it" into a traceable pipeline where every build points back to a written proposal,
 every claim points to a measurement, and every milestone is reviewed before the next starts.
 
@@ -36,9 +36,13 @@ agent carries in context every session and checks every top-level decision again
 RFC & DRP are a **coupled pair** — co-author them (RFC leads on approach, DRP on detail);
 sequential or merged-into-one are variants. See [METHODOLOGY.md](METHODOLOGY.md) §1.
 
-- **BLOG** (`.html`) — the vision / narrative. Why this, why now, for whom.
+- **BLOG** (`.html`) — the vision / narrative. Why this, why now, for whom — plus the **product frame**
+  (segments · jobs · success metric · launch criteria), which is the product tier of the pipeline and
+  where an incoming PRD lands.
 - **RFC** (`.html`) — the proposal: what we assemble, build, avoid; decisions; phased plan.
-- **DRP** (`.md`) — Detailed Requirements & Plan: scope, requirements, constraints, acceptance criteria.
+- **DRP** (`.md`) — Detailed Requirements & Plan: scope, requirements, constraints, acceptance criteria,
+  layout, libraries, integrations. The **engineering** requirements spec — *not* a PRD. A PRD, if your
+  org has one, is an upstream **input** to the RFC, never a co-author. See [METHODOLOGY.md](METHODOLOGY.md) §1.
 - **CONSTRAINTS** (`.md`) — the architecture contract: the agreed top-level design in ~15
   falsifiable sentences. Loaded every session; drift from it stops the build and goes to a human.
 - **ARCHITECTURE** (`.html`) / **CHANGE-REQUEST** (`.md`) — how it's built, or a scoped change on top.
@@ -61,6 +65,8 @@ ONBOARDING/
   sync-project.sh            ← push methodology updates into an already-onboarded project
   assets/house.css           ← the shared dark-theme design system (docs)
   templates/                 ← fill-in templates for every artifact (+ CLAUDE.md, settings, hooks)
+  templates/DECK.template.html ← self-contained dual-mode HTML presentation (present + reference)
+  templates/tools/           ← deck_to_pptx.py — export a deck to native 16:9 PowerPoint
   templates/roles/           ← manager/developer launchers for the two-session mode (R12 · §8)
   frontend-kit/              ← standalone themed HTML UI kit (no build)
   docs/                      ← the illustrated methodology guide + LinkedIn poster
@@ -86,7 +92,7 @@ available in any directory, including an empty new project:
 ./uninstall.sh            # remove them again (safe — see below)
 ```
 
-`install.sh` is **non-destructive**: it only touches this kit's seven skills, never deletes
+`install.sh` is **non-destructive**: it only touches this kit's eight skills, never deletes
 the skills directory, and **won't overwrite a same-named skill you already have** (use
 `--force` to replace, which backs the old one up first). `uninstall.sh` removes **only** what
 the installer created (its symlinks / tagged copies) — any skill you made yourself is left in
@@ -138,6 +144,8 @@ hand; copy `.claude/skills/*` into the project's `.claude/skills/` to get the co
 2. **Frame it:** `/write-blog` → `/write-rfc` + `/write-drp` (co-authored) — vision, proposal, requirements.
 3. **Design & plan:** `/write-architecture`, then `/make-workplan` — phases, milestones, test gates.
 4. **Each milestone:** `/milestone-review` — code review + checkpoint, update the progress trace.
+5. **Need to present it?** `/write-deck` — one self-contained HTML file, present mode + reference
+   mode, no build and no network; optional `.pptx` export.
 
 Skills read the templates in `templates/` and the design system in `assets/house.css`, so
 every project comes out consistent.
@@ -211,12 +219,19 @@ their own; `--copy` freezes them and needs a re-run to update.
 
 - **Docs before code.** Every build traces to an RFC/DRP; every doc traces to a BLOG.
 - **Every claim is measured.** Performance/accuracy statements ship with a reproducible harness in `scripts/`.
-- **Every milestone is reviewed** before the next one starts, and has explicit **test gates**.
-- **Feature branches; never merge to main unverified.** Commit/push only when asked.
+- **Every milestone is reviewed** before the next one starts, and has explicit **test gates** —
+  each naming the requirement IDs it proves, so coverage is checkable in both directions.
+- **Feature branches; never merge to main unverified — and never merge what you can't undo.**
+  Schema changes are expand-then-contract; the drop lands in a separate, later PR. Commit/push
+  only when asked.
 - **Docs are honest and current** — the final doc describes the destination, not the journey.
 - **Ask in planning, don't guess** — ambiguity is cheapest to fix before the artifact is written.
-- **Design docs name the layout, the libraries, and what already exists** — and reuse it; never
-  two libraries for one job.
+- **Design docs name the layout, the libraries, the integrations, and what already exists** — and
+  reuse it; never two libraries for one job. Every outbound call carries a timeout, a retry
+  budget, a breaker and a terminal state, or it has silently chosen *hang, then cascade*.
+- **Non-functional requirements are numbers, and every number has a gate.** "Fast", "reliable"
+  and "it must scale" are not requirements — they are places where one is missing. Each quality
+  attribute gets a target, a measurement method, and the milestone that proves it.
 - **The architecture contract is checked, not remembered** — `CONSTRAINTS.md` holds the agreed
   design as ~15 falsifiable sentences, loaded into context every session. Would a change make one
   of them false? Stop, report the drift, ask. Approved changes amend the contract first.
@@ -224,7 +239,7 @@ their own; `--copy` freezes them and needs a re-run to update.
   reviews and every call that needs a person. A second, sandboxed session builds at full speed and
   reports to the manager, never to you. Solo? Then you're already talking to the manager.
 
-The full set is [METHODOLOGY.md §2](METHODOLOGY.md#2--the-rules-that-make-it-work) (R1–R12),
+The full set is [METHODOLOGY.md §2](METHODOLOGY.md#2--the-rules-that-make-it-work) (R1–R13),
 or the illustrated version in [docs/METHODOLOGY.html](docs/METHODOLOGY.html).
 
 ## Built on, not instead of

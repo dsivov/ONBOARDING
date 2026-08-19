@@ -16,7 +16,9 @@
 > would make any sentence here **false**, STOP — do not implement it. Report the drift to the
 > human (constraint ID · what the contract says · what the change needs · why), offer
 > *comply / amend / defer*, and wait. On approval, amend this file **first** (bump the version,
-> add an amendment row), then log a `D-NN` in `DECISIONS.md`, then build. Never drift silently.
+> add a row to the change log), then log a `D-NN` in `DECISIONS.md`, then build. Never drift
+> silently. **Adding a new constraint that contradicts nothing is an extension, not a drift** —
+> see the change log at the bottom for the difference.
 
 ## Constraints
 
@@ -53,11 +55,24 @@
 - Anything the **Non-goals** list names.
 - {{project-specific tripwire}}
 
-## Amendments
+## Change log — extensions & amendments
 
-> One row per approved change of direction. The constraint text above is edited in place;
-> this is the audit trail. No entry without a human's explicit approval.
+> Two different acts, one table, told apart by the **kind** column. The test is mechanical:
+> **did a sentence that was true become false?**
+>
+> - **`ext`** — a *new* constraint ID is added; nothing already in force changed. This is the
+>   normal work of the ARCHITECTURE stage: the RFC/DRP agreed a shape, the design commits to
+>   specifics it couldn't state yet. Just add it at the artifact's closing checkpoint and bump
+>   the version. **No drift report — nothing became false.**
+> - **`amend`** — an *existing* sentence's meaning changes, or a constraint is retired. This
+>   requires the **full drift protocol**: stop, report (ID · what the contract says · what the
+>   change needs · why), human decides *comply / amend / defer*. On approval: edit above
+>   **first**, add the row here, log a `D-NN`, then build. Never as a side effect of a commit.
+>
+> The constraint text above is always edited in place and always present-tense; this table is
+> the audit trail.
 
-| Date | v | Constraint | Was → Now | Approved by | Decision |
-|------|---|------------|-----------|-------------|----------|
-| {{YYYY-MM-DD}} | v2 | {{A3}} | {{was: single Postgres → now: Postgres + Redis for ephemeral queue}} | {{human}} | {{D-014}} |
+| Date | v | Kind | Constraint | What changed | Approved by | Decision |
+|------|---|------|------------|--------------|-------------|----------|
+| {{YYYY-MM-DD}} | v2 | `ext` | {{A11}} | {{added: the architecture commits to one HTTP client (`httpx`)}} | {{— architecture stage}} | {{—}} |
+| {{YYYY-MM-DD}} | v3 | `amend` | {{A3}} | {{was: single Postgres → now: Postgres + Redis for ephemeral queue}} | {{human}} | {{D-014}} |

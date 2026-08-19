@@ -29,6 +29,8 @@
     <li><a href="#data">Data model</a></li>
     <li><a href="#flows">Key flows</a></li>
     <li><a href="#layout">Code layout &amp; dependencies</a></li>
+    <li><a href="#integrations">Integrations — in &amp; out</a></li>
+    <li><a href="#crosscutting">Cross-cutting concerns</a></li>
     <li><a href="#boundaries">Boundaries &amp; ownership</a></li>
     <li><a href="#tradeoffs">Trade-offs</a></li>
   </ol>
@@ -170,6 +172,83 @@
       {{If something here is replaced rather than reused: name it, justify it, and point at the
       work-plan task that deletes the old one. Two libraries doing one job is the failure this
       section exists to prevent.}}</div>
+  </section>
+
+  <!-- INTEGRATIONS — mandatory (methodology R10). "None" is a valid answer; say it explicitly. -->
+  <section id="integrations">
+    <div class="kicker">Integrations</div>
+    <h2>What calls us, what we call, and what happens when it's down</h2>
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 190" role="img" aria-label="inbound contracts and the outbound resilience chain">
+        <style>.ib{rx:9;stroke-width:1.6}.it{fill:#fff;font:700 11px "Segoe UI",sans-serif;text-anchor:middle}.is{fill:#aab3c5;font:8.5px var(--mono),monospace;text-anchor:middle}.ih{font:800 10px "Segoe UI",sans-serif}</style>
+        <text class="ih" x="24" y="18" fill="#9dbcff">inbound — we own this contract</text>
+        <rect class="ib" x="20" y="26" width="150" height="46" fill="rgba(91,141,239,.14)" stroke="var(--a)"/>
+        <text class="it" x="95" y="46">{{CONSUMER}}</text><text class="is" x="95" y="62">{{style · auth}}</text>
+        <rect class="ib" x="300" y="26" width="160" height="46" fill="var(--panel2)" stroke="var(--line)"/>
+        <text class="it" x="380" y="46">{{THIS_SYSTEM}}</text><text class="is" x="380" y="62">{{/v1 · additive-only}}</text>
+        <line x1="170" y1="49" x2="298" y2="49" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#ar)"/>
+
+        <text class="ih" x="24" y="106" fill="#ffce86">outbound — someone else's bad day</text>
+        <rect class="ib" x="20" y="114" width="106" height="44" fill="var(--panel2)" stroke="var(--line)"/><text class="it" x="73" y="140">caller</text>
+        <rect class="ib" x="140" y="114" width="96" height="44" fill="rgba(240,167,60,.14)" stroke="var(--c)"/><text class="it" x="188" y="134">timeout</text><text class="is" x="188" y="150">{{n}} ms</text>
+        <rect class="ib" x="250" y="114" width="96" height="44" fill="rgba(240,167,60,.14)" stroke="var(--c)"/><text class="it" x="298" y="134">retry</text><text class="is" x="298" y="150">{{n}}× jitter</text>
+        <rect class="ib" x="360" y="114" width="110" height="44" fill="rgba(240,167,60,.14)" stroke="var(--c)"/><text class="it" x="415" y="134">breaker</text><text class="is" x="415" y="150">{{threshold}}</text>
+        <rect class="ib" x="484" y="114" width="110" height="44" fill="rgba(239,91,110,.14)" stroke="var(--danger)"/><text class="it" x="539" y="134">{{DEPENDENCY}}</text><text class="is" x="539" y="150">p99 {{n}}</text>
+        <rect class="ib" x="608" y="114" width="132" height="44" fill="rgba(25,184,154,.12)" stroke="var(--b)"/><text class="it" x="674" y="134">terminal state</text><text class="is" x="674" y="150">{{where it ends up}}</text>
+        <line x1="126" y1="136" x2="138" y2="136" stroke="#8a93a8" stroke-width="1.4" marker-end="url(#ar)"/>
+        <line x1="236" y1="136" x2="248" y2="136" stroke="#8a93a8" stroke-width="1.4" marker-end="url(#ar)"/>
+        <line x1="346" y1="136" x2="358" y2="136" stroke="#8a93a8" stroke-width="1.4" marker-end="url(#ar)"/>
+        <line x1="470" y1="136" x2="482" y2="136" stroke="#8a93a8" stroke-width="1.4" marker-end="url(#ar)"/>
+        <line x1="594" y1="136" x2="606" y2="136" stroke="#8a93a8" stroke-width="1.4" marker-end="url(#ar)"/>
+      </svg>
+      <figcaption><b>{{Caption.}}</b> {{one line}}</figcaption>
+    </div></figure>
+
+    <h3 style="font-size:16px;margin:16px 0 6px">Inbound — contracts we expose</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Contract</th><th>Style</th><th>Consumed by</th><th>Version policy</th><th>Auth</th><th>Idempotency</th><th>Limits &amp; errors</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono-chip">{{POST /v1/…}}</span></td><td>{{REST/JSON}}</td><td>{{who}}</td><td>{{additive-only, {{n}}-month deprecation}}</td><td>{{OIDC}}</td><td>{{key, unique per {{scope}}}}</td><td>{{429 + Retry-After}}</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 style="font-size:16px;margin:16px 0 6px">Outbound — services we call</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Dependency</th><th>Their SLA / p99</th><th>Timeout</th><th>Retry</th><th>Breaker</th><th>Fallback / terminal state</th></tr></thead>
+      <tbody>
+        <tr><td>{{provider}}</td><td>{{99.9% / 1.2 s}}</td><td>{{800 ms}}</td><td>{{3× exp+jitter}}</td><td>{{50% of 20}}</td><td>{{…}}</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout caveat"><div class="clabel">◆ Two rules that prevent most cascades</div>
+      Never retry a non-idempotent call without an idempotency key — you will double-charge someone.
+      Never let a timeout exceed the caller's own deadline — that isn't a timeout, it's a queue of
+      doomed threads. <b class="hl">Retry budget:</b> {{attempts × timeout + backoff}} fits inside
+      {{the caller's deadline}}.</div>
+  </section>
+
+  <!-- CROSS-CUTTING — mandatory (methodology R10). One line each; "n/a — because …" is an answer. -->
+  <section id="crosscutting">
+    <div class="kicker">Cross-cutting concerns</div>
+    <h2>Decided once, applied everywhere</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Concern</th><th>Decision</th><th>Enforced where</th></tr></thead>
+      <tbody>
+        <tr><td>AuthN / AuthZ</td><td>{{authN at the edge; authorisation per resource}}</td><td><span class="mono-chip">{{path}}</span></td></tr>
+        <tr><td>Secrets</td><td>{{store · injection · rotation}}</td><td>{{…}}</td></tr>
+        <tr><td>Observability</td><td>{{correlation id through HTTP and the broker · RED metrics · traces · SLO}}</td><td>{{…}}</td></tr>
+        <tr><td>Configuration</td><td>{{per-env, validated at startup}}</td><td>{{…}}</td></tr>
+        <tr><td>Tenancy</td><td>{{single-tenant | row-level | schema-per-tenant}}</td><td>{{…}}</td></tr>
+        <tr><td>Data classification</td><td>{{which fields are personal/regulated → encryption, redaction, residency}}</td><td>{{…}}</td></tr>
+        <tr><td>Retention &amp; erasure</td><td>{{how long · how a deletion request is satisfied}}</td><td>{{…}}</td></tr>
+        <tr><td>Audit trail</td><td>{{updated_by | append-only table | event sourcing}}</td><td>{{…}}</td></tr>
+        <tr><td>Feature flags</td><td>{{what's behind one · the task that removes it}}</td><td>{{…}}</td></tr>
+        <tr><td>Cost model</td><td>{{the monthly shape · what dominates it}}</td><td>{{…}}</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout key"><div class="clabel">◆ Reversibility</div>
+      {{Schema changes are expand-then-contract; the drop is a separate deploy after the rollback
+      window. Anything that can't be un-deployed is additive-only or flagged off by default.}}
+      (methodology §3, merge condition 5)</div>
   </section>
 
   <section id="boundaries">

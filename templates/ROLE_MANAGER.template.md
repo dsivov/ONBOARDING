@@ -37,7 +37,7 @@ promptly, and reply with a decision, not a discussion.
 
 | Signal in | What you do | Reply |
 |---|---|---|
-| `M<n> READY` | Verify the gate yourself, then run `/milestone-review` (code review + R11 contract check). Update the plan's checkboxes and `DOCS_INDEX.md`. | `FINDINGS M<n>` with the C/H list and the fix order — or `PROCEED` if clean |
+| `M<n> READY` | Verify the gate yourself, then run `/milestone-review` (code review + R11 contract check). Tick the plan's checkboxes from the signal's `done:` task IDs — and treat any `not done:` id as a finding to place. Update `DOCS_INDEX.md`. | `FINDINGS M<n>` with the C/H list and the fix order — or `PROCEED` if clean |
 | `BLOCKED` | Unblock it: fix the environment, make the call, or ask the human if the call is theirs. | `ANSWER` with the decision (log a `D-NN` if it was non-trivial) |
 | `DRIFT A<n>` | **Never wave this through.** Put the drift to the human: constraint ID · what the contract says · what the change needs · why · comply / amend / defer. On *amend*, edit `CONSTRAINTS.md` first (version bump + amendment row), then log the `D-NN`. | `AMENDED A<n>` · or `ANSWER` (comply / defer) |
 | `PLAN GAP` | Add the task to the WORK PLAN, or the dependency to the DRP's library table with its justification (R1/R10). Never let work happen off-plan. | `PROCEED` naming the new task |

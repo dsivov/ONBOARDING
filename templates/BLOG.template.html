@@ -33,6 +33,7 @@
     <li><a href="#idea">The idea</a></li>
     <li><a href="#how">How it works</a></li>
     <li><a href="#why-now">Why now</a></li>
+    <li><a href="#frame">Product frame</a></li>
     <li><a href="#next">Where this goes</a></li>
   </ol>
 </nav>
@@ -77,6 +78,52 @@
     <div class="kicker">Why now</div>
     <h2>{{WHAT_MADE_THIS_POSSIBLE}}</h2>
     <p>{{The enabling shift — tech, market, or a capability that just crossed a threshold.}}</p>
+  </section>
+
+  <!-- PRODUCT FRAME — mandatory. The narrative above argues the case; this pins it down.
+       Four fields, and none of them may be prose. This is the product tier of the pipeline:
+       it is what an incoming PRD maps onto, and without it these four facts live nowhere —
+       the RFC/DRP pair is engineering-owned and carries none of them. Methodology §1. -->
+  <section id="frame">
+    <div class="kicker">Product frame</div>
+    <h2>Who it's for, what they're trying to do, and how we'll know it worked</h2>
+
+    <h3 style="font-size:16px;margin:16px 0 6px">Segments — who, named</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Segment</th><th>Size / volume</th><th>What they do today</th></tr></thead>
+      <tbody>
+        <tr><td>{{primary segment}}</td><td>{{how many · how often}}</td><td>{{the workaround they live with}}</td></tr>
+        <tr><td>{{secondary}}</td><td>{{…}}</td><td>{{…}}</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small">Named segments, not "users". If you can't put a number next to one, say so —
+      an unsized segment is an assumption, and it belongs in the DRP's open questions.</p>
+
+    <h3 style="font-size:16px;margin:16px 0 6px">Jobs — what they're hiring this to do</h3>
+    <ul>
+      <li><b>{{Segment}}</b> — {{when …, I want to …, so that …}}</li>
+      <li><b>{{Segment}}</b> — {{…}}</li>
+    </ul>
+    <p class="small">This is the altitude between the story above and the DRP's <span class="mono-chip">F1…Fn</span>:
+      one line per job, no solution named. Each requirement later traces up to one of these.</p>
+
+    <div class="callout key"><div class="clabel">◆ Success metric — the number this is judged on</div>
+      <b>{{metric}}</b>: {{baseline today}} → <b class="hl">{{target}}</b> by {{date}},
+      measured by {{how — the report, query or dashboard}}.
+      <br><span class="small">One primary metric. A guardrail metric that must <i>not</i> move:
+      {{metric}} stays within {{bound}}. This is a <b>business</b> outcome — latency and
+      availability targets are non-functional requirements and live in the DRP (R13).</span></div>
+
+    <div class="callout caveat"><div class="clabel">◆ Launch criteria — what must be true to roll out</div>
+      {{Not the same as the milestone gates, which prove the code is correct. These decide whether
+      it is safe and worth switching people onto: e.g. migration of {{n}} historical records verified ·
+      support runbook written · {{segment}} piloted for {{n}} weeks with no {{severity}} incidents ·
+      rollback rehearsed · legal/compliance sign-off.}}</div>
+
+    <div class="callout"><div class="clabel">◆ Explicitly not solving</div>
+      {{The adjacent problems people will assume are in scope. These carry into the RFC's
+      "avoid" column and the contract's non-goals — deciding them here is what stops the argument
+      recurring in month three.}}</div>
   </section>
 
   <section id="next">

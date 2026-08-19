@@ -49,6 +49,19 @@ dependency-manager question above — offering a recommended option first.
   before writing, don't quietly overwrite the contract. See `/write-drp` for how to pick the
   constraints.
 
+## Quality attributes & integrations (methodology R10 · R13)
+The RFC carries these at **summary level** — the DRP's tables are canonical, so point rather
+than restate (two copies of a pinned table will diverge, and R6 says docs stay honest):
+- The **numbers the approach is held to** — latency (with the percentile), throughput at peak,
+  availability, durability — and, for each, **what it forces in the design**. A target that
+  changes nothing was not a real target. Numbers are asked, never invented (R9); anything still
+  unanswered is an open question on the slide, not a quiet default.
+- **Inbound** (what we expose) and **outbound** (what we depend on) in a line each — the outbound
+  side named with its failure policy, because a dependency without one has chosen *hang, then
+  cascade*.
+- **Cross-cutting** decided here: authN/authZ · secrets · observability + SLO · tenancy · data
+  classification & retention · cost.
+
 ## Rules
 - Decisions must state *why* + what was rejected.
 - Gates are concrete, testable assertions — not "it works".

@@ -54,11 +54,25 @@ From `docs/templates/CODE_REVIEW.template.md` (copied into the project by new-pr
   *was* reported and approved must show its amendment row and `D-NN`. Also flag constraints that
   have gone **stale** (still enforced, no longer describe the design) — those get amended, not
   worked around.
-- **Check layout & dependency drift** (methodology R10): does the code sit where the
+- **Check layout, dependency & integration drift** (methodology R10): does the code sit where the
   architecture/DRP layout says it does, and does the manifest match the declared library
   table? Flag any dependency added off-plan, and any **new library that duplicates one
   already used** (two HTTP clients, two ORMs, two config loaders) — that's a High finding.
-  Either the doc is updated to match reality, or the code moves; drift is never left silent.
+  Also flag any **new outbound call** that isn't in the design's outbound table, or is there
+  without a timeout, retry budget, breaker and terminal state — an unbounded call is a High
+  finding on its own. And any **public contract change** (endpoint, schema, event, file format):
+  additive? versioned? deprecation window stated? Either the doc is updated to match reality, or
+  the code moves; drift is never left silent.
+- **Check requirement & NFR coverage** (R3 · R13): the gate is only meaningful if it proves
+  something named. For each gate assertion, record what it proves (`F#` / `NFR-*`), whether it
+  actually ran, and the result. Two questions that are easy to skip and expensive to skip:
+  *did this milestone claim a requirement it didn't prove?* and *was an NFR target measured and
+  missed?* A performance target with a number and no measurement this milestone is not "passing"
+  — it is unverified, and it is a finding.
+- **Check reversibility** (§3, merge condition 5): how is this undone? If the diff contains a
+  schema change, is it expand-then-contract, and is the `drop` held back to a **separate later**
+  PR? A migration merging alongside the code that depends on it is a High finding — code reverts
+  in seconds and data does not.
 
 ## 3 · Checkpoint (periodic) → `docs/PROJECT_REVIEW_<date>.md`
 From `docs/templates/CHECKPOINT_REVIEW.template.md`. Carry forward open findings, mark
@@ -68,7 +82,13 @@ stale, and where the contract keeps getting argued with — sustained pressure o
 usually means the design is wrong, and that's a finding worth raising to the human.
 
 ## 4 · Advance the trace
-- Check off completed tasks in the work plan; mark the milestone done.
+- Check off completed tasks in the work plan; mark the milestone done. In §8 mode the
+  `M<n> READY` signal carries `done:` / `not done:` **task ids** — tick from those rather than
+  reconstructing what landed from the git log, and treat a `not done:` id as a finding to place
+  (moved to a later phase, or dropped with a `D-NN`).
+- **Update the requirement-coverage table** in the work plan: mark the requirements this
+  milestone proved. At the last milestone, any row still unmapped is a shipped-unverified
+  requirement — raise it to the human rather than closing the plan over it.
 - Log any decisions in `DECISIONS.md`; update `DOCS_INDEX.md`.
 - **Open the next milestone with its contract check** (R11) — re-read `CONSTRAINTS.md` and name
   the constraints the upcoming phase touches before its first task starts.

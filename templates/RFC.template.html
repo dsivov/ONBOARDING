@@ -124,6 +124,43 @@
   <p class="small">Replacing an incumbent? Name it, justify it, and plan its removal — never leave both.</p>
 </section>
 
+<!-- QUALITY ATTRIBUTES + INTEGRATIONS — mandatory (methodology R10 · R13).
+     Summary level here; the DRP §4 / §9 tables are canonical. Do not restate, point. -->
+<section class="slide" id="quality">
+  <div class="kicker k-c">Quality attributes &amp; integrations</div>
+  <h2>The numbers this approach is held to, and what it's attached to</h2>
+  <figure><div class="fig svgwrap">
+    <svg viewBox="0 0 760 150" role="img" aria-label="the numbers that shape the approach">
+      <style>.qb{rx:9;stroke-width:1.6}.qt{fill:#fff;font:700 11px "Segoe UI",sans-serif;text-anchor:middle}.qn{fill:#ffce86;font:700 13px var(--mono),monospace;text-anchor:middle}.qs{fill:#aab3c5;font:8.5px var(--mono),monospace;text-anchor:middle}</style>
+      <rect class="qb" x="20" y="26" width="168" height="66" fill="rgba(240,167,60,.12)" stroke="var(--c)"/>
+      <text class="qt" x="104" y="46">latency</text><text class="qn" x="104" y="66">{{p99 ≤ 800 ms}}</text><text class="qs" x="104" y="82">{{forces: …}}</text>
+      <rect class="qb" x="204" y="26" width="168" height="66" fill="rgba(240,167,60,.12)" stroke="var(--c)"/>
+      <text class="qt" x="288" y="46">throughput</text><text class="qn" x="288" y="66">{{240 w/s peak}}</text><text class="qs" x="288" y="82">{{forces: …}}</text>
+      <rect class="qb" x="388" y="26" width="168" height="66" fill="rgba(91,141,239,.14)" stroke="var(--a)"/>
+      <text class="qt" x="472" y="46">availability</text><text class="qn" x="472" y="66">{{99.9%}}</text><text class="qs" x="472" y="82">{{forces: …}}</text>
+      <rect class="qb" x="572" y="26" width="168" height="66" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+      <text class="qt" x="656" y="46">durability</text><text class="qn" x="656" y="66">{{RPO 0 · RTO 5m}}</text><text class="qs" x="656" y="82">{{forces: …}}</text>
+      <text class="qs" x="380" y="120" fill="#8a93a8">each number names what it forces in the design — a target that changes nothing was not a real target</text>
+      <text class="qs" x="380" y="136" fill="#8a93a8">full table with measurement method and gate: {{NAME}}_DRP.md §4</text>
+    </svg>
+    <figcaption><b>{{Caption.}}</b> {{The one number that decided the approach, and why.}}</figcaption>
+  </div></figure>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card rail ra"><h3 style="margin-top:0">Inbound — what we expose</h3>
+      <p class="small">{{style · consumers · version policy · auth · idempotency.}}
+      Once a consumer integrates, this is the most expensive thing here to change.</p></div>
+    <div class="card rail rc"><h3 style="margin-top:0">Outbound — what we depend on</h3>
+      <p class="small">{{dependency · their p99 · timeout · retry · breaker · terminal state.}}
+      A dependency without a failure policy has chosen <b class="hl">hang, then cascade</b>.</p></div>
+  </div>
+  <div class="callout key"><div class="clabel">◆ Cross-cutting, decided here</div>
+    {{authN/authZ · secrets · observability + SLO · tenancy · data classification &amp; retention ·
+    cost.}} One line each — detail in <span class="mono-chip">{{NAME}}_DRP.md</span> §10.</div>
+  <p class="small">Unanswered numbers above are <b>open questions</b>, not defaults — ask, with
+    options (R9), before this RFC is accepted.</p>
+</section>
+
 <!-- ROADMAP -->
 <section class="slide" id="roadmap">
   <div class="kicker k-c">Roadmap</div>

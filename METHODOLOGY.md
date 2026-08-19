@@ -13,9 +13,9 @@ Each stage produces a durable artifact in `docs/`. Later stages reference earlie
 
 | # | Stage | Artifact | Format | Answers |
 |---|-------|----------|--------|---------|
-| 1 | **Vision** | `BLOG_<topic>.html` | HTML | Why this? For whom? What changes? |
+| 1 | **Vision** | `BLOG_<topic>.html` | HTML | Why this? For whom? What changes? Plus the **product frame**: segments · jobs · success metric · launch criteria |
 | 2 | **Proposal** | `<NAME>_RFC.html` | HTML (slides) | What do we assemble / build / avoid? Key decisions? Phased plan? |
-| 3 | **Requirements** | `<NAME>_DRP.md` | Markdown | Detailed requirements, constraints, acceptance criteria, non-goals |
+| 3 | **Requirements** | `<NAME>_DRP.md` | Markdown | Detailed requirements, constraints, acceptance criteria, non-goals. **Engineering-owned — not a PRD** (see below) |
 | 4a | **Design** | `<NAME>_ARCHITECTURE.html` | HTML | How is it built? Components, data model, boundaries |
 | 4b | **Change** | `<NAME>_CHANGE_REQUEST.md` | Markdown | A scoped change on top of an existing architecture |
 | 5 | **Plan** | `<NAME>_WORK_PLAN.md` | Markdown | Phases → milestones (M1…) → tasks, with **test gates** |
@@ -39,11 +39,53 @@ Templates for all of these live in [`templates/`](templates/).
 - Each **milestone** ends with a **CODE REVIEW**; the project periodically gets a
   **CHECKPOINT REVIEW**.
 
+### The DRP is not a PRD — and where a PRD fits if you have one
+
+This trips people up on first contact, so it is worth stating plainly. **DRP = Detailed
+Requirements & Plan**: the *engineering* requirements specification — roughly an SRS for the
+requirements half plus design detail for the rest. It carries the file-system layout, the pinned
+library table, the integrations (with their timeout/retry/breaker policies) and the cross-cutting
+concerns (R10). No product manager writes a circuit-breaker threshold. **It is owned by
+engineering, and the people who write it are the people who write the RFC** — which is exactly
+what makes co-authoring them the right default.
+
+A **PRD** (Product Requirements Document) is a different artifact at a different altitude: the
+problem, the personas, the user stories, the success metrics, the release criteria. If your
+organisation has one, it sits **upstream as an input** — it informs the BLOG and the RFC, and it
+is **never co-authored with the RFC**, because product decides *what and why* while the RFC/DRP
+pair decides *how*. Confusing the two produces the objection people actually raise: *"why would a
+PM co-author an engineering proposal?"* They wouldn't.
+
+```
+[PRD — product-owned, optional, upstream]
+        │  maps onto the product frame + the DRP's F1…Fn
+        ▼
+ ① BLOG ─▶ ② RFC ⇄ ③ DRP ─▶ CONSTRAINTS ─▶ ④ ARCHITECTURE ─▶ ⑤ WORK PLAN
+   └ product frame ┘   └ engineering-owned pair ┘
+```
+
+**The product tier is a section, not a stage.** Rather than a separate optional document — which
+would duplicate most of the BLOG, and which teams would quietly route around (weakening R1) — the
+BLOG carries a mandatory **product frame**: **segments** (named and sized) · **jobs** (*when … I
+want to … so that …*, no solution named) · **success metric** (one business number as baseline →
+target → by when, plus a guardrail that must not move) · **launch criteria** (what must be true to
+roll out — not the same as milestone gates, which only prove the code correct).
+
+Those four facts otherwise live nowhere: the BLOG's narrative implies them, and the RFC/DRP pair
+is engineering-owned and carries none of them. With the frame in place, an incoming PRD has an
+obvious landing site instead of a competing one — its content maps onto the frame plus the DRP's
+`F1…Fn`, and the PRD stays the authority for anything in the frame so each fact keeps one owner
+(R6). Without a product function, the BLOG carries the *why* and the DRP carries the *what* —
+which is the common case, and nothing is missing.
+
 ### RFC & DRP are a coupled pair (not a strict hand-off)
 
 The RFC (approach) and DRP (detail) depend on each other, so **co-author them** — this is
 the default. The invariant is only that *approach and detailed requirements are agreed
 together **before** the WORK PLAN*; how you get there is a size/fidelity choice:
+
+Both are engineering documents with the same authors — that is the premise the whole rule rests
+on. (A PRD is not one of these two; see above.)
 
 | Mode | When | How |
 |------|------|-----|
@@ -70,20 +112,34 @@ with a **reproducible harness** in `scripts/` (or `scripts/<name>_bench/`) and t
 in the doc. If you can't measure it, mark it a **hypothesis**, not a finding. Prefer an
 honest null result ("parity") over an unverified win.
 
-### R3 — Every milestone has test gates
+### R3 — Every milestone has test gates, and every gate names what it proves
 A milestone is not "done" because the code exists. It's done when its **test gate** passes —
 an explicit, listed set of tests/assertions in the work plan. Gates are written *with* the
 milestone, not after.
+
+**Gates cite requirement IDs.** Each gate line names the DRP requirements it proves
+(`gate (M2): … — proves F3, F4, NFR-latency`). That makes the chain
+**requirement → acceptance criterion → gate → review** walkable in both directions: forward,
+"what must this prove?"; backward, "if this test is deleted, which requirement just became
+unverified?". A checkpoint can then ask the question that otherwise never gets asked — *which
+requirements have no gate?* Requirements are `F1…Fn` (functional) and `NFR-<attribute>`
+(non-functional, R13); an unreferenced requirement at the last milestone is a finding, not an
+oversight.
 
 ### R4 — Review before advancing
 Run a code review at the end of each milestone before starting the next. Findings are
 triaged by severity (Critical / High / Medium / Security) and either fixed or logged as an
 open finding in the next checkpoint.
 
-### R5 — Branches, and never merge to main unverified
+### R5 — Branches; never merge to main unverified, and never merge what you can't undo
 Work on `feature/<name>` branches. Do not merge to `main` until the milestone's gate passes
 and the review is clean. Commit and push only when the human asks. The full flow — branch,
 commit, push, PR, merge — is **§3 · The GitHub cycle**.
+
+The fifth merge condition is **reversibility**: the PR says how the change is undone, because
+code rolls back in seconds and data does not. Schema changes are expand-then-contract and the
+`drop` lands in a separate, later PR — a migration never merges alongside the code that depends
+on it. The mechanics are in §3.
 
 ### R6 — Docs are honest and current
 The **final** doc describes the destination, not the journey — remove cancelled ideas and
@@ -108,8 +164,8 @@ later — so this is where questions pay off most. (In the build stages you act 
 spec; if a genuine ambiguity surfaces there, add it to the plan and, if it changes direction,
 ask.)
 
-### R10 — Design docs name the layout, the libraries, and what already exists
-Every architectural artifact (RFC, DRP, ARCHITECTURE, CHANGE_REQUEST) must carry two
+### R10 — Design docs name the layout, the libraries, the integrations, and what already exists
+Every architectural artifact (RFC, DRP, ARCHITECTURE, CHANGE_REQUEST) must carry four
 concrete sections, not prose gestures at them:
 
 1. **Code file-system layout** — the directory tree as it will exist, with what each path
@@ -117,6 +173,25 @@ concrete sections, not prose gestures at them:
 2. **External libraries** — every proposed dependency by name, with version/pin, what it's
    for, and why it over the alternative. Unlisted dependencies don't get added mid-build;
    they go through the plan (R1).
+3. **Integrations — inbound and outbound.** Two tables, because they fail in opposite
+   directions:
+   - **Inbound** (contracts we expose): protocol/style, who consumes it, version and
+     compatibility policy, authN/authZ, idempotency semantics, rate limits, and the error
+     shape. An exposed contract is the most expensive thing in the system to change, because
+     we don't control who depends on it.
+   - **Outbound** (services we call): the dependency, its published SLA/latency, **timeout,
+     retry policy, breaker threshold, fallback, and the terminal state** a request ends in
+     when all of that fails. One row per dependency — a global "we'll add retries" is not an
+     answer. A design without this table has silently chosen *hang forever, then cascade*.
+
+   "None" is a valid answer to either table; say it explicitly rather than omitting it.
+4. **Cross-cutting concerns** — decided once, applied everywhere, and named here so an audit
+   or an incident isn't the first time they're discussed: authN/authZ model · secrets and
+   rotation · observability (structured logs with a correlation id, metrics, traces, the SLO)
+   · configuration and its validation · tenancy · **data classification** (which fields are
+   personal or regulated, and what that forces: encryption, log redaction, residency,
+   retention and erasure) · audit trail · feature flags · cost model. One line each is enough;
+   silence is not.
 
 Two conditions attach to this:
 
@@ -149,6 +224,19 @@ sits in context every session, and every line costs.
 **Who writes it, when.** Created the moment the **RFC + DRP are agreed** — that's the first
 point where a top-level design exists to hold anyone to. The **ARCHITECTURE** extends it (adding
 constraints its design commits to); a **CHANGE-REQUEST** never silently contradicts it.
+
+**Extension is not amendment.** These are different acts and the contract records them
+differently — conflating them makes the normal work of the design stage read as drift:
+
+| | **Extension** | **Amendment** |
+|---|---|---|
+| What happens | A **new** constraint ID is added (`A11`…). Nothing already in force changes. | An **existing** sentence's meaning changes, or a constraint is retired. |
+| When | The ARCHITECTURE stage, mostly — the RFC/DRP agreed a shape, and the design commits to specifics it couldn't state yet. | Any time the build needs something the contract forbids. |
+| Protocol | Just add it, at the artifact's closing checkpoint. Bump the version. No drift report — nothing became false. | The **full drift protocol**: stop, report, human decides comply / amend / defer. |
+| Recorded as | A row in the log marked `ext`. | A row marked `amend`, plus a `D-NN` in `DECISIONS.md`. |
+
+The test is mechanical, and it's the same test as everywhere else in R11: **did a sentence that
+was true become false?** If no — extension. If yes — amendment, and the build stops first.
 
 **When the agent reads it** — three layers, because "check on serious decisions" is not a trigger
 anything can execute:
@@ -217,6 +305,47 @@ flowchart TD
   class A,B,C,E,I c; class D,F,H c; class G s; class J,K g;
 ```
 
+### R13 — Non-functional requirements are numbers, and every number has a gate
+Functional requirements decide *what* gets built. Non-functional ones decide *how* — and they
+are the ones that get left as adjectives. "Fast", "reliable", "highly available", "real-time"
+and "it must scale" are not requirements; they are places where a requirement is missing.
+
+**Every quality attribute the system is held to gets a row in the DRP**, with four columns and
+no blanks:
+
+| Attribute | Target | Measured by | Gate |
+|-----------|--------|-------------|------|
+| Latency | p99 ≤ 800 ms at peak | `scripts/bench_checkout/` — p99 of `POST /orders` at 240 w/s for 10 min | M4 |
+| Availability | 99.9% monthly | synthetic probe on the checkout path, 1/min | — (ops, not a gate) |
+| Durability | RPO 0 · RTO 5 min | rehearsed failover, timed, quarterly | M3 |
+
+The attributes to walk, so none is silently dropped: **latency** (with the percentile —
+p99 is where architecture lives) · **throughput** (peak, not average) · **availability** ·
+**durability** (RPO/RTO) · **consistency** (how eventual, in seconds) · **security &
+privacy** · **observability** · **operability** · **cost**. Not every one applies; the ones
+that don't are written as *n/a, because …* rather than omitted.
+
+Three conditions:
+
+**A target with no measurement method is a wish.** The "measured by" column names a runnable
+harness in `scripts/` (R2) or a specific probe — not a person's judgement. If it can't be
+measured, it's a **hypothesis**, and it is labelled one.
+
+**Every NFR with a number gets a milestone gate.** This is where R2 and R3 meet, and it is the
+join people skip: R2 governs claims you *make*, R3 governs milestones — so an unmeasured
+*target* falls between them and nothing ever proves it. A performance target with no
+performance gate is a target nobody will discover was missed until production does. The gate
+may be its own milestone (`M4 · scale proof`) when the number can only be shown late.
+
+**Ask for the number; never invent it.** During planning, an unspecified quality attribute is
+an R9 question with options attached — "three nines or four? Four roughly triples the
+infrastructure and puts someone on call" — not a default quietly chosen by whoever writes the
+doc. Record the answer in `DECISIONS.md`, then in the table.
+
+Constraints that a diff can falsify are promoted to `CONSTRAINTS.md` (R11); the rest stay in
+the DRP. Most NFRs stay in the DRP — a latency budget is a target to measure, not a sentence a
+diff makes false.
+
 ---
 
 ## 3 · The GitHub cycle
@@ -253,6 +382,25 @@ A `feature/*` branch merges to `main` **only when all hold**:
 2. The **code review is clean** — no open Critical/High (R4).
 3. CI is green (if configured).
 4. The PR is approved.
+5. **It is reversible** — the PR says how this is undone, and the answer isn't "restore from
+   backup".
+
+Condition 5 exists because code rolls back in seconds and data does not. Anything irreversible
+is split so that the irreversible half lands last, on its own, after the rollback window has
+closed:
+
+- **Schema changes are expand-then-contract.** Add the new column/table, backfill, switch
+  reads, *then* drop the old one — four deploys, and the drop is a separate PR days later.
+  A migration and the code that depends on it never merge together.
+- **A destructive migration ships with its down-path** — a tested rollback script, or a copy of
+  what it deletes, retained past the rollback window.
+- **Behaviour that can't be un-deployed** (a published event shape, an outbound webhook, an API
+  field) is additive-only, or goes behind a flag that defaults off.
+- **Risky changes go behind a feature flag**, so reverting is a config change rather than a
+  deploy — and the flag's removal is a task in the plan (R1), not an intention.
+
+If none of that applies, the PR says **"reversible: plain revert"** — one line. The point is
+that it was considered, in the open, before the merge and not during the incident.
 
 Prefer **squash-merge** for a clean, linear `main` (one commit per milestone/feature),
 unless the project decides otherwise. Delete the branch after merge. Tag releases
@@ -297,6 +445,14 @@ real structure beats prose describing it.
 
 App UIs (not docs) use [`frontend-kit/`](frontend-kit/): the same tokens exposed as a
 buildless HTML/CSS component kit.
+
+**Presentations** use [`templates/DECK.template.html`](templates/DECK.template.html) — the same
+tokens again, as a **single self-contained file**: inlined CSS and JS, inline SVG, no CDN and no
+webfont link, so it opens from a USB stick or an offline laptop. It carries two modes in one
+document — *present* (one slide at a time, arrow keys, overview grid, fullscreen) and *reference*
+(everything stacked, sticky TOC, `Ctrl+F`) — plus Print → PDF. `templates/tools/deck_to_pptx.py`
+exports it to a native 16:9 PowerPoint, re-rendering each inline SVG at high resolution; the HTML
+stays the source of truth. Written by `/write-deck`.
 
 ---
 
@@ -352,6 +508,7 @@ The `.claude/skills/` here automate each stage against these templates:
 | `write-architecture` | Generates an ARCHITECTURE doc (or a CHANGE-REQUEST); extends the contract |
 | `make-workplan` | Turns a DRP/architecture into phases, milestones, tasks + test gates + per-phase contract checks |
 | `milestone-review` | Runs a code review + contract check; updates the progress trace / checkpoint. In §8 mode it's also the manager's answer to an `M<n> READY` signal |
+| `write-deck` | Generates a **self-contained dual-mode HTML presentation** (present + reference in one file, no build, no network) from `templates/DECK.template.html`; optional PowerPoint export via `templates/tools/deck_to_pptx.py`. Not a pipeline stage — it's for the times an artifact has to be *presented* rather than read |
 
 ### Reuse before building
 R10 applies to the method itself: where Claude Code already does something well, the skill
@@ -436,7 +593,7 @@ prose:
 
 | Signal | Fires when | Carries |
 |--------|-----------|---------|
-| `M<n> READY` | the milestone's test gate passes (R3) | branch + commit sha · the gate command and its result · what changed in a sentence. **Requests the review** (R4). |
+| `M<n> READY` | the milestone's test gate passes (R3) | branch + commit sha · the gate command and its result · **the plan task IDs it completed** · what changed in a sentence. **Requests the review** (R4). |
 | `BLOCKED` | it cannot proceed | what's blocked · what was already tried · what it needs from the manager |
 | `DRIFT A<n>` | an R11 tripwire fired and the change would make a constraint false | constraint ID · what the contract says · what the change needs · why · comply / amend / defer |
 | `PLAN GAP` | the work needs a task the plan doesn't have (R1), or a dependency not in the library table (R10) | what's missing · the task or dependency it proposes · what it would displace |
@@ -477,10 +634,18 @@ history, so a message carries a tag, a pointer, and a sentence:
 
 ```
 M2 READY · feature/ingest @ 4a1c2f · gate: pytest -q tests/ingest → 34 passed
+done: P2.1 P2.2 P2.4 · not done: P2.3 (deferred — see BLOCKED earlier)
 Backfill path is in; the retry budget is per-batch, not per-record — worth a look in review.
 ```
 
 Never paste a diff. The repo is the channel; the message says where to look.
+
+**Why the task IDs are on the wire.** The work-plan checkboxes are the progress trace (§6), and
+the developer never edits `docs/` — so without them the trace lags a whole milestone behind
+reality and the manager has to reconstruct what landed from the git log. The `done:` /
+`not done:` line makes ticking the boxes a transcription rather than an investigation, and it
+surfaces the more useful fact: a task the plan has that the milestone *didn't* do. The manager
+ticks the boxes as part of the review, before replying.
 
 ### What the sandbox has to provide
 

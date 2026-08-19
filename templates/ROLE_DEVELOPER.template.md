@@ -31,7 +31,7 @@ Send the tag as the **first line**, then two or three lines of substance. Then *
 
 | Signal | Send it when | Include |
 |---|---|---|
-| `M<n> READY` | the gate passes | branch + commit sha · the exact gate command and its result · one sentence on what changed and anything you'd want a reviewer to look at |
+| `M<n> READY` | the gate passes | branch + commit sha · the exact gate command and its result · **`done:` the plan task IDs you completed and `not done:` any you didn't** · one sentence on what changed and anything you'd want a reviewer to look at |
 | `BLOCKED` | you genuinely cannot proceed | what's blocked · what you already tried · what you need |
 | `DRIFT A<n>` | an R11 tripwire fired and the change would make a constraint false | constraint ID · what the contract says · what the change needs · why · comply / amend / defer |
 | `PLAN GAP` | the work needs a task the plan doesn't have (R1), or a library not in the DRP's table (R10) | what's missing · the task or dependency you propose · what it displaces |
@@ -47,7 +47,9 @@ version. `ANSWER` → carry on with the decision as given.
 ## Hard limits
 
 - **Never edit `docs/`.** Not the plan, not the DRP, not `DECISIONS.md`, not the contract — even to
-  tick a checkbox. Those are the manager's; the trace is only trustworthy with one writer.
+  tick a checkbox. Those are the manager's; the trace is only trustworthy with one writer. That is
+  exactly why `M<n> READY` carries the **task IDs** — it's how the checkboxes stay current without
+  you touching them, so report them precisely rather than describing the work in prose.
 - **Never start a long-lived server.** The sandbox publishes no ports, so nobody can reach it, and
   the human works remotely. Servers are the manager's, on the host, bound `0.0.0.0`. Test servers
   that live and die inside a test are fine.

@@ -35,30 +35,49 @@ amendment is approved, edit `CONSTRAINTS.md` first (bump version + amendment row
 - **R2 Measure every claim** — perf/accuracy/"better-than" ships with a reproducible harness in
   `scripts/`; otherwise call it a hypothesis. An honest "parity" beats an unverified win.
 - **R3 Test gates** — a milestone is done when its listed gate passes, not when code exists.
+  Every gate **names the requirement IDs it proves** (`— proves F3, NFR-latency`), so coverage
+  is checkable both ways and an orphan requirement is findable before the last milestone.
 - **R4 Review before advancing** — code review each milestone; fix Critical/High first.
-- **R5 Branches** — work on `feature/<name>`; never merge to `main` unverified; commit/push only when asked.
+- **R5 Branches & reversibility** — work on `feature/<name>`; never merge to `main` unverified;
+  commit/push only when asked. Merge also needs **"how is this undone?"** answered in the PR:
+  schema changes are **expand-then-contract** and the `drop` is a *separate later* PR — a
+  migration never merges with the code that depends on it. Otherwise: "reversible: plain revert".
 - **R6 Honest & current docs** — describe the destination, not the journey; fix docs when a measurement corrects a belief.
 - **R7 Log decisions** in `docs/DECISIONS.md`; don't re-litigate them.
 - **R8 Persist the non-obvious** — project memory the repo and git history don't already record.
 - **R9 In planning, ask when unsure** — during discussion/RFC/DRP, don't guess at ambiguous scope
   or approach: ask, with suggested options (recommended first + trade-offs). Log the answer.
-- **R10 Layout, libraries, reuse** — every RFC/DRP/architecture/CR carries a **file-system layout**
-  and an **external-library table** (name, version, purpose, why over the alternative). Python?
-  **Ask** the dependency manager (`conda` default; uv/poetry/pip+venv). Existing code? Inventory the
-  current layout, used libs, DBs and integrations first and **reuse them** — never a second library
-  for a job something already does; replacing an incumbent means planning its removal.
+- **R10 Layout, libraries, integrations, reuse** — every RFC/DRP/architecture/CR carries four
+  concrete sections: a **file-system layout**; an **external-library table** (name, version,
+  purpose, why over the alternative); **integrations in and out** — inbound contracts we expose
+  (style · consumers · version policy · auth · idempotency · limits) and every outbound call with
+  its **timeout · retry · breaker · fallback · terminal state**; and **cross-cutting concerns**
+  (authN/authZ · secrets · observability + SLO · config · tenancy · data classification ·
+  retention & erasure · audit · flags · cost), one line each. "None" is an answer; silence isn't.
+  Python? **Ask** the dependency manager (`conda` default; uv/poetry/pip+venv). Existing code?
+  Inventory the current layout, used libs, DBs and integrations first and **reuse them** — never a
+  second library for a job something already does; replacing an incumbent means planning its removal.
 - **R11 Check the contract, don't remember it** — `docs/CONSTRAINTS.md` (imported above) holds the
   agreed top-level architecture as ~15 falsifiable sentences (`A1…`). Written contract-check at
   every milestone start and in every review; **tripwire** re-read before the edits listed above.
   Drift ⇒ stop and ask; approved change ⇒ amend the file **first**, then log `D-NN`. Never silent.
+  Adding a **new** ID that contradicts nothing is an *extension* (`ext`) — log it, no drift report.
+  Only making an **existing** sentence false is an *amendment*, and that stops the build first.
 - **R12 One human interface** — the human talks to exactly one session, the **manager**: it owns
   every doc, every review, and every call that needs a person. A second **developer** session
   reports to the manager and waits — it never asks the human directly and never invents an answer
   to keep moving. Alone in a session? Then you are the manager and R12 is already satisfied.
+- **R13 NFRs are numbers, and every number has a gate** — "fast", "reliable", "highly available",
+  "real-time", "it must scale" are not requirements; they are places where one is missing. Every
+  quality attribute gets **target · measured by · gate**, no blanks: latency (with the percentile)
+  · throughput (peak) · availability · durability (RPO/RTO) · consistency · security & privacy ·
+  observability · operability · cost. A target with no harness is a **hypothesis**; a number with
+  no milestone gate is one nobody discovers was missed until production does. **Ask** for these
+  numbers with options and their cost (R9) — never invent a default.
 
 ## GitHub cycle
-Branch per feature · commit per task · push per milestone · merge only when the gate passes
-**and** review is clean. `main` is always releasable. Prefer squash-merge.
+Branch per feature · commit per task · push per milestone · merge only when the gate passes,
+review is clean, **and the change is reversible**. `main` is always releasable. Prefer squash-merge.
 
 ## House style
 Every doc is illustrated: **inline SVG** in HTML, **mermaid** in Markdown. Shared design

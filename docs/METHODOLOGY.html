@@ -114,9 +114,9 @@
     <div class="tablewrap"><table>
       <thead><tr><th>Artifact</th><th>Format</th><th>Answers</th></tr></thead>
       <tbody>
-        <tr><td><span class="pill a">BLOG</span></td><td>HTML</td><td>Why this? For whom? What changes?</td></tr>
+        <tr><td><span class="pill a">BLOG</span></td><td>HTML</td><td>Why this? For whom? What changes? Plus the <b>product frame</b> — segments · jobs · success metric · launch criteria</td></tr>
         <tr><td><span class="pill a">RFC</span></td><td>HTML</td><td>What we assemble / build / avoid · decisions · phased plan</td></tr>
-        <tr><td><span class="pill b">DRP</span></td><td>Markdown</td><td>Detailed requirements, constraints, acceptance criteria, non-goals</td></tr>
+        <tr><td><span class="pill b">DRP</span></td><td>Markdown</td><td>Detailed requirements, constraints, acceptance criteria, non-goals, layout, libraries, integrations. <b>Engineering-owned — not a PRD</b></td></tr>
         <tr><td><span class="pill danger">CONSTRAINTS</span></td><td>Markdown</td><td>The contract: the agreed top-level design in ~15 falsifiable sentences. Drift stops the build</td></tr>
         <tr><td><span class="pill b">ARCHITECTURE</span></td><td>HTML</td><td>How it's built — components, data, boundaries, flows</td></tr>
         <tr><td><span class="pill c">CHANGE-REQUEST</span></td><td>Markdown</td><td>A scoped change on top of an existing architecture</td></tr>
@@ -135,6 +135,33 @@
       acceptance criteria) — and they cross-check as you go. <b>Sequential</b> (RFC→DRP) suits a contested approach you
       want signed off cheaply first; <b>merged</b> (one RFC with a requirements section) suits a small feature. The only
       invariant: approach + detailed requirements are agreed <b>before</b> the work plan.</div>
+
+    <div class="callout caveat"><div class="clabel">◆ The DRP is not a PRD</div>
+      This trips people on first contact. <b>DRP = Detailed Requirements &amp; Plan</b>: the <b>engineering</b>
+      requirements spec — an SRS for the requirements half plus design detail for the rest. It carries the
+      file-system layout, the pinned library table, the integrations with their timeout/retry/breaker policies
+      and the cross-cutting concerns (R10). No product manager writes a circuit-breaker threshold.
+      <b>Engineering owns it, and its authors are the RFC's authors</b> — which is precisely what makes
+      co-authoring the two correct.
+      <br><br>A <b>PRD</b> is a different artifact at a different altitude: problem, personas, user stories,
+      success metrics, release criteria. If your organisation has one it sits <b>upstream as an input</b> —
+      it informs the Vision Brief and the RFC, and it is <b>never co-authored with the RFC</b>, because product
+      decides <i>what and why</i> while the RFC/DRP pair decides <i>how</i>. Confusing the two produces the
+      objection people actually raise: <i>"why would a PM co-author an engineering proposal?"</i> They wouldn't.</div>
+
+    <div class="callout key"><div class="clabel">◆ The product tier is a section, not a stage</div>
+      Rather than a separate optional document — which would duplicate most of the BLOG, and which teams
+      would quietly route around, weakening R1 — the <b>BLOG carries a mandatory product frame</b>:
+      <b>segments</b> (named and sized, not "users") · <b>jobs</b> (<i>when … I want to … so that …</i>,
+      no solution named) · <b>success metric</b> (one business number as baseline → target → by when, plus
+      a guardrail that must not move) · <b>launch criteria</b> (what must be true to roll out — <i>not</i>
+      the milestone gates, which only prove the code correct).
+      <br><br>Those four facts otherwise live nowhere: the narrative implies them, and the RFC/DRP pair is
+      engineering-owned and carries none of them. With the frame in place an incoming PRD has an obvious
+      landing site instead of a competing one — it maps onto the frame plus the DRP's
+      <span class="mono-chip">F1…Fn</span>, and stays the authority for anything in the frame, so each fact
+      keeps one owner (R6). Without a product function, the BLOG carries the <i>why</i> and the DRP the
+      <i>what</i> — the common case, and nothing is missing.</div>
   </section>
 
   <section id="lifecycle">
@@ -166,15 +193,25 @@
       Any performance/accuracy/"better-than" statement ships with a reproducible harness in
       <span class="mono-chip">scripts/</span> and the numbers in the doc. Can't measure it? Call it a
       <b>hypothesis</b>. An honest null result ("parity") beats an unverified win.</div>
-    <div class="callout caveat"><div class="clabel">◆ R3 · Every milestone has a test gate</div>
+    <div class="callout caveat"><div class="clabel">◆ R3 · Every milestone has a test gate, and every gate names what it proves</div>
       "The code exists" isn't done. The listed gate passing is done — and gates are written with
-      the milestone, not after.</div>
+      the milestone, not after. Each gate <b>cites the requirement IDs it proves</b>
+      (<span class="mono-chip">gate (M2): … — proves F3, F4, NFR-latency</span>), so the chain
+      requirement → criterion → gate → review walks both ways: forward, "what must this prove?";
+      backward, "if this test is deleted, which requirement just became unverified?" A checkpoint
+      can then ask the question nothing else asks — <b>which requirements have no gate?</b></div>
     <div class="callout info"><div class="clabel">◆ R4 · Review before advancing</div>
       Code review at the end of each milestone. Critical/High get fixed (or logged as open
       findings) before the next milestone starts.</div>
-    <div class="callout danger"><div class="clabel">◆ R5 · Branches; never merge to main unverified</div>
+    <div class="callout danger"><div class="clabel">◆ R5 · Branches; never merge to main unverified — or irreversibly</div>
       Work on <span class="mono-chip">feature/&lt;name&gt;</span>. Merge only after the gate passes and
-      review is clean. Commit/push when the human asks.</div>
+      review is clean. Commit/push when the human asks. And the fifth merge condition:
+      <b>it must be reversible</b>, and the PR says how — because code rolls back in seconds and data
+      does not. Schema changes are <b>expand-then-contract</b> (add, backfill, switch reads, then drop),
+      and <b>the drop is a separate PR days later</b>; a migration never merges with the code that
+      depends on it. Anything that can't be un-deployed is additive-only or behind a flag that defaults
+      off. Nothing to say? Then the PR says "reversible: plain revert" — one line, considered before
+      the merge rather than during the incident.</div>
     <div class="callout"><div class="clabel">◆ R6 · Docs are honest &amp; current</div>
       The final doc describes the <b>destination, not the journey</b> — cancelled ideas move to
       DECISIONS if they carry a lesson. When a measurement corrects a belief, fix the doc.</div>
@@ -186,9 +223,18 @@
       approach — <b>ask, and present suggested options</b> (recommended first, each with its trade-off) so the
       person chooses fast. Resolve before finalizing the artifact; record the answer in DECISIONS.md. Ambiguity is
       cheapest to fix here.</div>
-    <div class="callout key"><div class="clabel">◆ R10 · Design docs name the layout, the libraries, and what already exists</div>
-      Every RFC / DRP / ARCHITECTURE / CR carries a <b>code file-system layout</b> (the tree, and what each
-      path owns) and a <b>external-libraries table</b> (name, version, purpose, why over the alternative).
+    <div class="callout key"><div class="clabel">◆ R10 · Design docs name the layout, the libraries, the integrations, and what already exists</div>
+      Every RFC / DRP / ARCHITECTURE / CR carries <b>four</b> concrete sections, not prose gestures at them:
+      <b>(1)</b> the <b>code file-system layout</b> — the tree, and what each path owns, so a reader places a
+      new file without asking. <b>(2)</b> the <b>external-libraries table</b> — name, version, purpose, why
+      over the alternative. <b>(3) integrations, in and out</b>: <i>inbound</i> contracts we expose (style ·
+      consumers · version policy · auth · idempotency · limits — the most expensive thing here to change,
+      because we don't control who depends on it) and <i>outbound</i> dependencies we call, one row each with
+      <b>timeout · retry · breaker · fallback · terminal state</b>. A design without that table has silently
+      chosen <b>hang forever, then cascade</b>. <b>(4) cross-cutting concerns</b>, one line each: authN/authZ ·
+      secrets &amp; rotation · observability and the SLO · config · tenancy · <b>data classification</b>
+      (which fields are personal or regulated, and what that forces) · retention &amp; erasure · audit ·
+      feature flags · cost. "None" is a valid answer to any of them; silence is not.
       <b>Python?</b> Ask which dependency manager — <span class="mono-chip">conda</span> is the default;
       uv / poetry / pip+venv the alternatives. <b>Existing codebase?</b> Inventory the current layout, used
       libraries, databases and integrations first and reuse them — never add a second library that duplicates
@@ -200,8 +246,15 @@
       architecture: the parts that, if violated, mean we're building a <b>different system</b> than the one
       agreed. <b>If a change would make one of those sentences false — stop.</b> Report the drift (constraint ID ·
       what the contract says · what the change needs · why) and offer <b>comply / amend / defer</b>. If the human
-      approves the amendment, edit the contract <b>first</b> — version bump, amendment row, a
-      <span class="mono-chip">D-NN</span> in DECISIONS — then build. Never drift silently.</div>
+      approves the amendment, edit the contract <b>first</b> — version bump, change-log row, a
+      <span class="mono-chip">D-NN</span> in DECISIONS — then build. Never drift silently.
+      <br><br><b>Extension is not amendment.</b> Adding a <b>new</b> constraint ID that contradicts
+      nothing — the normal work of the ARCHITECTURE stage, which commits to specifics the RFC/DRP
+      couldn't state yet — is an <span class="mono-chip">ext</span>: just add it at the artifact's
+      closing checkpoint and bump the version. No drift report, because nothing became false.
+      Changing what an <b>existing</b> sentence means, or retiring one, is an
+      <span class="mono-chip">amend</span> and takes the full protocol above. Same mechanical test
+      either way: <b>did a sentence that was true become false?</b></div>
 
     <h3>Why a contract, and when the agent reads it</h3>
     <p>A long build doesn't jump the rails; it drifts one reasonable-looking local decision at a time.
@@ -304,6 +357,52 @@
     the docs open. Typing is limited by <b>permission prompts</b> — it improves when nothing needs approving
     at all. One session can't be optimised for both; two can. That shape is
     <a href="#roles">the next section</a>.</p>
+
+    <h3>And one about the requirements nobody writes down</h3>
+    <div class="callout caveat"><div class="clabel">◆ R13 · Non-functional requirements are numbers, and every number has a gate</div>
+      Functional requirements decide <b>what</b> gets built. Non-functional ones decide <b>how</b> — and they
+      are the ones left as adjectives. "Fast", "reliable", "highly available", "real-time" and "it must scale"
+      are not requirements; they are places where a requirement is <b>missing</b>. Every quality attribute the
+      system is held to gets a row in the DRP with four columns and no blanks:
+      <b>attribute · target · measured by · gate</b>.</div>
+
+    <figure><div class="fig svgwrap">
+      <svg viewBox="0 0 760 150" role="img" aria-label="an adjective becomes a target, a harness, and a gate">
+        <defs><marker id="r13a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker></defs>
+        <style>.nb{rx:9;stroke-width:1.6}.nt{fill:#fff;font:700 12px "Segoe UI",sans-serif;text-anchor:middle}.ns{fill:#aab3c5;font:9px var(--mono),monospace;text-anchor:middle}</style>
+        <rect class="nb" x="16" y="40" width="150" height="60" fill="rgba(239,91,110,.14)" stroke="var(--danger)"/>
+        <text class="nt" x="91" y="66">“it must be fast”</text><text class="ns" x="91" y="86">not a requirement</text>
+        <rect class="nb" x="206" y="40" width="150" height="60" fill="rgba(240,167,60,.14)" stroke="var(--c)"/>
+        <text class="nt" x="281" y="66">p99 ≤ 800 ms</text><text class="ns" x="281" y="86">a target — and a percentile</text>
+        <rect class="nb" x="396" y="40" width="160" height="60" fill="rgba(25,184,154,.12)" stroke="var(--b)"/>
+        <text class="nt" x="476" y="66">scripts/bench_x/</text><text class="ns" x="476" y="86">how it is measured</text>
+        <rect class="nb" x="596" y="40" width="150" height="60" fill="rgba(169,116,240,.16)" stroke="var(--ctrl)"/>
+        <text class="nt" x="671" y="66">gate at M4</text><text class="ns" x="671" y="86">when it is proven</text>
+        <line x1="166" y1="70" x2="204" y2="70" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#r13a)"/>
+        <line x1="356" y1="70" x2="394" y2="70" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#r13a)"/>
+        <line x1="556" y1="70" x2="594" y2="70" stroke="#8a93a8" stroke-width="1.5" marker-end="url(#r13a)"/>
+        <text class="ns" x="380" y="128" fill="#7b8499">a target with no measurement is a wish · a number with no gate is one nobody discovers was missed until production does</text>
+      </svg>
+      <figcaption><b>Four columns, no blanks.</b> The attributes to walk: latency (with the percentile) ·
+      throughput (peak, not average) · availability · durability (RPO/RTO) · consistency (how eventual,
+      in seconds) · security &amp; privacy · observability · operability · cost. One that doesn't apply is
+      written <span class="mono-chip">n/a — because …</span>, not omitted.</figcaption>
+    </div></figure>
+
+    <p>Three conditions attach. <b>A target with no measurement method is a wish</b> — the "measured by"
+    column names a runnable harness in <span class="mono-chip">scripts/</span> (R2) or a specific probe,
+    never a person's judgment; if it can't be measured it is labelled a <b>hypothesis</b>.
+    <b>Every NFR with a number gets a milestone gate</b> — this is where R2 and R3 meet, and it is the join
+    people skip: R2 governs claims you <i>make</i>, R3 governs milestones, so an unmeasured <i>target</i>
+    falls between them and nothing ever proves it. The gate may be its own milestone
+    (<span class="mono-chip">M4 · scale proof</span>) when the number can only be shown late.
+    And <b>ask for the number, never invent it</b> — an unspecified quality attribute is an R9 question with
+    options attached ("three nines or four? Four roughly triples the infrastructure and puts someone on
+    call"), not a default quietly chosen by whoever writes the doc.</p>
+
+    <p class="small">Constraints a diff can falsify are promoted to
+    <span class="mono-chip">CONSTRAINTS.md</span> (R11); the rest stay in the DRP. Most NFRs stay — a latency
+    budget is a target to measure, not a sentence a diff makes false.</p>
   </section>
 
   <section id="git">
@@ -348,8 +447,13 @@
         <p class="small"><b>Push per milestone</b> (and before a review). Open a <b>draft PR</b> early for
         visibility; the PR body links the RFC/DRP, the milestone, and the code review.</p></div>
       <div class="card rail ra"><h3 style="margin-top:0">Merge gate</h3>
-        <p class="small">Merge to <span class="mono">main</span> only when <b>all</b> hold: test gate passes ·
-        code review clean (no open Critical/High) · CI green · PR approved. Prefer <b>squash-merge</b>; delete the branch.</p></div>
+        <p class="small">Merge to <span class="mono">main</span> only when <b>all five</b> hold: test gate passes ·
+        code review clean (no open Critical/High) · CI green · PR approved · <b>it is reversible</b>, and the PR
+        says how. Prefer <b>squash-merge</b>; delete the branch.</p>
+        <p class="small">The fifth exists because code rolls back in seconds and data does not. Schema changes are
+        <b>expand-then-contract</b> and the <span class="mono">drop</span> is a separate PR days later — a migration
+        never merges with the code that depends on it. Nothing to say? "Reversible: plain revert" — one line,
+        considered before the merge instead of during the incident.</p></div>
       <div class="card rail rc"><h3 style="margin-top:0">Release</h3>
         <p class="small">Tag <span class="mono">vX.Y.Z</span> when <span class="mono">main</span> reaches a shippable
         point. <span class="mono">main</span> is never broken, so any tag is releasable.</p></div>
@@ -452,7 +556,9 @@
       <thead><tr><th>Signal</th><th>Fires when</th><th>Carries</th></tr></thead>
       <tbody>
         <tr><td><span class="pill c">M&lt;n&gt; READY</span></td><td>the milestone's test gate passes (R3)</td>
-          <td>branch + commit sha · the gate command and its result · one sentence on what changed. <b>Requests the review</b> (R4)</td></tr>
+          <td>branch + commit sha · the gate command and its result · <b>the plan task IDs it completed</b>
+            (<span class="mono-chip">done: P2.1 P2.2</span> / <span class="mono-chip">not done: P2.3</span>) ·
+            one sentence on what changed. <b>Requests the review</b> (R4)</td></tr>
         <tr><td><span class="pill c">BLOCKED</span></td><td>it genuinely cannot proceed</td>
           <td>what's blocked · what was already tried · what it needs</td></tr>
         <tr><td><span class="pill danger">DRIFT A&lt;n&gt;</span></td><td>a change would make a constraint false (R11)</td>
@@ -471,6 +577,15 @@
       "just tidy something up". <b>The value of a checkpoint is that the code being reviewed isn't moving
       while it's reviewed</b> — so waiting is the correct state, and a silent developer mid-milestone is
       the system working, not a session to go poke.</div>
+
+    <div class="callout key"><div class="clabel">◆ Why the task IDs ride on the wire</div>
+      The work-plan checkboxes <i>are</i> the progress trace (§6), and the developer never edits
+      <span class="mono-chip">docs/</span> — so without the IDs the trace lags a whole milestone behind
+      reality and the manager reconstructs what landed from the git log. The
+      <span class="mono-chip">done:</span> / <span class="mono-chip">not done:</span> line makes ticking
+      the boxes a <b>transcription rather than an investigation</b>, and surfaces the more useful fact:
+      a task the plan has that the milestone didn't do. The manager ticks them as part of the review,
+      before replying.</div>
 
     <h3>Why the servers belong to the manager</h3>
     <p>This one is mechanical rather than stylistic. The sandbox publishes no ports, so a server started
