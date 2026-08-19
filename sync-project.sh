@@ -53,7 +53,7 @@ for f in "$KIT"/templates/*; do
   [ -f "$f" ] || continue
   cp_if_changed "$f" "$PROJ/docs/templates/$(basename "$f")" "$(basename "$f")"
 done
-for sub in hooks roles; do
+for sub in hooks roles tools; do
   [ -d "$KIT/templates/$sub" ] || continue
   [ "$DRY" -eq 1 ] || mkdir -p "$PROJ/docs/templates/$sub"
   for f in "$KIT"/templates/"$sub"/*; do

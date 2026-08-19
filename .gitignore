@@ -1,0 +1,3 @@
+# Generated from the .html source by templates/tools/deck_to_pptx.py — regenerate, don't track.
+# Binary that changes wholesale on every rebuild; the HTML is the source of truth.
+docs/*.pptx

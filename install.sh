@@ -45,7 +45,7 @@ done
   echo "those options only apply with --new-project DIR" >&2; exit 2; }
 
 # The skills this kit provides (only these are ever touched).
-SKILLS=(new-project write-blog write-rfc write-drp write-architecture make-workplan milestone-review)
+SKILLS=(new-project write-blog write-rfc write-drp write-architecture make-workplan milestone-review write-deck)
 
 mkdir -p "$DEST"
 echo "ONBOARDING skills → $DEST"
