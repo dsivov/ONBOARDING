@@ -290,6 +290,11 @@ figcaption b{color:var(--ink-soft)}
   .slide{display:block!important;break-after:page;page-break-after:always;
          max-width:none;padding:0 0 14px}
   .slide:last-child{break-after:auto;page-break-after:auto}
+  /* A slide taller than the page has to break somewhere; this decides where.
+     Without it the break lands mid-sentence inside a callout or halfway down a
+     table, which reads as a rendering fault rather than a long slide. */
+  figure,.card,.callout,.tablewrap,pre.code,.pull{break-inside:avoid;page-break-inside:avoid}
+  h2,.eyebrow{break-after:avoid;page-break-after:avoid}
 }
 </style>
 </head>
