@@ -63,6 +63,7 @@ MARKERS = """<defs>
 <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker>
 <marker id="arwA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5b8def"/></marker>
 <marker id="arwB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#19b89a"/></marker>
+<marker id="arwC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#f0a73c"/></marker>
 <marker id="arwD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#ef5b6e"/></marker>
 <marker id="arwS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5a6478"/></marker>
 </defs>"""
@@ -636,26 +637,54 @@ for sec in sections:
 
 cover = new_slide()
 rect(cover, 0, 0, SLIDE_W, 0.09, ACC["a"], rounded=False)
-tf = tb(cover, 1.1, 1.95, 11.1, 0.4)
-para(tf, "SOLUTION / SOFTWARE ARCHITECTURE  ·  CANONICAL PROCESS", 12,
-     ACC["a"], font=MONO, bold=True, first=True)
-tf = tb(cover, 1.1, 2.45, 11.1, 1.6)
-para(tf, "From a one-line idea to a build plan\nsomeone else can execute", 40, INK,
-     bold=True, first=True, spacing=0.98)
-tf = tb(cover, 1.1, 4.25, 10.4, 1.0)
-para(tf, "Requirements · analysis · dependencies · building blocks · integrations · "
-         "data model · code layout · libraries · design patterns", 14, INK_SOFT, first=True,
-     spacing=1.15)
-for i, (lab, k) in enumerate([("① Vision Brief", "a"), ("② RFC", "ctrl"), ("③ DRP", "b"),
-                              ("Constraints", "c"), ("④ Architecture", "a"),
-                              ("⑤ Work Plan", "b"), ("6·7 Reviews", "ctrl")]):
-    x = 1.1 + i * 1.60
-    rect(cover, x, 5.55, 1.45, 0.52, PANEL, ACC[k])
-    tf = tb(cover, x + 0.08, 5.68, 1.29, 0.3)
-    para(tf, lab, 9, ACC[k], font=MONO, bold=True, first=True, align=PP_ALIGN.CENTER)
-tf = tb(cover, 1.1, 6.55, 11.1, 0.3)
-para(tf, "Worked example carried end to end: an order & payments system", 11,
-     INK_FAINT, first=True)
+
+# Eyebrow: the document's own identity, not a hardcoded one.
+eyebrow = " · ".join(x for x in (DOC_TITLE, DOC_SUB) if x).upper()
+tf = tb(cover, 1.1, 1.80, 11.1, 0.4)
+para(tf, eyebrow or "ARCHITECTURE", 12, ACC["a"], font=MONO, bold=True, first=True)
+
+# Headline: the first slide's own claim, scaled so a long one still fits.
+headline = first.get("title") or DOC_TITLE or "Architecture"
+size = 40 if len(headline) <= 58 else 32 if len(headline) <= 95 else 26
+h = text_h(headline, 11.1, size, 0.98, after_pt=0) + 0.1
+tf = tb(cover, 1.1, 2.30, 11.1, h)
+para(tf, headline, size, INK, bold=True, first=True, spacing=0.98)
+y = 2.30 + h + 0.22
+
+# Lede: the first slide's own lede, trimmed to what the cover can hold.
+lede = (first.get("lede") or "").strip()
+if lede:
+    if len(lede) > 320:
+        lede = lede[:317].rsplit(" ", 1)[0] + "…"
+    lh = min(text_h(lede, 10.4, 14, 1.15, after_pt=0) + 0.06, 1.5)
+    tf = tb(cover, 1.1, y, 10.4, lh)
+    para(tf, lede, 14, INK_SOFT, first=True, spacing=1.15)
+
+# Section chips: the deck's actual groups, laid out to however many there are.
+if GROUPS:
+    keys = ["a", "ctrl", "b", "c", "d", "ok", "n"]
+    n = len(GROUPS)
+    gap = 0.14
+    bw = max(0.9, min(1.8, (11.1 - gap * (n - 1)) / n))
+    for i_g, g in enumerate(GROUPS):
+        x = 1.1 + i_g * (bw + gap)
+        if x + bw > 1.1 + 11.1:
+            break
+        k = keys[i_g % len(keys)]
+        rect(cover, x, 5.55, bw, 0.52, PANEL, ACC[k])
+        tfc = tb(cover, x + 0.06, 5.66, bw - 0.12, 0.34)
+        label = g if len(g) <= 16 else g[:15] + "…"
+        para(tfc, f"{i_g + 1} {label}", 9, ACC[k], font=MONO, bold=True,
+             first=True, align=PP_ALIGN.CENTER)
+
+# Footer: the document's own one-line description, when it has one.
+desc = soup.find("meta", attrs={"name": "description"})
+desc = (desc.get("content") or "").strip() if desc else ""
+if desc:
+    if len(desc) > 150:
+        desc = desc[:147].rsplit(" ", 1)[0] + "…"
+    tf = tb(cover, 1.1, 6.55, 11.1, 0.3)
+    para(tf, desc, 11, INK_FAINT, first=True)
 
 # ---- content -----------------------------------------------------------
 count = 1

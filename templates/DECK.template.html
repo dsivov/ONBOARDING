@@ -252,7 +252,7 @@ figcaption b{color:var(--ink-soft)}
 .ds{fill:#aab3c5;font:9.5px var(--mono);text-anchor:middle}
 .dtl{fill:#fff;font:700 12.5px var(--sans)}
 .dsl{fill:#aab3c5;font:9.5px var(--mono)}
-.hd{font:700 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.hd{fill:#8a93a8;font:700 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase}
 .ln{stroke:#8a93a8;stroke-width:1.5;fill:none}
 .ln-d{stroke:#5a6478;stroke-width:1.3;stroke-dasharray:4 4;fill:none}
 .lbl{fill:#8a93a8;font:9.5px var(--mono);text-anchor:middle}
@@ -268,10 +268,28 @@ figcaption b{color:var(--ink-soft)}
 .ov-item.cur{border-color:var(--a);background:rgba(91,141,239,.12);color:#fff}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+/* Print / Save-as-PDF. Tune the page HEIGHT once the deck is written: open it,
+   emulate print, and measure `section.slide` heights. At 297mm wide a slide
+   lays out around 900px; a height that clears your tallest slide keeps one
+   slide per page, and A4 landscape (167mm) will split most of them. */
+@page{size:297mm 360mm;margin:9mm}
 @media print{
   .topbar,.rail,.navbtn,.ov,nav.toc{display:none!important}
-  body{background:#fff;color:#111}
-  .slide{display:block!important;page-break-after:always;max-width:none;padding:0 0 20px}
+  /* Collapse the reference-mode grid. The TOC is the FIRST of two grid items
+     (`grid-template-columns:250px 1fr`), so hiding it with display:none takes
+     it out of grid flow and the slides move up into the 250px column — every
+     slide prints as a narrow ribbon several pages tall. */
+  .shell,body[data-mode="ref"] .shell{
+    display:block!important;max-width:none!important;padding:0!important}
+  /* Keep the committed dark theme. Setting `background:#fff;color:#111` here
+     changes only the body: every element that sets `color:var(--ink)` keeps its
+     near-white, so headings, card text and diagram labels print white on white
+     and the PDF comes out mostly blank. */
+  html,body{background:var(--bg)!important;color:var(--ink)!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide{display:block!important;break-after:page;page-break-after:always;
+         max-width:none;padding:0 0 14px}
+  .slide:last-child{break-after:auto;page-break-after:auto}
 }
 </style>
 </head>
@@ -282,6 +300,7 @@ figcaption b{color:var(--ink-soft)}
   <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a93a8"/></marker>
   <marker id="arwA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5b8def"/></marker>
   <marker id="arwB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#19b89a"/></marker>
+  <marker id="arwC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#f0a73c"/></marker>
   <marker id="arwD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#ef5b6e"/></marker>
   <marker id="arwS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5a6478"/></marker>
 </defs></svg>

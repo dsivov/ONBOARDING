@@ -79,6 +79,21 @@ For centred text the usable width is the box width minus ~2× the corner radius.
 - A slide that is only bullets is a slide that wanted to be a paragraph. Cards, a table, or a
   diagram — pick one.
 
+## Export to PDF (optional)
+
+```bash
+node templates/tools/deck_to_pdf.mjs docs/<NAME>.html docs/<NAME>.pdf
+```
+
+One slide per page, dark theme intact, text selectable. Browser **Print → Save as PDF** gives the
+same result; the script is for regenerating it without a human in the loop. It finds Playwright
+wherever the project already keeps it.
+
+**Tune the page height once the deck is written.** The template ships `@page{size:297mm 360mm}`,
+which is a guess. At 297mm wide a slide lays out around 900px; measure your tallest
+`section.slide` under print media and give the page enough height to clear it, or that slide
+splits across pages. A4 landscape (167mm) splits almost everything.
+
 ## Export to PowerPoint (optional)
 
 ```bash
